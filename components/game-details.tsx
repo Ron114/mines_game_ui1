@@ -46,6 +46,7 @@ export default function GameDetails() {
           position: relative;
           overflow: hidden;
           box-shadow: inset 2px 1px 9px #070709;
+          margin-top: 20px;
         }
 
         .game-details__inner {

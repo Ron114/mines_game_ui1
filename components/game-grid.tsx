@@ -9,8 +9,8 @@ export default function GameGrid() {
       <div className="game-tiles">
         {tiles.map((tileIndex) => (
           <div key={tileIndex} className="game-tile">
-            <div className="game-tile__inner-possible-win">{/* Placeholder for possible win amount */}</div>
-            <div className="game-tile__inner">{/* Placeholder for tile content (gem/bomb) */}</div>
+            <div className="game-tile__inner-possible-win"></div>
+            <div className="game-tile__inner"></div>
           </div>
         ))}
       </div>
@@ -27,22 +27,24 @@ export default function GameGrid() {
         }
 
         .game-tiles {
-          grid-gap: 14px;
+          grid-gap: 10px;
           grid-template-rows: repeat(5, 1fr);
           grid-template-columns: repeat(5, 1fr);
           padding-bottom: 30px;
           display: grid;
+          max-width: 380px;
+          margin: 0 auto;
         }
 
         .game-tile {
           text-align: center;
           aspect-ratio: 1;
           background-image: linear-gradient(320.64deg, #17191c -42.09%, #32383e 167.71%);
-          border-radius: 13px;
+          border-radius: 8px;
           justify-content: center;
           align-items: center;
-          font-size: 50px;
-          line-height: 100px;
+          font-size: 32px;
+          line-height: 65px;
           display: flex;
           position: relative;
           box-shadow: 3px 3px 4px rgba(10, 9, 9, 0.4);

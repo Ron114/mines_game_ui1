@@ -7,7 +7,7 @@ export default function Home() {
         className="absolute inset-0 opacity-30"
         style={{
           backgroundImage: `linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px)`,
-          backgroundSize: "60px 100%",
+          backgroundSize: "45px 100%",
         }}
       />
 

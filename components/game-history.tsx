@@ -8,7 +8,7 @@ export default function GameHistory() {
       <div className="game-history__inner">
         <div className="game-history__inner-container">
           {historyItems.map((multiplier, index) => (
-            <div key={index} data-history-item="false" className="game-history__item" style={{ minWidth: "67.5714px" }}>
+            <div key={index} data-history-item="false" className="game-history__item">
               <div className="game-history__item-text">{multiplier}</div>
             </div>
           ))}
@@ -41,11 +41,12 @@ export default function GameHistory() {
           flex: 1;
           max-width: 100%;
           height: 100%;
-          padding: 2px 0;
+          padding: 2px;
           display: flex;
           position: relative;
           overflow-x: auto;
           overflow-y: hidden;
+          gap: 1px;
         }
 
         .game-history__item {
@@ -53,7 +54,7 @@ export default function GameHistory() {
           color: #d26d3d;
           justify-content: center;
           align-items: center;
-          min-width: 16%;
+          flex: 1;
           padding: 0 2px;
           font-size: 10px;
           font-weight: 500;
@@ -66,7 +67,6 @@ export default function GameHistory() {
           background: rgba(22, 25, 29, 0.8);
           border: 1px solid rgba(93, 102, 111, 0.3);
           border-radius: 3px;
-          margin: 1px;
           transition: all 0.2s ease;
         }
 

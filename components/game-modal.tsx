@@ -8,8 +8,9 @@ export default function GameModal() {
         className="w-full max-w-6xl border border-white rounded-lg overflow-hidden flex flex-col"
         style={{
           backgroundColor: "var(--modal-bg-color)",
-          maxHeight: "90vh",
-          minHeight: "600px",
+          maxHeight: "75vh",
+          minHeight: "480px",
+          width: "80vw",
         }}
       >
         <div className="flex flex-col overflow-y-auto h-full">
