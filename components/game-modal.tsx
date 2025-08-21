@@ -5,12 +5,16 @@ export default function GameModal() {
   return (
     <div className="absolute inset-0 flex items-center justify-center p-4">
       <div
-        className="w-full max-w-6xl border border-white rounded-lg overflow-hidden flex flex-col"
+        className="w-full max-w-6xl rounded-lg overflow-hidden flex flex-col"
         style={{
           backgroundColor: "var(--modal-bg-color)",
           maxHeight: "75vh",
           minHeight: "480px",
           width: "80vw",
+          borderTop: "1px solid white",
+          borderLeft: "1px solid white",
+          borderRight: "4px solid white",
+          borderBottom: "4px solid white",
         }}
       >
         <div className="flex flex-col overflow-y-auto h-full">
