@@ -7,7 +7,7 @@ export default function GameModal() {
       <div
         className="w-full max-w-6xl rounded-lg overflow-hidden flex flex-col"
         style={{
-          backgroundColor: "var(--modal-bg-color)",
+          background: "linear-gradient(135deg, #2a2f35 0%, #1a1e22 50%, #12151a 100%)",
           maxHeight: "75vh",
           minHeight: "480px",
           width: "80vw",
