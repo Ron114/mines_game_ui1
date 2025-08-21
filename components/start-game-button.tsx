@@ -25,20 +25,21 @@ export default function StartGameButton() {
             width: 100%;
             max-width: 400px;
             height: 64px;
-            border: 2px solid #4A90E2;
+            border: 1px solid rgba(74, 144, 226, 0.4);
             background: none;
             overflow: hidden;
             box-shadow: -4px -2px 16px rgba(195, 200, 205, .09), 4px 4px 18px rgba(0, 0, 0, .5);
             transition: all 0.3s ease;
+            padding: 3px;
           }
 
           .btn-new__background {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 8px;
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            bottom: 3px;
+            border-radius: 7px;
             background: linear-gradient(320.64deg, #17191c -42.09%, #32383e 167.71%);
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -49,8 +50,8 @@ export default function StartGameButton() {
           }
 
           .btn-new:hover {
-            border-color: #63e6fc;
-            box-shadow: 0 0 20px rgba(68, 197, 238, 0.3), -4px -2px 16px rgba(195, 200, 205, .09), 4px 4px 18px rgba(0, 0, 0, .5);
+            border-color: rgba(99, 230, 252, 0.8);
+            box-shadow: 0 0 15px rgba(68, 197, 238, 0.2), -4px -2px 16px rgba(195, 200, 205, .09), 4px 4px 18px rgba(0, 0, 0, .5);
           }
 
           .btn-new__content {
