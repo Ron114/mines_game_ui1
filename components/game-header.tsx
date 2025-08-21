@@ -1,6 +1,11 @@
+"use client"
+
 import { ChevronLeft, Volume2, Settings } from "lucide-react"
+import { useState } from "react"
+import SettingsModal from "./settings-modal"
 
 export default function GameHeader() {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   return (
     <div className="flex items-center relative px-2 text-white/50 pt-2">
       {/* Left side - Back button and Logo */}
@@ -62,7 +67,10 @@ export default function GameHeader() {
           </div>
         </div>
 
-        <div className="w-7 h-7 ml-3 cursor-pointer relative">
+        <button 
+          className="w-7 h-7 ml-3 cursor-pointer relative"
+          onClick={() => setIsSettingsOpen(true)}
+        >
           <div
             className="flex items-center justify-center w-7 h-7 min-w-full min-h-full rounded-full"
             style={{
@@ -71,8 +79,14 @@ export default function GameHeader() {
           >
             <Settings size={14} className="text-white/70" />
           </div>
-        </div>
+        </button>
       </div>
+
+      {/* Settings Modal */}
+      <SettingsModal 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+      />
     </div>
   )
 }
