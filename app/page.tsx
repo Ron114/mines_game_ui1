@@ -1,6 +1,12 @@
+"use client"
+
 import GameModal from "@/components/game-modal"
 
 export default function Home() {
+  const handleClose = () => {
+    window.location.reload()
+  }
+
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
       <div
@@ -20,6 +26,25 @@ export default function Home() {
       />
 
       <GameModal />
+      
+      {/* Close button positioned at app level */}
+      <button
+        onClick={handleClose}
+        className="fixed z-50 text-white hover:text-gray-300 transition-colors duration-200"
+        style={{
+          fontSize: "24px",
+          lineHeight: "1",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          padding: "8px",
+          top: "12%",
+          right: "6%",
+          transform: "translateY(-50%)",
+        }}
+      >
+        ✕
+      </button>
     </div>
   )
 }

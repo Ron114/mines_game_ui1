@@ -11,7 +11,7 @@ import GameStatistics from "./game-statistics"
 
 export default function GameContainer() {
   return (
-    <div className="game-container">
+    <div className="game-container mt-2">
       <div className="game-container__content">
         <div className="game-container__left">
           <GameModeTabs />
