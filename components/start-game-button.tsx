@@ -25,10 +25,11 @@ export default function StartGameButton() {
             width: 100%;
             max-width: 400px;
             height: 64px;
-            border: none;
+            border: 2px solid #4A90E2;
             background: none;
             overflow: hidden;
             box-shadow: -4px -2px 16px rgba(195, 200, 205, .09), 4px 4px 18px rgba(0, 0, 0, .5);
+            transition: all 0.3s ease;
           }
 
           .btn-new__background {
@@ -37,9 +38,19 @@ export default function StartGameButton() {
             left: 0;
             right: 0;
             bottom: 0;
-            border-radius: 10px;
-            background: radial-gradient(ellipse at center, rgba(74, 144, 226, 0.3) 0%, rgba(74, 144, 226, 0.1) 50%, transparent 100%), 
-                        linear-gradient(135deg, #2a2d32 0%, #3a3f45 50%, #2a2d32 100%);
+            border-radius: 8px;
+            background: linear-gradient(320.64deg, #17191c -42.09%, #32383e 167.71%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+          }
+
+          .btn-new:hover .btn-new__background {
+            opacity: 1;
+          }
+
+          .btn-new:hover {
+            border-color: #63e6fc;
+            box-shadow: 0 0 20px rgba(68, 197, 238, 0.3), -4px -2px 16px rgba(195, 200, 205, .09), 4px 4px 18px rgba(0, 0, 0, .5);
           }
 
           .btn-new__content {
@@ -74,8 +85,7 @@ export default function StartGameButton() {
             bottom: -1px;
             left: -1px;
             right: -1px;
-            background-image: linear-gradient(132.19deg, #c8d5e1 -160.75%, transparent 169.75%);
-            box-shadow: inset 2px 2px 2px rgba(26, 32, 38, .4);
+            background-image: linear-gradient(92deg, #777f85 0%, #363b3f 100%);
             border-radius: 2.5px;
             z-index: 1;
           }
@@ -87,10 +97,21 @@ export default function StartGameButton() {
             bottom: 0;
             left: 0;
             right: 0;
-            background-image: linear-gradient(136.14deg, #44c5ee -.24%, #63e6fc 91.03%);
-            box-shadow: 4px 10px 32px rgba(63, 208, 164, .4), -6px -6px 16px rgba(0, 0, 0, .6);
+            background-image: linear-gradient(92deg, #777f85 0%, #363b3f 100%);
             border-radius: 1.5px;
             z-index: 2;
+            opacity: 1;
+            transition: all 0.3s ease;
+          }
+
+          .btn-new:hover .indicator._placebet:before {
+            background-image: linear-gradient(132.19deg, #c8d5e1 -160.75%, transparent 169.75%);
+            box-shadow: inset 2px 2px 2px rgba(26, 32, 38, .4);
+          }
+
+          .btn-new:hover .indicator._placebet:after {
+            background-image: linear-gradient(136.14deg, #44c5ee -.24%, #63e6fc 91.03%);
+            box-shadow: 4px 10px 32px rgba(63, 208, 164, .4), -6px -6px 16px rgba(0, 0, 0, .6);
           }
         `}</style>
       </button>
