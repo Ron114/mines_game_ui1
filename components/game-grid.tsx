@@ -33,7 +33,7 @@ export default function GameGrid() {
           grid-template-columns: repeat(5, 1fr);
           padding-bottom: 30px;
           display: grid;
-          max-width: 380px;
+          max-width: 405px;
           margin: 0 auto;
         }
 
@@ -41,7 +41,7 @@ export default function GameGrid() {
           text-align: center;
           aspect-ratio: 1;
           background-image: linear-gradient(320.64deg, #17191c -42.09%, #32383e 167.71%);
-          border-radius: 8px;
+          border-radius: 12px;
           justify-content: center;
           align-items: center;
           font-size: 32px;

@@ -55,7 +55,7 @@ export default function GameHistory() {
           justify-content: center;
           align-items: center;
           flex: 1;
-          padding: 0 2px;
+          padding: 2px;
           font-size: 10px;
           font-weight: 500;
           display: flex;
@@ -63,22 +63,30 @@ export default function GameHistory() {
           -webkit-user-select: none;
           -moz-user-select: none;
           -ms-user-select: none;
-          /* Added individual box styling for each item */
           background: rgba(22, 25, 29, 0.8);
-          border: 1px solid rgba(93, 102, 111, 0.3);
-          border-radius: 3px;
           transition: all 0.2s ease;
         }
 
-        .game-history__item:hover {
-          background: rgba(22, 25, 29, 1);
-          border-color: rgba(93, 102, 111, 0.5);
+        .game-history__item:hover .game-history__item-text {
+          border-color: rgba(163, 82, 49, 1);
+          box-shadow: -1px -1px 12px rgba(141, 68, 37, .6);
         }
 
         .game-history__item-text {
+          text-align: center;
+          box-sizing: border-box;
+          border: 1px solid #a35231;
+          border-radius: 4px;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          box-shadow: -1px -1px 10px rgba(141, 68, 37, .3);
           font-size: 10px;
           font-weight: 500;
           color: inherit;
+          transition: all 0.2s ease;
         }
 
         @media (min-width: 820px) {

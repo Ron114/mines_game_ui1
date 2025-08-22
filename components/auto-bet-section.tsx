@@ -304,7 +304,8 @@ export default function AutoBetSection() {
         }
 
         .settings-input__wrapper label + .input-button + .input-button + .games-input__wrapper .games-input__number {
-          padding-left: 204px;
+          padding-left: 170px;
+          // padding-right: 5px;
         }
 
         .indicator__infinity,
