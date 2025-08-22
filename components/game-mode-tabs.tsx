@@ -2,18 +2,27 @@
 
 import { useState } from "react"
 
-export default function GameModeTabs() {
+interface GameModeTabsProps {
+  onModeChange?: (mode: "manual" | "auto") => void
+}
+
+export default function GameModeTabs({ onModeChange }: GameModeTabsProps) {
   const [activeMode, setActiveMode] = useState<"manual" | "auto">("manual")
+
+  const handleModeChange = (mode: "manual" | "auto") => {
+    setActiveMode(mode)
+    onModeChange?.(mode)
+  }
 
   return (
     <div className="game-mode-tabs">
-      <div className={`mode-btn ${activeMode === "manual" ? "active" : ""}`} onClick={() => setActiveMode("manual")}>
+      <div className={`mode-btn ${activeMode === "manual" ? "active" : ""}`} onClick={() => handleModeChange("manual")}>
         <div className="mode-btn__inner">
           <div className="mode-btn__text">Manual</div>
           <div className="mode-btn__indicator"></div>
         </div>
       </div>
-      <div className={`mode-btn ${activeMode === "auto" ? "active" : ""}`} onClick={() => setActiveMode("auto")}>
+      <div className={`mode-btn ${activeMode === "auto" ? "active" : ""}`} onClick={() => handleModeChange("auto")}>
         <div className="mode-btn__inner">
           <div className="mode-btn__text">Auto</div>
           <div className="mode-btn__indicator"></div>

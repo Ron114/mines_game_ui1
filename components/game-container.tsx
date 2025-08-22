@@ -1,24 +1,33 @@
 "use client"
 
+import { useState } from "react"
 import GameModeTabs from "./game-mode-tabs"
 import GameHistory from "./game-history"
 import BetAmountInput from "./bet-amount-input"
 import MinesSelector from "./mines-selector"
 import StartGameButton from "./start-game-button"
+import AutoBetSection from "./auto-bet-section"
 import GameDetails from "./game-details"
 import GameGrid from "./game-grid"
 import GameStatistics from "./game-statistics"
 
 export default function GameContainer() {
+  const [gameMode, setGameMode] = useState<"manual" | "auto">("manual")
   return (
     <div className="game-container mt-2">
       <div className="game-container__content">
         <div className="game-container__left">
-          <GameModeTabs />
+          <GameModeTabs onModeChange={setGameMode} />
           <BetAmountInput />
           <MinesSelector />
-          <StartGameButton />
-          <GameDetails />
+          {gameMode === "manual" ? (
+            <>
+              <StartGameButton />
+              <GameDetails />
+            </>
+          ) : (
+            <AutoBetSection />
+          )}
         </div>
         <div className="game-container__right">
           <GameHistory />

@@ -1,7 +1,7 @@
 "use client"
 
 export default function GameHistory() {
-  const historyItems = ["x18.21", "x2.45", "x1.08", "x5.67", "x12.34", "x3.21", "x7.89"]
+  const historyItems = ["x1.8", "x2.4", "x3.2", "x4.5", "x5.8", "x6.9", "x7.5"]
 
   return (
     <div className="game-history">
