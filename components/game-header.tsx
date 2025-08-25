@@ -24,7 +24,7 @@ export default function GameHeader() {
           <img
             src="/assets/minesgamelogo.svg"
             alt="Mines Game Logo"
-            className="w-[120px] h-[45px]"
+            className="game-header__logo"
             style={{
               backgroundRepeat: "no-repeat",
               backgroundSize: "contain",
@@ -37,7 +37,7 @@ export default function GameHeader() {
 
       {/* Right side - Balance and Controls */}
       <div className="flex items-center ml-auto">
-        <div className="text-white/60 ml-auto mr-1.5 font-bold" style={{ fontWeight: 700 }}>
+        <div className="balance-label text-white/60 ml-auto mr-1.5 font-bold" style={{ fontWeight: 700 }}>
           Balance:
         </div>
 
@@ -55,7 +55,6 @@ export default function GameHeader() {
         >
           $1369.4
         </div>
-
         <div className="w-7 h-7 ml-3 cursor-pointer relative">
           <div
             className="flex items-center justify-center w-7 h-7 min-w-full min-h-full rounded-full"
@@ -81,6 +80,32 @@ export default function GameHeader() {
           </div>
         </button>
       </div>
+
+      <style jsx>{`
+        /* Mobile responsive styles */
+        @media (max-width: 819px) {
+          .balance-label {
+            display: none;
+          }
+
+          .game-header__logo {
+            width: 130px;
+            height: 45px;
+          }
+        }
+
+        /* Desktop styles */
+        @media (min-width: 820px) {
+          .balance-label {
+            display: block;
+          }
+
+          .game-header__logo {
+            width: 120px;
+            height: 45px;
+          }
+        }
+      `}</style>
 
       {/* Settings Modal */}
       <SettingsModal 

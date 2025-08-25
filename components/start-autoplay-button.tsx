@@ -109,6 +109,18 @@ export default function StartAutoplayButton() {
           transition: opacity 0.3s ease;
         }
 
+        /* Mobile - always show glow effect */
+        @media (max-width: 819px) {
+          .btn-new._placebet ._bg11 {
+            opacity: 1;
+          }
+
+          .btn-new._placebet ._bg2,
+          .btn-new._placebet ._bg22 {
+            opacity: 1;
+          }
+        }
+
         .btn-new._placebet ._bg2,
         .btn-new._placebet ._bg22 {
           background-image: radial-gradient(148.08% 148.08% at 1.81% 132.69%, #66a1e5 0%, rgba(38, 74, 112, 0) 100%), linear-gradient(94.46deg, rgba(200, 213, 225, .21) 45.13%, transparent 123.58%), linear-gradient(315.81deg, #17191c -42.75%, #32383e 123.05%);

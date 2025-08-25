@@ -149,10 +149,13 @@ export default function GameGrid() {
           }
 
           .game-tiles {
-            grid-gap: 4px;
-            padding-bottom: 10px;
+            grid-gap: 14px;
+            padding-bottom: 30px;
             max-width: calc(100vw - 20px);
             width: 100%;
+            grid-template-rows: repeat(5, 62px);
+            grid-template-columns: repeat(5, 62px);
+            justify-content: center;
           }
         }
 

@@ -12,6 +12,7 @@ export default function GameStatistics() {
   ]
 
   const columns = ["Game", "Player", "Time", "Bet Amount", "Multiplier", "Payout"]
+  const mobileColumns = ["Game", "Multiplier", "Payout"]
 
   const gameData = [
     { 
@@ -72,26 +73,50 @@ export default function GameStatistics() {
 
       <div className="content">
         <div className="tab-content">
-          <div className="titles">
+          {/* Desktop titles */}
+          <div className="titles desktop-titles">
             {columns.map((column, index) => (
               <div key={column} className={`titles__item ${index === 2 ? "_time" : ""}`}>
                 {column}
               </div>
             ))}
           </div>
+          
+          {/* Mobile titles */}
+          <div className="titles mobile-titles">
+            {mobileColumns.map((column) => (
+              <div key={column} className="titles__item">
+                {column}
+              </div>
+            ))}
+          </div>
+          
           <div className="separator"></div>
           <div className="rows">
             {gameData.map((row, index) => (
               <div key={index} className="row">
-                <div className="cell _capitalize _nowrap">
-                  <span className="game-icon">{row.icon}</span>
-                  {row.game}
+                {/* Desktop row */}
+                <div className="desktop-row">
+                  <div className="cell _capitalize _nowrap">
+                    <span className="game-icon">{row.icon}</span>
+                    {row.game}
+                  </div>
+                  <div className="cell player">{row.player}</div>
+                  <div className="cell _time">{row.time}</div>
+                  <div className="cell amount">{row.betAmount}</div>
+                  <div className="cell multiplier">{row.multiplier}</div>
+                  <div className="cell payout">{row.payout}</div>
                 </div>
-                <div className="cell player">{row.player}</div>
-                <div className="cell _time">{row.time}</div>
-                <div className="cell amount">{row.betAmount}</div>
-                <div className="cell multiplier">{row.multiplier}</div>
-                <div className="cell payout">{row.payout}</div>
+                
+                {/* Mobile row - only 3 columns */}
+                <div className="mobile-row">
+                  <div className="cell _capitalize _nowrap">
+                    <span className="game-icon">{row.icon}</span>
+                    {row.game}
+                  </div>
+                  <div className="cell multiplier">{row.multiplier}</div>
+                  <div className="cell payout">{row.payout}</div>
+                </div>
               </div>
             ))}
           </div>
@@ -291,9 +316,58 @@ export default function GameStatistics() {
           }
         }
 
+        /* Mobile responsive styles */
+        @media (max-width: 819px) {
+          .desktop-titles,
+          .desktop-row {
+            display: none;
+          }
+
+          .mobile-titles,
+          .mobile-row {
+            display: flex;
+          }
+
+          .tabs__item {
+            min-width: 90px;
+          }
+
+          .tabs__item-inner {
+            padding: 12px 15px;
+          }
+
+          .tabs__item .text {
+            font-size: 11px;
+          }
+
+          .rows {
+            height: 240px;
+          }
+
+          .cell {
+            font-size: 11px;
+            padding: 0 8px;
+          }
+
+          .cell:first-child {
+            padding-left: 15px;
+          }
+        }
+
+        /* Desktop styles */
         @media (min-width: 820px) {
           .game-statistic {
             grid-area: stats;
+          }
+
+          .desktop-titles,
+          .desktop-row {
+            display: flex;
+          }
+
+          .mobile-titles,
+          .mobile-row {
+            display: none;
           }
         }
       `}</style>

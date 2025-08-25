@@ -4,6 +4,7 @@ import { useState } from "react"
 import GameModeTabs from "./game-mode-tabs"
 import GameHistory from "./game-history"
 import BetAmountInput from "./bet-amount-input"
+import MobileBetAmount from "./mobile-bet-amount"
 import MinesSelector from "./mines-selector"
 import StartGameButton from "./start-game-button"
 import StartAutoplayButton from "./start-autoplay-button"
@@ -78,9 +79,9 @@ export default function GameContainer() {
             </div>
           )}
           
-          {/* Bet Amount */}
+          {/* Mobile Bet Amount with integrated controls */}
           <div className="mobile-bet-amount">
-            <BetAmountInput />
+            <MobileBetAmount />
           </div>
           
           {/* Mines Selector */}
