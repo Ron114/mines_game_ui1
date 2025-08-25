@@ -143,20 +143,32 @@ export default function GameContainer() {
           margin: 0 10px;
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 0;
         }
 
         .mobile-start-button,
-        .mobile-start-autoplay,
-        .mobile-bet-amount,
-        .mobile-mines,
-        .mobile-game-details,
+        .mobile-start-autoplay {
+          margin: 0 0 16px 0;
+        }
+
+        .mobile-bet-amount {
+          margin: 0 0 16px 0;
+        }
+
+        .mobile-mines {
+          margin: 0 0 8px 0;
+        }
+
+        .mobile-game-details {
+          margin: 8px 0 0 0;
+        }
+
         .mobile-auto-section {
           margin: 0;
         }
 
         .mobile-stats {
-          margin: 8px 10px 0 10px;
+          margin: 16px 10px 0 10px;
         }
 
         /* Desktop styles - applied when screen is wide enough */

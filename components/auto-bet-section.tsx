@@ -135,6 +135,23 @@ export default function AutoBetSection() {
           margin-bottom: 20px;
         }
 
+        /* Mobile auto tab border */
+        .game-autobet::before {
+          content: "";
+          display: none;
+          background-color: rgba(128, 128, 128, .3);
+          border-radius: 2px;
+          height: 1px;
+          margin-bottom: 15px;
+          box-shadow: 0 -1px 1px rgba(83, 89, 102, .3);
+        }
+
+        @media (max-width: 819px) {
+          .game-autobet::before {
+            display: block;
+          }
+        }
+
         /* Mobile responsive styles */
         @media (max-width: 819px) {
           .game-autobet {
@@ -356,7 +373,7 @@ export default function AutoBetSection() {
         }
 
         .settings-input__wrapper label + .input-button + .input-button + .games-input__wrapper .games-input__number {
-          padding-left: 190px;
+          padding-left: 180px;
           // padding-right: 5px;
         }
 
@@ -383,6 +400,28 @@ export default function AutoBetSection() {
           margin-right: .9375rem;
           padding: .0625rem;
           position: relative;
+          cursor: pointer;
+          z-index: 10;
+        }
+
+        /* Mobile touch fix */
+        @media (max-width: 819px) {
+          .switcher {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            pointer-events: auto;
+          }
+
+          .switcher__input {
+            z-index: 20;
+            position: relative;
+            pointer-events: auto;
+          }
+
+          .switcher__label {
+            pointer-events: auto;
+            z-index: 15;
+          }
         }
 
         .switcher__inner {
@@ -426,6 +465,19 @@ export default function AutoBetSection() {
           width: 0;
           height: 0;
           display: none;
+        }
+
+        /* Mobile input visibility fix */
+        @media (max-width: 819px) {
+          .switcher__input {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: 25;
+            cursor: pointer;
+          }
         }
 
         .switcher__label {

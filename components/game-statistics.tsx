@@ -200,6 +200,13 @@ export default function GameStatistics() {
           box-shadow: 0 -1px 1px rgba(83, 89, 102, .6);
         }
 
+        /* Hide border on mobile for manual tab */
+        @media (max-width: 819px) {
+          .border {
+            display: none;
+          }
+        }
+
         .tabs {
           margin-bottom: 20px;
           display: flex;
