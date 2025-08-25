@@ -1,16 +1,86 @@
 "use client"
 
+import { useGame } from '../contexts/GameContext'
+import Image from 'next/image'
+
 export default function GameGrid() {
+  const { gameState, tileStates, setTileState } = useGame()
+  
   // Create 25 tiles for 5x5 grid
   const tiles = Array.from({ length: 25 }, (_, index) => index)
+
+  // Predefined results: first tile diamond, second tile bomb
+  const predefinedResults = {
+    0: 'diamond',
+    1: 'bomb'
+  } as const
+
+  const handleTileClick = (tileIndex: number) => {
+    // Only allow clicks when game is active and tile hasn't been clicked
+    if (gameState !== 'active' || tileStates[tileIndex]) return
+
+    const result = predefinedResults[tileIndex as keyof typeof predefinedResults] || 'bomb'
+    setTileState(tileIndex, result)
+  }
+
+  const getTileClass = (tileIndex: number) => {
+    const state = tileStates[tileIndex]
+    let classes = 'game-tile'
+    
+    if (state === 'diamond') {
+      classes += ' _active _win'
+    } else if (state === 'bomb') {
+      classes += ' _active _lose'
+    }
+    
+    return classes
+  }
+
+  const renderTileContent = (tileIndex: number) => {
+    const state = tileStates[tileIndex]
+    
+    if (state === 'diamond') {
+      return (
+        <div className="tile-content">
+          <Image 
+            src="/assets/diamond.svg" 
+            alt="Diamond" 
+            width={50} 
+            height={50}
+            style={{ filter: 'drop-shadow(0 0 10px rgba(92, 217, 245, 0.6))' }}
+          />
+        </div>
+      )
+    } else if (state === 'bomb') {
+      return (
+        <div className="tile-content">
+          <Image 
+            src="/assets/bomb.svg" 
+            alt="Bomb" 
+            width={45} 
+            height={45}
+            style={{ filter: 'drop-shadow(0 0 10px rgba(255, 68, 68, 0.6))' }}
+          />
+        </div>
+      )
+    }
+    
+    return null
+  }
 
   return (
     <div className="table-holder">
       <div className="game-tiles">
         {tiles.map((tileIndex) => (
-          <div key={tileIndex} className="game-tile">
+          <div 
+            key={tileIndex} 
+            className={getTileClass(tileIndex)}
+            onClick={() => handleTileClick(tileIndex)}
+          >
             <div className="game-tile__inner-possible-win"></div>
-            <div className="game-tile__inner"></div>
+            <div className="game-tile__inner">
+              {renderTileContent(tileIndex)}
+            </div>
           </div>
         ))}
       </div>
@@ -87,6 +157,56 @@ export default function GameGrid() {
 
         .game-tile:hover .game-tile__inner-possible-win {
           opacity: 1;
+        }
+
+        /* Active tile states */
+        .game-tile._active {
+          box-shadow: none;
+        }
+
+        .game-tile._active .game-tile__inner {
+          opacity: 1;
+          background-image: linear-gradient(317.11deg, #0a0b0d -17.46%, #32383e 197.04%);
+          border-radius: 12px;
+          width: calc(100% - 2px);
+          height: calc(100% - 2px);
+          box-shadow: inset -2px -2px 6px rgba(76, 79, 81, .26), inset 4px 4px 3px rgba(10, 9, 9, .49);
+        }
+
+        .game-tile._win {
+          background-image: radial-gradient(33.95% 33.95% at -8.16% 104.08%, rgba(148, 226, 251, .37) 5.7%, rgba(33, 38, 42, 0) 100%), radial-gradient(33.68% 33.68% at 113.68% 107.89%, rgba(148, 226, 251, .37) 0%, rgba(33, 38, 42, 0) 100%), radial-gradient(62.12% 48.25% at 49.48% -8.25%, #5cd9f5 0%, rgba(38, 42, 46, 0) 100%), linear-gradient(129.86deg, #242526 -1.52%, rgba(29, 33, 36, .21) 107.51%);
+        }
+
+        .game-tile._lose {
+          background-image: radial-gradient(33.95% 33.95% at -8.16% 104.08%, rgba(255, 82, 92, .4) 5.7%, rgba(42, 33, 33, 0) 100%), radial-gradient(33.68% 33.68% at 113.68% 107.89%, rgba(255, 82, 92, .4) 0%, rgba(42, 33, 33, 0) 100%), radial-gradient(62.12% 48.25% at 49.48% -8.25%, #f55c5c 0%, rgba(46, 38, 38, 0) 100%), linear-gradient(129.86deg, #242526 -1.52%, rgba(36, 29, 29, .21) 107.51%);
+        }
+
+        .game-tile._win .game-tile__inner-possible-win,
+        .game-tile._lose .game-tile__inner-possible-win {
+          display: none;
+        }
+
+        .game-tile._win:after,
+        .game-tile._lose:after {
+          content: "";
+          background-position: 0;
+          background-repeat: no-repeat;
+          border-radius: 13px;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+        }
+
+        .tile-content {
+          z-index: 2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+          position: relative;
         }
       `}</style>
     </div>
