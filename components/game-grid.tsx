@@ -35,7 +35,7 @@ export default function GameGrid() {
           newSet.delete(tileIndex)
           return newSet
         })
-      }, 800) // Animation duration
+      }, 400) // Reduced timing for faster transition
     } else {
       setTileState(tileIndex, result)
     }
