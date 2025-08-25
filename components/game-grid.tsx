@@ -18,8 +18,8 @@ export default function GameGrid() {
   } as const
 
   const handleTileClick = (tileIndex: number) => {
-    // Only allow clicks when game is active and tile hasn't been clicked
-    if (gameState !== 'active' || tileStates[tileIndex]) return
+    // Only allow clicks when game is active or cashout and tile hasn't been clicked
+    if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex]) return
 
     const result = predefinedResults[tileIndex as keyof typeof predefinedResults] || 'bomb'
     

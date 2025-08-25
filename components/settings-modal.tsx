@@ -26,10 +26,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       
       {/* Modal positioned below settings icon */}
       <div 
-        className="absolute z-10"
+        className="absolute z-10 settings-modal"
         style={{
-          top: "170px", // Position below the header
-          right: "300px", // Align with settings icon
           width: "280px", // 30% smaller than max-w-md (384px)
           background: "linear-gradient(135deg, #1a1e22 0%, #12151a 50%, #0a0c0f 100%)",
           borderRadius: "12px",
@@ -135,6 +133,29 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         isOpen={isRulesOpen} 
         onClose={() => setIsRulesOpen(false)} 
       />
+
+      {/* Responsive positioning styles */}
+      <style jsx>{`
+        .settings-modal {
+          top: 60px;
+          right: 20px;
+        }
+
+        @media (min-width: 1200px) {
+          .settings-modal {
+            top: 145px;
+            right: calc((98vw - 880px) / 2 + 20px);
+          }
+        }
+
+        @media (max-width: 920px) {
+          .settings-modal {
+            top: 60px;
+            right: 20px;
+            left: auto;
+          }
+        }
+      `}</style>
     </div>
   )
 }
