@@ -49,6 +49,17 @@ export default function GameDetails() {
           margin-top: 20px;
         }
 
+        .game-details:before {
+          content: "";
+          background: rgba(196, 196, 196, .06);
+          width: 300px;
+          height: 300px;
+          position: absolute;
+          top: -148px;
+          left: -182px;
+          transform: rotate(40deg);
+        }
+
         .game-details__inner {
           height: 100%;
         }
