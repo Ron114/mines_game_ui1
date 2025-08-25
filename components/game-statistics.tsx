@@ -565,6 +565,19 @@ export default function GameStatistics() {
             justify-content: flex-start;
             padding-left: 20px;
           }
+
+          /* Desktop cell colors - match mobile grey styling */
+          .desktop-row .cell {
+            color: rgba(255, 255, 255, .5);
+            font-size: 12px;
+          }
+
+          .desktop-row .cell.amount,
+          .desktop-row .cell.multiplier,
+          .desktop-row .cell.payout {
+            color: rgba(255, 255, 255, .5);
+            font-weight: inherit;
+          }
         }
       `}</style>
     </div>
