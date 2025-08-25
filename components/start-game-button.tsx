@@ -51,7 +51,7 @@ export default function StartGameButton() {
 
         .btn-new._placebet ._bg11 {
           background-image: radial-gradient(50% 91.38% at 50% 0, rgba(82, 195, 243, .19) .01%, rgba(18, 194, 250, .54) .02%, rgba(40, 45, 49, .18) 100%), linear-gradient(315.81deg, #17191c -42.75%, #32383e 123.05%);
-          opacity: 0;
+          opacity: 0.3;
           transition: opacity 0.3s ease;
         }
 
@@ -137,8 +137,10 @@ export default function StartGameButton() {
           z-index: 2;
           width: 24px;
           height: 3px;
-          margin: 5px auto 0;
-          position: relative;
+          position: absolute;
+          bottom: 5px;
+          left: 50%;
+          transform: translateX(-50%);
         }
 
         .btn-new__inner .indicator._placebet:before {
