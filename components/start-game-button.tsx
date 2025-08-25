@@ -182,6 +182,7 @@ export default function StartGameButton() {
 
         .btn-new__text {
           display: flex;
+          flex-direction: column;
           justify-content: center;
           align-items: center;
           height: 100%;
@@ -284,15 +285,19 @@ export default function StartGameButton() {
           background-image: linear-gradient(132.19deg, #c8d5e1 -160.75%, transparent 169.75%);
         }
 
+        .btn-new__text ._small {
+          margin-top: -5px;
+        }
+
         ._small {
-          font-size: 12px;
-          margin-top: 2px;
+          color: #d6e1ef;
+          font-size: 10px;
+          font-weight: 400;
         }
 
         ._roboto {
           font-family: 'Roboto', sans-serif;
-          color: #fff;
-          font-weight: 600;
+          color: inherit;
         }
       `}</style>
     </div>

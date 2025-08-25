@@ -2,9 +2,11 @@
 
 import { useGame } from '../contexts/GameContext'
 import Image from 'next/image'
+import { useState } from 'react'
 
 export default function GameGrid() {
   const { gameState, tileStates, setTileState } = useGame()
+  const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   
   // Create 25 tiles for 5x5 grid
   const tiles = Array.from({ length: 25 }, (_, index) => index)
@@ -20,14 +22,33 @@ export default function GameGrid() {
     if (gameState !== 'active' || tileStates[tileIndex]) return
 
     const result = predefinedResults[tileIndex as keyof typeof predefinedResults] || 'bomb'
-    setTileState(tileIndex, result)
+    
+    if (result === 'bomb') {
+      // Start explosion animation
+      setAnimatingTiles(prev => new Set(prev).add(tileIndex))
+      
+      // After explosion animation, show the bomb
+      setTimeout(() => {
+        setTileState(tileIndex, result)
+        setAnimatingTiles(prev => {
+          const newSet = new Set(prev)
+          newSet.delete(tileIndex)
+          return newSet
+        })
+      }, 800) // Animation duration
+    } else {
+      setTileState(tileIndex, result)
+    }
   }
 
   const getTileClass = (tileIndex: number) => {
     const state = tileStates[tileIndex]
+    const isAnimating = animatingTiles.has(tileIndex)
     let classes = 'game-tile'
     
-    if (state === 'diamond') {
+    if (isAnimating) {
+      classes += ' _active _exploding'
+    } else if (state === 'diamond') {
       classes += ' _active _win'
     } else if (state === 'bomb') {
       classes += ' _active _lose'
@@ -38,8 +59,21 @@ export default function GameGrid() {
 
   const renderTileContent = (tileIndex: number) => {
     const state = tileStates[tileIndex]
+    const isAnimating = animatingTiles.has(tileIndex)
     
-    if (state === 'diamond') {
+    if (isAnimating) {
+      return (
+        <div className="tile-content explosion-container">
+          <Image 
+            src="/assets/explosion.svg" 
+            alt="Explosion" 
+            width={60} 
+            height={60}
+            className="explosion-animation"
+          />
+        </div>
+      )
+    } else if (state === 'diamond') {
       return (
         <div className="tile-content">
           <Image 
@@ -207,6 +241,40 @@ export default function GameGrid() {
           width: 100%;
           height: 100%;
           position: relative;
+        }
+
+        /* Explosion animation styles */
+        .game-tile._exploding {
+          background-image: radial-gradient(33.95% 33.95% at -8.16% 104.08%, rgba(255, 140, 0, .6) 5.7%, rgba(42, 33, 33, 0) 100%), radial-gradient(33.68% 33.68% at 113.68% 107.89%, rgba(255, 69, 0, .6) 0%, rgba(42, 33, 33, 0) 100%), radial-gradient(62.12% 48.25% at 49.48% -8.25%, #ff4500 0%, rgba(46, 38, 38, 0) 100%), linear-gradient(129.86deg, #242526 -1.52%, rgba(36, 29, 29, .21) 107.51%);
+          box-shadow: 0 0 20px rgba(255, 69, 0, 0.8), 0 0 40px rgba(255, 140, 0, 0.4);
+        }
+
+        .explosion-container {
+          animation: explosionPulse 0.8s ease-in-out;
+        }
+
+        .explosion-animation {
+          animation: explosionScale 0.8s ease-in-out, explosionRotate 0.8s linear;
+          filter: drop-shadow(0 0 15px rgba(255, 140, 0, 0.8)) drop-shadow(0 0 25px rgba(255, 69, 0, 0.6));
+        }
+
+        @keyframes explosionPulse {
+          0% { transform: scale(1); opacity: 0; }
+          20% { transform: scale(1.1); opacity: 1; }
+          60% { transform: scale(1.3); opacity: 0.8; }
+          100% { transform: scale(1); opacity: 0.9; }
+        }
+
+        @keyframes explosionScale {
+          0% { transform: scale(0.3); }
+          30% { transform: scale(1.2); }
+          60% { transform: scale(1.1); }
+          100% { transform: scale(1); }
+        }
+
+        @keyframes explosionRotate {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(15deg); }
         }
       `}</style>
     </div>

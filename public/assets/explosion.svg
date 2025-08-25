@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <!-- Fire flames -->
+  <path d="M32 8C28 12 26 18 28 24C30 20 34 18 36 22C38 16 42 14 44 20C46 12 50 10 52 18C54 8 58 6 60 16C58 4 54 2 48 8C44 4 40 6 36 10C34 6 30 4 26 8C24 4 20 6 18 12C16 8 12 10 14 16C12 6 16 4 20 8C18 2 14 0 8 6C12 0 18 2 24 6C26 2 30 0 32 8Z" fill="url(#fireGradient1)"/>
+  
+  <path d="M32 12C30 16 28 22 30 28C32 24 36 22 38 26C40 20 44 18 46 24C48 16 52 14 54 22C56 12 60 10 62 20C60 8 56 6 50 12C46 8 42 10 38 14C36 10 32 8 28 12C26 8 22 10 20 16C18 12 14 14 16 20C14 10 18 8 22 12C20 6 16 4 10 10C14 4 20 6 26 10C28 6 32 4 32 12Z" fill="url(#fireGradient2)" opacity="0.8"/>
+  
+  <!-- Inner bright core -->
+  <circle cx="32" cy="35" r="8" fill="url(#coreGradient)"/>
+  
+  <defs>
+    <radialGradient id="fireGradient1" cx="0" cy="0" r="1" gradientTransform="translate(32 25) scale(30)">
+      <stop offset="0%" stop-color="#FFFF00"/>
+      <stop offset="30%" stop-color="#FF8C00"/>
+      <stop offset="70%" stop-color="#FF4500"/>
+      <stop offset="100%" stop-color="#DC143C"/>
+    </radialGradient>
+    
+    <radialGradient id="fireGradient2" cx="0" cy="0" r="1" gradientTransform="translate(32 28) scale(25)">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="40%" stop-color="#FFFF00"/>
+      <stop offset="80%" stop-color="#FF6600"/>
+      <stop offset="100%" stop-color="#FF0000"/>
+    </radialGradient>
+    
+    <radialGradient id="coreGradient" cx="0" cy="0" r="1" gradientTransform="translate(32 35) scale(8)">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="50%" stop-color="#FFFF00"/>
+      <stop offset="100%" stop-color="#FF8C00"/>
+    </radialGradient>
+  </defs>
+</svg>

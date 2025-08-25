@@ -28,8 +28,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       <div 
         className="absolute z-10"
         style={{
-          top: "140px", // Position below the header
-          right: "150px", // Align with settings icon
+          top: "170px", // Position below the header
+          right: "300px", // Align with settings icon
           width: "280px", // 30% smaller than max-w-md (384px)
           background: "linear-gradient(135deg, #1a1e22 0%, #12151a 50%, #0a0c0f 100%)",
           borderRadius: "12px",
