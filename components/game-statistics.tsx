@@ -535,6 +535,36 @@ export default function GameStatistics() {
           .mobile-row {
             display: none;
           }
+
+          /* Desktop column alignment fix */
+          .desktop-titles .titles__item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+          }
+
+          .desktop-titles .titles__item:first-child {
+            justify-content: flex-start;
+            padding-left: 20px;
+          }
+
+          .desktop-row {
+            display: flex;
+            width: 100%;
+          }
+
+          .desktop-row .cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+          }
+
+          .desktop-row .cell:first-child {
+            justify-content: flex-start;
+            padding-left: 20px;
+          }
         }
       `}</style>
     </div>
