@@ -143,7 +143,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
         @media (min-width: 1200px) {
           .settings-modal {
-            top: 145px;
+            top: 155px;
             right: calc((98vw - 880px) / 2 + 20px);
           }
         }
