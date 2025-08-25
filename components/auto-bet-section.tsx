@@ -201,14 +201,6 @@ export default function AutoBetSection() {
             font-size: 10px;
           }
 
-          .settings-input__wrapper label + .input-button {
-            left: 104px;
-          }
-
-          .settings-input__wrapper label + .input-button + .input-button {
-            left: 178px;
-          }
-
           .switcher {
             height: 1.5rem;
             margin-right: 0.75rem;
@@ -269,12 +261,24 @@ export default function AutoBetSection() {
           top: 4px;
         }
 
+        /* Desktop button positioning (original values) */
         .settings-input__wrapper label + .input-button {
-          left: 104px;
+          left: 124px;
         }
 
         .settings-input__wrapper label + .input-button + .input-button {
-          left: 188px;
+          left: 205px;
+        }
+
+        /* Mobile button positioning */
+        @media (max-width: 819px) {
+          .settings-input__wrapper label + .input-button {
+            left: 104px;
+          }
+
+          .settings-input__wrapper label + .input-button + .input-button {
+            left: 178px;
+          }
         }
 
         .input-button {
@@ -372,9 +376,16 @@ export default function AutoBetSection() {
           -moz-appearance: textfield;
         }
 
+        /* Desktop input padding */
         .settings-input__wrapper label + .input-button + .input-button + .games-input__wrapper .games-input__number {
-          padding-left: 180px;
-          // padding-right: 5px;
+          padding-left: 190px;
+        }
+
+        /* Mobile input padding */
+        @media (max-width: 819px) {
+          .settings-input__wrapper label + .input-button + .input-button + .games-input__wrapper .games-input__number {
+            padding-left: 170px;
+          }
         }
 
         .indicator__infinity,
