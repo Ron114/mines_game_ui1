@@ -253,11 +253,11 @@ export default function AutoBetSection() {
         }
 
         .settings-input__wrapper label + .input-button {
-          left: 124px;
+          left: 104px;
         }
 
         .settings-input__wrapper label + .input-button + .input-button {
-          left: 205px;
+          left: 188px;
         }
 
         .input-button {
@@ -356,7 +356,7 @@ export default function AutoBetSection() {
         }
 
         .settings-input__wrapper label + .input-button + .input-button + .games-input__wrapper .games-input__number {
-          padding-left: 170px;
+          padding-left: 190px;
           // padding-right: 5px;
         }
 
