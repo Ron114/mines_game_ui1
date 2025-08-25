@@ -95,6 +95,21 @@ export default function GameModeTabs({ onModeChange }: GameModeTabsProps) {
           padding: 2px;
           position: relative;
         }
+
+        .mode-btn__indicator::after {
+          content: "";
+          background-color: #292c2f;
+          border-radius: 3px;
+          width: 6px;
+          height: 6px;
+          position: absolute;
+          top: 1px;
+          left: 1px;
+        }
+
+        .mode-btn.active .mode-btn__indicator::after {
+          background-image: radial-gradient(circle at 88% 115%, #81df49, #8de15e 70%);
+        }
       `}</style>
     </div>
   )

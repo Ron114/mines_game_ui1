@@ -115,7 +115,7 @@ export default function AutoBetSection() {
         <label htmlFor="on_any_win">Stop at any Win</label>
         
         <div className="switcher">
-          <div className="switcher__inner">
+          <div className={`switcher__inner ${stopAtAnyWin ? 'active' : ''}`}>
             <input 
               type="checkbox" 
               id="on_any_win" 
@@ -207,14 +207,12 @@ export default function AutoBetSection() {
         .input-button {
           cursor: pointer;
           background-image: linear-gradient(135deg, #282c31 0%, #1e2125 100%);
-          border: 1px solid transparent;
           border-radius: 8px;
           justify-content: center;
           align-items: center;
           height: 44px;
           display: flex;
           box-shadow: 3px 3px 4px rgba(10, 9, 9, .4);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .input-button._md {
@@ -222,10 +220,8 @@ export default function AutoBetSection() {
         }
 
         .input-button.active {
-          background-image: linear-gradient(135deg, #3a3f45 0%, #2a2f34 100%);
-          border: 1px solid #4a5058;
-          transform: translateY(-1px);
-          box-shadow: 3px 4px 6px rgba(10, 9, 9, .5);
+          background-image: linear-gradient(135deg, #191b1e 0%, #25292e 100%);
+          box-shadow: inset 3px 4px 10px rgba(7, 7, 9, .85);
         }
 
         .input-button.active .input-button__text {
@@ -366,7 +362,7 @@ export default function AutoBetSection() {
           transition: all .3s linear;
         }
 
-        .switcher__input:checked ~ .switcher__inner:after {
+        .switcher__inner.active:after {
           background-image: radial-gradient(circle at 88% 115%, #81df49, #8de15e 70%);
         }
 
