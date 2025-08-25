@@ -132,13 +132,37 @@ export default function GameGrid() {
         }
 
         .game-tiles {
-          grid-gap: 10px;
+          grid-gap: 6px;
           grid-template-rows: repeat(5, 1fr);
           grid-template-columns: repeat(5, 1fr);
-          padding-bottom: 30px;
+          padding-bottom: 15px;
           display: grid;
-          max-width: 405px;
+          max-width: 100%;
           margin: 0 auto;
+        }
+
+        /* Mobile responsive styles */
+        @media (max-width: 819px) {
+          .table-holder {
+            margin-top: 0;
+            padding: 0;
+          }
+
+          .game-tiles {
+            grid-gap: 4px;
+            padding-bottom: 10px;
+            max-width: calc(100vw - 20px);
+            width: 100%;
+          }
+        }
+
+        /* Desktop styles */
+        @media (min-width: 820px) {
+          .game-tiles {
+            grid-gap: 10px;
+            padding-bottom: 30px;
+            max-width: 405px;
+          }
         }
 
         .game-tile {
@@ -155,6 +179,22 @@ export default function GameGrid() {
           box-shadow: 3px 3px 4px rgba(10, 9, 9, 0.4);
           cursor: pointer;
           transition: transform 0.1s ease;
+        }
+
+        /* Mobile responsive tile styles */
+        @media (max-width: 819px) {
+          .game-tile {
+            border-radius: 8px;
+            font-size: 20px;
+            line-height: 40px;
+            box-shadow: 2px 2px 3px rgba(10, 9, 9, 0.4);
+          }
+
+          .game-tile__inner-possible-win {
+            font-size: 10px;
+            font-weight: 500;
+            line-height: 14px;
+          }
         }
 
         .game-tile:hover {

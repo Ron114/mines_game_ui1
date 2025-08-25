@@ -89,6 +89,27 @@ export default function GameHistory() {
           transition: all 0.2s ease;
         }
 
+        /* Mobile responsive styles */
+        @media (max-width: 819px) {
+          .game-history {
+            height: 36px;
+            border-radius: 4px;
+          }
+
+          .game-history__inner-container {
+            border-radius: 4px;
+          }
+
+          .game-history__item {
+            font-size: 9px;
+          }
+
+          .game-history__item-text {
+            font-size: 9px;
+            border-radius: 3px;
+          }
+        }
+
         @media (min-width: 820px) {
           .game-history {
             grid-area: history;

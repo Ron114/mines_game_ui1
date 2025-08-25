@@ -2,15 +2,13 @@
 
 import { useGame } from '../contexts/GameContext'
 
-export default function StartGameButton() {
-  const { gameState, setGameState, winAmount, resetGame } = useGame()
+export default function StartAutoplayButton() {
+  const { gameState, setGameState, resetGame } = useGame()
 
   const handleButtonClick = () => {
     if (gameState === 'idle') {
       setGameState('active')
     } else if (gameState === 'active') {
-      resetGame()
-    } else if (gameState === 'cashout') {
       resetGame()
     }
   }
@@ -18,11 +16,9 @@ export default function StartGameButton() {
   const getButtonText = () => {
     switch (gameState) {
       case 'active':
-        return 'Cancel'
-      case 'cashout':
-        return 'Cash Out'
+        return 'Stop Autoplay'
       default:
-        return 'Start Game'
+        return 'Start Autoplay'
     }
   }
 
@@ -30,8 +26,6 @@ export default function StartGameButton() {
     switch (gameState) {
       case 'active':
         return '_cancel'
-      case 'cashout':
-        return '_cashout'
       default:
         return '_placebet'
     }
@@ -41,8 +35,6 @@ export default function StartGameButton() {
     switch (gameState) {
       case 'active':
         return '_cancel'
-      case 'cashout':
-        return '_cashout'
       default:
         return '_placebet'
     }
@@ -61,16 +53,7 @@ export default function StartGameButton() {
             <div className="btn-bg _bg11"></div>
             
             <div className="btn-new__text">
-              {gameState === 'cashout' ? (
-                <>
-                  <div className="text">Cash Out</div>
-                  <div className="_small">
-                    <span className="_roboto">${winAmount.toFixed(2)}</span>
-                  </div>
-                </>
-              ) : (
-                <div className="text">{getButtonText()}</div>
-              )}
+              <div className="text">{getButtonText()}</div>
             </div>
             
             <div className={`indicator ${getIndicatorClass()}`}></div>
@@ -272,47 +255,6 @@ export default function StartGameButton() {
 
         .btn-new__inner .indicator._cancel:after {
           background-image: linear-gradient(262deg, #f9718e 100%, #f64444 0%), linear-gradient(90deg, rgba(179, 179, 179, .45) -90%, rgba(0, 0, 0, .85) 141%);
-        }
-
-        /* Cash out button styles */
-        .btn-new._cashout ._bg1,
-        .btn-new._cashout ._bg11 {
-          background-image: radial-gradient(48.81% 101.72% at 50% -10.34%, rgba(244, 157, 76, .243) 0%, rgba(255, 125, 5, .19) .01%, rgba(225, 155, 90, 0) 100%), linear-gradient(315.81deg, #17191c -42.75%, #32383e 123.05%);
-          opacity: 1;
-        }
-
-        .btn-new._cashout ._bg2,
-        .btn-new._cashout ._bg22 {
-          background-image: radial-gradient(155.77% 155.77% at 0 125%, #ff9838 0%, rgba(27, 21, 15, 0) 100%), linear-gradient(94.46deg, rgba(225, 215, 200, .21) 45.13%, transparent 123.58%), linear-gradient(315.81deg, #17191c -42.75%, #32383e 123.05%);
-          opacity: 1;
-        }
-
-        .btn-new._cashout .btn-new__inner {
-          border-color: rgba(255, 152, 56, 0.5);
-        }
-
-        .btn-new__inner .indicator._cashout:before {
-          background: linear-gradient(136.14deg, #ee9644 -.24%, #f9e1b2 91.03%);
-          box-shadow: 4px 10px 32px rgba(63, 208, 164, .4), -6px -6px 16px rgba(0, 0, 0, .6);
-        }
-
-        .btn-new__inner .indicator._cashout:after {
-          background-image: linear-gradient(132.19deg, #c8d5e1 -160.75%, transparent 169.75%);
-        }
-
-        .btn-new__text ._small {
-          margin-top: -5px;
-        }
-
-        ._small {
-          color: #d6e1ef;
-          font-size: 10px;
-          font-weight: 400;
-        }
-
-        ._roboto {
-          font-family: 'Roboto', sans-serif;
-          color: inherit;
         }
       `}</style>
     </div>

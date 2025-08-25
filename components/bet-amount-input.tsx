@@ -67,6 +67,36 @@ export default function BetAmountInput() {
           margin-bottom: 20px;
         }
 
+        /* Mobile responsive styles */
+        @media (max-width: 819px) {
+          .input-text__wrapper {
+            margin-bottom: 0;
+          }
+
+          .games-input__wrapper {
+            height: 48px;
+            margin-bottom: 8px;
+          }
+
+          .games-input__wrapper label {
+            font-size: 10px;
+            top: 10px;
+          }
+
+          .games-input__number {
+            font-size: 13px;
+            padding: 26px 16px 8px 16px;
+          }
+
+          .button {
+            height: 22px;
+          }
+
+          .button__text {
+            font-size: 10px;
+          }
+        }
+
         .games-input__wrapper {
           background: linear-gradient(98deg, rgba(200, 213, 225, .25) 0%, transparent 100%);
           border-radius: 11px;

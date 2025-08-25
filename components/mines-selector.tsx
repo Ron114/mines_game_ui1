@@ -92,6 +92,37 @@ export default function MinesSelector() {
           display: flex;
         }
 
+        /* Mobile responsive styles */
+        @media (max-width: 819px) {
+          .settings-input__wrapper._mines {
+            margin-bottom: 0;
+            height: 42px;
+          }
+
+          .settings-input__wrapper._mines .button {
+            height: 40px;
+            top: 2px;
+          }
+
+          .settings-input__wrapper._mines .games-input__wrapper {
+            height: 42px;
+          }
+
+          .settings-input__wrapper._mines .games-input__wrapper label {
+            font-size: 9px;
+            top: 8px;
+          }
+
+          .settings-input__wrapper._mines .games-input__wrapper input {
+            font-size: 15px;
+            padding-top: 22px;
+          }
+
+          .button__text {
+            font-size: 10px;
+          }
+        }
+
         .settings-input__wrapper-inner {
           background-image: linear-gradient(315deg, #16191d 0%, #252a2e 100%);
           border-radius: 10px;

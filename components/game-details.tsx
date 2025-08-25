@@ -49,6 +49,31 @@ export default function GameDetails() {
           margin-top: 10px;
         }
 
+        /* Mobile responsive styles */
+        @media (max-width: 819px) {
+          .game-details {
+            margin-top: 0;
+            font-size: 10px;
+          }
+
+          .game-details__title {
+            height: 35px;
+            margin-bottom: 12px;
+            font-size: 11px;
+          }
+
+          .game-details__row {
+            margin-bottom: 14px;
+            padding: 0 10px;
+          }
+
+          .game-details__row-icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 12px;
+          }
+        }
+
         .game-details:before {
           content: "";
           background: rgba(196, 196, 196, .06);

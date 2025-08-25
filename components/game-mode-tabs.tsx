@@ -35,6 +35,34 @@ export default function GameModeTabs({ onModeChange }: GameModeTabsProps) {
           display: flex;
         }
 
+        /* Mobile responsive styles */
+        @media (max-width: 819px) {
+          .game-mode-tabs {
+            margin: 0 0 8px 0;
+          }
+
+          .mode-btn {
+            height: 36px;
+            font-size: 12px;
+          }
+
+          .mode-btn__text {
+            font-size: 12px;
+            margin-right: 4px;
+          }
+
+          .mode-btn__indicator {
+            width: 7px;
+            height: 7px;
+            padding: 1.5px;
+          }
+
+          .mode-btn__indicator::after {
+            width: 5px;
+            height: 5px;
+          }
+        }
+
         @media (min-width: 820px) {
           .game-mode-tabs {
             margin-top: 0;
