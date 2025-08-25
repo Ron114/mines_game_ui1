@@ -15,57 +15,82 @@ export default function GameContainer() {
   const [gameMode, setGameMode] = useState<"manual" | "auto">("manual")
   return (
     <div className="game-container mt-2">
-      <div className="game-container__content">
-        <div className="game-container__left">
-          <GameModeTabs onModeChange={setGameMode} />
-          <BetAmountInput />
-          <MinesSelector />
-          {gameMode === "manual" ? (
-            <>
-              <StartGameButton />
-              <GameDetails />
-            </>
-          ) : (
-            <AutoBetSection />
-          )}
-        </div>
-        <div className="game-container__right">
-          <GameHistory />
-          <GameGrid />
-        </div>
+      <div className="mode-tabs">
+        <GameModeTabs onModeChange={setGameMode} />
       </div>
-
-      <GameStatistics />
+      
+      <div className="history">
+        <GameHistory />
+      </div>
+      
+      <div className="betslip">
+        <BetAmountInput />
+        <MinesSelector />
+        {gameMode === "manual" ? (
+          <>
+            <StartGameButton />
+            <GameDetails />
+          </>
+        ) : (
+          <AutoBetSection />
+        )}
+      </div>
+      
+      <div className="chart">
+        <GameGrid />
+      </div>
+      
+      <div className="stats">
+        <GameStatistics />
+      </div>
 
       <style jsx>{`
         .game-container {
-          display: flex;
-          flex-direction: column;
-          flex: 1;
-          padding: 0 20px 20px 20px;
+          padding: 0 10px 10px;
+          padding-bottom: calc(20px + var(--safe-area-inset-bottom));
+          position: relative;
         }
 
-        .game-container__content {
-          display: flex;
-          flex-direction: row;
-          gap: 15px;
-          margin-bottom: 20px;
+        @media (min-width: 820px) {
+          .game-container {
+            grid-gap: 0;
+            width: 100%;
+            max-width: 880px;
+            margin: 0 auto;
+            display: grid;
+            grid-template:
+              "modeTabs history" min-content
+              "betslip chart" min-content
+              "betslip range" max-content
+              "stats stats" 1fr / 360px 1fr;
+          }
         }
 
-        .game-container__left {
-          display: flex;
-          flex-direction: column;
-          flex: 0 0 40%;
+        .mode-tabs {
+          grid-area: modeTabs;
         }
 
-        .game-container__right {
+        .history {
+          grid-area: history;
+        }
+
+        .betslip {
+          grid-area: betslip;
           display: flex;
           flex-direction: column;
-          flex: 0 0 60%;
+        }
+
+        .chart {
+          grid-area: chart;
+        }
+
+        .stats {
+          grid-area: stats;
         }
 
         @media (max-width: 819px) {
-          .game-container__content {
+          .game-container {
+            display: flex;
             flex-direction: column;
             gap: 10px;
           }

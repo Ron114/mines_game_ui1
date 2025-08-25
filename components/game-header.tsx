@@ -7,7 +7,7 @@ import SettingsModal from "./settings-modal"
 export default function GameHeader() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   return (
-    <div className="flex items-center relative px-2 text-white/50 pt-2">
+    <div className="flex items-center relative px-2 text-white/50 pt-2" style={{ maxWidth: '880px', margin: '0 auto', width: '100%' }}>
       {/* Left side - Back button and Logo */}
       <div className="flex items-center">
         <button
@@ -24,7 +24,7 @@ export default function GameHeader() {
           <img
             src="/assets/minesgamelogo.svg"
             alt="Mines Game Logo"
-            className="w-[155px] h-[40px]"
+            className="w-[120px] h-[45px]"
             style={{
               backgroundRepeat: "no-repeat",
               backgroundSize: "contain",

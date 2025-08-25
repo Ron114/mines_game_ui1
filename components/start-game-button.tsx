@@ -105,12 +105,17 @@ export default function StartGameButton() {
           -webkit-backface-visibility: hidden;
           -moz-backface-visibility: hidden;
           background-image: linear-gradient(320.64deg, #17191c -42.09%, #32383e 167.71%);
+          border: 1px solid rgba(68, 197, 238, 0.3);
           border-radius: 7px;
           height: 100%;
           position: relative;
           overflow: hidden;
           -webkit-transform: translate(0, 0);
           -moz-transform: translate(0,0);
+        }
+
+        .btn-new._placebet:hover .btn-new__inner {
+          border-color: rgba(68, 197, 238, 0.8);
         }
 
         .btn-new .text {
@@ -137,12 +142,8 @@ export default function StartGameButton() {
         }
 
         .btn-new__inner .indicator._placebet:before {
-          background-image: linear-gradient(92deg, #777f85 0%, #363b3f 100%);
-          box-shadow: inset 2px 2px 2px rgba(26, 32, 38, .4);
-        }
-
-        .btn-new._placebet:hover .indicator._placebet:before {
           background-image: linear-gradient(132.19deg, #c8d5e1 -160.75%, transparent 169.75%);
+          box-shadow: inset 2px 2px 2px rgba(26, 32, 38, .4);
         }
 
         .btn-new__inner .indicator:before {
@@ -163,11 +164,6 @@ export default function StartGameButton() {
         }
 
         .btn-new__inner .indicator._placebet:after {
-          background-image: linear-gradient(92deg, #777f85 0%, #363b3f 100%);
-          box-shadow: none;
-        }
-
-        .btn-new._placebet:hover .indicator._placebet:after {
           background-image: linear-gradient(136.14deg, #44c5ee -.24%, #63e6fc 91.03%);
           box-shadow: 4px 10px 32px rgba(63, 208, 164, .4), -6px -6px 16px rgba(0, 0, 0, .6);
         }
