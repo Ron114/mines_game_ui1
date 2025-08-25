@@ -88,7 +88,7 @@ export default function MinesSelector() {
           padding: 1px;
           position: relative;
           box-shadow: inset 2px 2px 2px rgba(26, 32, 38, .4);
-          margin-bottom: 20px;
+          margin-bottom: 8px;
           display: flex;
         }
 

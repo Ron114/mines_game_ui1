@@ -122,7 +122,7 @@ export default function GameGrid() {
       <style jsx>{`
         .table-holder {
           position: relative;
-          margin-top: 25px;
+          margin-top: 8px;
         }
 
         @media (max-height: 700px) and (min-width: 820px) {

@@ -80,7 +80,7 @@ export default function StartGameButton() {
 
       <style jsx>{`
         .game-betslip__buttons {
-          margin-bottom: 20px;
+          margin-bottom: 10px;
           display: flex;
         }
 
