@@ -13,6 +13,45 @@ export default function GameStatistics() {
 
   const columns = ["Game", "Player", "Time", "Bet Amount", "Multiplier", "Payout"]
 
+  const gameData = [
+    { 
+      game: "Crash X", 
+      icon: "🚀", 
+      player: "ind_turbo_4826597", 
+      time: "12:12 PM", 
+      betAmount: "$0.11", 
+      multiplier: "4.72x", 
+      payout: "$4.89" 
+    },
+    { 
+      game: "Turboplinko", 
+      icon: "●", 
+      player: "SmartHornet744", 
+      time: "12:12 PM", 
+      betAmount: "$9.41", 
+      multiplier: "10.05x", 
+      payout: "$94.59" 
+    },
+    { 
+      game: "Dice Twice", 
+      icon: "⚂", 
+      player: "Tremendous Dinosa...", 
+      time: "12:12 PM", 
+      betAmount: "$0.10", 
+      multiplier: "32.50x", 
+      payout: "$3.17" 
+    },
+    { 
+      game: "Mines", 
+      icon: "💣", 
+      player: "20908c8d-7dc2-448...", 
+      time: "12:11 PM", 
+      betAmount: "$0.23", 
+      multiplier: "47.50x", 
+      payout: "$10.69" 
+    }
+  ]
+
   return (
     <div className="game-statistic">
       <div className="border"></div>
@@ -42,14 +81,17 @@ export default function GameStatistics() {
           </div>
           <div className="separator"></div>
           <div className="rows">
-            {Array.from({ length: 10 }).map((_, index) => (
+            {gameData.map((row, index) => (
               <div key={index} className="row">
-                <div className="cell _capitalize _nowrap">Mines</div>
-                <div className="cell _time">Player{index + 1}</div>
-                <div className="cell _time _00">2m ago</div>
-                <div className="cell amount _fw600">$100.00</div>
-                <div className="cell _fw500">x1.08</div>
-                <div className="cell _fw600">$108.00</div>
+                <div className="cell _capitalize _nowrap">
+                  <span className="game-icon">{row.icon}</span>
+                  {row.game}
+                </div>
+                <div className="cell player">{row.player}</div>
+                <div className="cell _time">{row.time}</div>
+                <div className="cell amount">{row.betAmount}</div>
+                <div className="cell multiplier">{row.multiplier}</div>
+                <div className="cell payout">{row.payout}</div>
               </div>
             ))}
           </div>
@@ -161,7 +203,9 @@ export default function GameStatistics() {
         }
 
         .row {
+          -webkit-transform-style: preserve-3d;
           transform-style: preserve-3d;
+          -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
           cursor: pointer;
           align-items: center;
@@ -169,8 +213,13 @@ export default function GameStatistics() {
           animation-timing-function: ease-out;
           animation-fill-mode: forwards;
           display: flex;
-          padding: 10px 0;
+          padding: 12px 0;
           border-bottom: 1px solid rgba(26, 28, 31, .3);
+          transition: background-color 0.2s ease;
+        }
+
+        .row:hover {
+          background-color: rgba(255, 255, 255, 0.02);
         }
 
         .row:nth-child(odd) {
@@ -192,12 +241,37 @@ export default function GameStatistics() {
           padding-left: 20px;
         }
 
-        .cell._fw600 {
-          font-weight: 600;
+        .game-icon {
+          margin-right: 8px;
+          font-size: 14px;
         }
 
-        .cell._fw500 {
-          font-weight: 500;
+        .cell.player {
+          color: #8a9ba8;
+          font-size: 12px;
+        }
+
+        .cell._time {
+          color: #8a9ba8;
+          font-size: 12px;
+        }
+
+        .cell.amount {
+          color: #ffffff;
+          font-weight: 600;
+          font-size: 12px;
+        }
+
+        .cell.multiplier {
+          color: #ffffff;
+          font-weight: 600;
+          font-size: 12px;
+        }
+
+        .cell.payout {
+          color: #ffffff;
+          font-weight: 600;
+          font-size: 12px;
         }
 
         .cell._capitalize {
@@ -206,10 +280,6 @@ export default function GameStatistics() {
 
         .cell._nowrap {
           white-space: nowrap;
-        }
-
-        .cell._time {
-          color: #acb5c5;
         }
 
         @keyframes row-odd {
