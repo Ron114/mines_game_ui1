@@ -64,13 +64,15 @@ export default function GameGrid() {
     if (isAnimating) {
       return (
         <div className="tile-content explosion-container">
-          <Image 
-            src="/assets/explosion.svg" 
-            alt="Explosion" 
-            width={60} 
-            height={60}
-            className="explosion-animation"
-          />
+          <video
+            className="explosion-video"
+            autoPlay
+            muted
+            playsInline
+            onEnded={() => {}}
+          >
+            <source src="/assets/bombgif.mp4" type="video/mp4" />
+          </video>
         </div>
       )
     } else if (state === 'diamond') {
@@ -293,31 +295,27 @@ export default function GameGrid() {
         }
 
         .explosion-container {
-          animation: explosionPulse 0.8s ease-in-out;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
         }
 
-        .explosion-animation {
-          animation: explosionScale 0.8s ease-in-out, explosionRotate 0.8s linear;
+        .explosion-video {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 12px;
           filter: drop-shadow(0 0 15px rgba(255, 140, 0, 0.8)) drop-shadow(0 0 25px rgba(255, 69, 0, 0.6));
         }
 
-        @keyframes explosionPulse {
-          0% { transform: scale(1); opacity: 0; }
-          20% { transform: scale(1.1); opacity: 1; }
-          60% { transform: scale(1.3); opacity: 0.8; }
-          100% { transform: scale(1); opacity: 0.9; }
-        }
-
-        @keyframes explosionScale {
-          0% { transform: scale(0.3); }
-          30% { transform: scale(1.2); }
-          60% { transform: scale(1.1); }
-          100% { transform: scale(1); }
-        }
-
-        @keyframes explosionRotate {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(15deg); }
+        /* Mobile responsive video styles */
+        @media (max-width: 819px) {
+          .explosion-video {
+            border-radius: 8px;
+          }
         }
       `}</style>
     </div>

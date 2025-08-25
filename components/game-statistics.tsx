@@ -16,40 +16,103 @@ export default function GameStatistics() {
 
   const gameData = [
     { 
-      game: "Crash X", 
-      icon: "🚀", 
+      game: "Turboplinko", 
+      iconClass: "_turboplinko",
       player: "ind_turbo_4826597", 
       time: "12:12 PM", 
       betAmount: "$0.11", 
-      multiplier: "4.72x", 
-      payout: "$4.89" 
-    },
-    { 
-      game: "Turboplinko", 
-      icon: "●", 
-      player: "SmartHornet744", 
-      time: "12:12 PM", 
-      betAmount: "$9.41", 
-      multiplier: "10.05x", 
-      payout: "$94.59" 
-    },
-    { 
-      game: "Dice Twice", 
-      icon: "⚂", 
-      player: "Tremendous Dinosa...", 
-      time: "12:12 PM", 
-      betAmount: "$0.10", 
-      multiplier: "32.50x", 
-      payout: "$3.17" 
+      multiplier: "5.70x", 
+      payout: "$0.88" 
     },
     { 
       game: "Mines", 
-      icon: "💣", 
+      iconClass: "_mines",
+      player: "SmartHornet744", 
+      time: "12:12 PM", 
+      betAmount: "$9.41", 
+      multiplier: "1.36x", 
+      payout: "$0.08" 
+    },
+    { 
+      game: "Hi-lo", 
+      iconClass: "_hilo",
+      player: "Tremendous Dinosa...", 
+      time: "12:12 PM", 
+      betAmount: "$0.10", 
+      multiplier: "1.60x", 
+      payout: "$160.00" 
+    },
+    { 
+      game: "Hi-lo", 
+      iconClass: "_hilo",
       player: "20908c8d-7dc2-448...", 
       time: "12:11 PM", 
       betAmount: "$0.23", 
-      multiplier: "47.50x", 
-      payout: "$10.69" 
+      multiplier: "0.00x", 
+      payout: "$0.00" 
+    },
+    { 
+      game: "Fruit Towers", 
+      iconClass: "_fruittowers",
+      player: "player123", 
+      time: "12:10 PM", 
+      betAmount: "$0.15", 
+      multiplier: "1.90x", 
+      payout: "$0.28" 
+    },
+    { 
+      game: "Dice Twice", 
+      iconClass: "_dice",
+      player: "player456", 
+      time: "12:09 PM", 
+      betAmount: "$0.03", 
+      multiplier: "1.01x", 
+      payout: "$0.03" 
+    },
+    { 
+      game: "Dice Twice", 
+      iconClass: "_dice",
+      player: "player789", 
+      time: "12:08 PM", 
+      betAmount: "$0.50", 
+      multiplier: "0.00x", 
+      payout: "$0.00" 
+    },
+    { 
+      game: "Fruit Towers", 
+      iconClass: "_fruittowers",
+      player: "player101", 
+      time: "12:07 PM", 
+      betAmount: "$0.25", 
+      multiplier: "0.00x", 
+      payout: "$0.00" 
+    },
+    { 
+      game: "Turboplinko", 
+      iconClass: "_turboplinko",
+      player: "player102", 
+      time: "12:06 PM", 
+      betAmount: "$5.85", 
+      multiplier: "0.54x", 
+      payout: "$3.14" 
+    },
+    { 
+      game: "Mines", 
+      iconClass: "_mines",
+      player: "player103", 
+      time: "12:05 PM", 
+      betAmount: "$0.62", 
+      multiplier: "1.36x", 
+      payout: "$0.84" 
+    },
+    { 
+      game: "Mines", 
+      iconClass: "_mines",
+      player: "player104", 
+      time: "12:04 PM", 
+      betAmount: "$1.00", 
+      multiplier: "0.00x", 
+      payout: "$0.00" 
     }
   ]
 
@@ -98,7 +161,7 @@ export default function GameStatistics() {
                 {/* Desktop row */}
                 <div className="desktop-row">
                   <div className="cell _capitalize _nowrap">
-                    <span className="game-icon">{row.icon}</span>
+                    <div className={`icon folders-icon ${row.iconClass}`}></div>
                     {row.game}
                   </div>
                   <div className="cell player">{row.player}</div>
@@ -108,14 +171,14 @@ export default function GameStatistics() {
                   <div className="cell payout">{row.payout}</div>
                 </div>
                 
-                {/* Mobile row - only 3 columns */}
+                {/* Mobile row - exact reference structure */}
                 <div className="mobile-row">
                   <div className="cell _capitalize _nowrap">
-                    <span className="game-icon">{row.icon}</span>
+                    <div className={`icon folders-icon ${row.iconClass}`}></div>
                     {row.game}
                   </div>
-                  <div className="cell multiplier">{row.multiplier}</div>
-                  <div className="cell payout">{row.payout}</div>
+                  <div className="cell _fw500">{row.multiplier}</div>
+                  <div className="cell _fw600">{row.payout}</div>
                 </div>
               </div>
             ))}
@@ -271,6 +334,27 @@ export default function GameStatistics() {
           font-size: 14px;
         }
 
+        /* Game icon styles for both desktop and mobile */
+        .icon.folders-icon {
+          width: 16px;
+          height: 16px;
+          margin-right: 8px;
+          display: inline-block;
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center;
+          vertical-align: middle;
+        }
+
+        .icon.folders-icon._turboplinko,
+        .icon.folders-icon._mines,
+        .icon.folders-icon._hilo,
+        .icon.folders-icon._fruittowers,
+        .icon.folders-icon._dice {
+          background-color: rgba(255, 255, 255, .5);
+          border-radius: 50%;
+        }
+
         .cell.player {
           color: #8a9ba8;
           font-size: 12px;
@@ -328,6 +412,22 @@ export default function GameStatistics() {
             display: flex;
           }
 
+          .mobile-titles .titles__item:nth-child(1) {
+            flex: 1;
+            justify-content: flex-start;
+            padding-left: 15px;
+          }
+
+          .mobile-titles .titles__item:nth-child(2) {
+            flex: 1;
+            justify-content: center;
+          }
+
+          .mobile-titles .titles__item:nth-child(3) {
+            flex: 1;
+            justify-content: center;
+          }
+
           .tabs__item {
             min-width: 90px;
           }
@@ -341,17 +441,76 @@ export default function GameStatistics() {
           }
 
           .rows {
-            height: 240px;
+            height: 285px;
+            cursor: default;
+            -webkit-text-size-adjust: 100%;
+            font-variant-ligatures: none;
+            text-rendering: optimizeLegibility;
+            text-shadow: 0 0 1px rgba(0,0,0,.01);
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-weight: inherit;
+            font-style: inherit;
+            vertical-align: baseline;
+            user-select: none;
+            border: 0;
+            outline: 0;
+            margin: 0;
+            padding: 0;
+            font-family: inherit;
+            font-size: 100%;
           }
 
-          .cell {
+          .mobile-row .cell {
             font-size: 11px;
             padding: 0 8px;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+            color: rgba(255, 255, 255, .5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
 
-          .cell:first-child {
+          .mobile-row .cell:first-child {
             padding-left: 15px;
+            justify-content: flex-start;
           }
+
+          .mobile-row .cell._fw500 {
+            font-weight: 500;
+            color: rgba(255, 255, 255, .5);
+          }
+
+          .mobile-row .cell._fw600 {
+            font-weight: 600;
+            color: rgba(255, 255, 255, .5);
+          }
+
+          .mobile-row {
+            display: flex;
+            width: 100%;
+          }
+
+          .mobile-row .cell:nth-child(1) {
+            flex: 1;
+            justify-content: flex-start;
+          }
+
+          .mobile-row .cell:nth-child(2) {
+            flex: 1;
+            justify-content: center;
+          }
+
+          .mobile-row .cell:nth-child(3) {
+            flex: 1;
+            justify-content: center;
+          }
+
+
         }
 
         /* Desktop styles */
