@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 
 export default function GameGrid() {
-  const { gameState, tileStates, setTileState } = useGame()
+  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading } = useGame()
   const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   
   // Create 25 tiles for 5x5 grid
@@ -18,35 +18,46 @@ export default function GameGrid() {
   } as const
 
   const handleTileClick = (tileIndex: number) => {
-    // Only allow clicks when game is active or cashout and tile hasn't been clicked
-    if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex]) return
+    // Only allow clicks when game is active or cashout and tile hasn't been clicked and not loading
+    if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex] || loadingTiles.has(tileIndex)) return
 
     const result = predefinedResults[tileIndex as keyof typeof predefinedResults] || 'bomb'
     
-    if (result === 'bomb') {
-      // Start explosion animation
-      setAnimatingTiles(prev => new Set(prev).add(tileIndex))
+    // Start loading animation
+    setTileLoading(tileIndex, true)
+    
+    // Show loading circles for 400ms, then reveal result
+    setTimeout(() => {
+      setTileLoading(tileIndex, false)
       
-      // After explosion animation, show the bomb
-      setTimeout(() => {
+      if (result === 'bomb') {
+        // Start explosion animation
+        setAnimatingTiles(prev => new Set(prev).add(tileIndex))
+        
+        // After explosion animation, show the bomb
+        setTimeout(() => {
+          setTileState(tileIndex, result)
+          setAnimatingTiles(prev => {
+            const newSet = new Set(prev)
+            newSet.delete(tileIndex)
+            return newSet
+          })
+        }, 400)
+      } else {
         setTileState(tileIndex, result)
-        setAnimatingTiles(prev => {
-          const newSet = new Set(prev)
-          newSet.delete(tileIndex)
-          return newSet
-        })
-      }, 400) // Reduced timing for faster transition
-    } else {
-      setTileState(tileIndex, result)
-    }
+      }
+    }, 400) // 400ms loading time for expanding circles
   }
 
   const getTileClass = (tileIndex: number) => {
     const state = tileStates[tileIndex]
     const isAnimating = animatingTiles.has(tileIndex)
+    const isLoading = loadingTiles.has(tileIndex)
     let classes = 'game-tile'
     
-    if (isAnimating) {
+    if (isLoading) {
+      classes += ' _loading'
+    } else if (isAnimating) {
       classes += ' _active _exploding'
     } else if (state === 'diamond') {
       classes += ' _active _win'
@@ -60,8 +71,11 @@ export default function GameGrid() {
   const renderTileContent = (tileIndex: number) => {
     const state = tileStates[tileIndex]
     const isAnimating = animatingTiles.has(tileIndex)
+    const isLoading = loadingTiles.has(tileIndex)
     
-    if (isAnimating) {
+    if (isLoading) {
+      return null // Content handled by absolute positioned circles
+    } else if (isAnimating) {
       return (
         <div className="tile-content explosion-container">
           <video
@@ -117,6 +131,15 @@ export default function GameGrid() {
             <div className="game-tile__inner">
               {renderTileContent(tileIndex)}
             </div>
+            {/* EXPANDING CIRCLES LOADER */}
+            {loadingTiles.has(tileIndex) && (
+              <div className="absolute-spinner">
+                <div className="expanding-circles">
+                  <div className="circle outer-circle"></div>
+                  <div className="circle inner-circle"></div>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -186,6 +209,10 @@ export default function GameGrid() {
           transition: transform 0.1s ease;
         }
 
+        .game-tile._loading {
+          transform: none !important;
+        }
+
         /* Mobile responsive tile styles */
         @media (max-width: 819px) {
           .game-tile {
@@ -202,7 +229,7 @@ export default function GameGrid() {
           }
         }
 
-        .game-tile:hover {
+        .game-tile:hover:not(._loading) {
           transform: scale(0.98);
         }
 
@@ -235,6 +262,11 @@ export default function GameGrid() {
         }
 
         .game-tile:hover .game-tile__inner-possible-win {
+          opacity: 1;
+        }
+
+        /* Loading tile states */
+        .game-tile._loading .game-tile__inner {
           opacity: 1;
         }
 
@@ -315,6 +347,114 @@ export default function GameGrid() {
         @media (max-width: 819px) {
           .explosion-video {
             border-radius: 8px;
+          }
+        }
+
+        /* Loading state styles */
+        .loading-container {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+        }
+
+        .absolute-spinner {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          pointer-events: none;
+        }
+
+        /* 🎯 CIRCLE LOADER SIZING - UPDATE THESE VALUES TO CHANGE SIZE */
+        .expanding-circles {
+          position: relative;
+          width: 64px;          /* 📏 Container size - increase this to make overall loader bigger */
+          height: 64px;         /* 📏 Container size - keep same as width */
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .circle {
+          position: absolute;
+          border-radius: 60%;
+        }
+
+        .outer-circle {
+          width: 44px;          /* 📏 Outer circle size - increase to make outer circle bigger */
+          height: 44px;         /* 📏 Outer circle size - keep same as width */
+          background: transparent;
+          border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .inner-circle {
+          width: 15px;          /* 📏 Inner circle start size - increase to make inner circle bigger */
+          height: 15px;         /* 📏 Inner circle start size - keep same as width */
+          background: transparent;
+          border: 2px solid rgba(255, 255, 255, 0.9);
+          animation: expand-pulse 1.2s ease-in-out infinite;
+        }
+
+        @keyframes expand-pulse {
+          0% {
+            width: 10px;        /* 📏 Inner circle start size - should match .inner-circle width */
+            height: 10px;       /* 📏 Inner circle start size - should match .inner-circle height */
+            opacity: 1;
+          }
+          50% {
+            width: 28px;        /* 📏 Inner circle expanded size - should be smaller than outer circle */
+            height: 28px;       /* 📏 Inner circle expanded size - should be smaller than outer circle */
+            opacity: 0.6;
+          }
+          100% {
+            width: 10px;        /* 📏 Inner circle end size - should match start size */
+            height: 10px;       /* 📏 Inner circle end size - should match start size */
+            opacity: 1;
+          }
+        }
+
+        /* 📱 MOBILE CIRCLE LOADER SIZING - UPDATE THESE FOR MOBILE */
+        @media (max-width: 819px) {
+          .expanding-circles {
+            width: 28px;        /* 📏 Mobile container size */
+            height: 28px;       /* 📏 Mobile container size */
+          }
+
+          .outer-circle {
+            width: 28px;        /* 📏 Mobile outer circle size */
+            height: 28px;       /* 📏 Mobile outer circle size */
+            border-width: 1px;
+          }
+
+          .inner-circle {
+            width: 8px;         /* 📏 Mobile inner circle start size */
+            height: 8px;        /* 📏 Mobile inner circle start size */
+            border-width: 1px;
+          }
+
+          @keyframes expand-pulse {
+            0% {
+              width: 8px;       /* 📏 Mobile inner start - should match mobile inner-circle */
+              height: 8px;      /* 📏 Mobile inner start - should match mobile inner-circle */
+              opacity: 1;
+            }
+            50% {
+              width: 22px;      /* 📏 Mobile inner expanded - should be smaller than mobile outer */
+              height: 22px;     /* 📏 Mobile inner expanded - should be smaller than mobile outer */
+              opacity: 0.6;
+            }
+            100% {
+              width: 8px;       /* 📏 Mobile inner end - should match start */
+              height: 8px;      /* 📏 Mobile inner end - should match start */
+              opacity: 1;
+            }
           }
         }
       `}</style>

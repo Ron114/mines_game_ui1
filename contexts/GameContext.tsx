@@ -9,6 +9,8 @@ interface GameContextType {
   setGameState: (state: GameState) => void
   tileStates: Record<number, 'diamond' | 'bomb' | null>
   setTileState: (tileIndex: number, state: 'diamond' | 'bomb') => void
+  loadingTiles: Set<number>
+  setTileLoading: (tileIndex: number, isLoading: boolean) => void
   winAmount: number
   setWinAmount: (amount: number) => void
   resetGame: () => void
@@ -19,7 +21,20 @@ const GameContext = createContext<GameContextType | undefined>(undefined)
 export function GameProvider({ children }: { children: ReactNode }) {
   const [gameState, setGameState] = useState<GameState>('idle')
   const [tileStates, setTileStatesInternal] = useState<Record<number, 'diamond' | 'bomb' | null>>({})
+  const [loadingTiles, setLoadingTilesInternal] = useState<Set<number>>(new Set())
   const [winAmount, setWinAmount] = useState(0)
+
+  const setTileLoading = (tileIndex: number, isLoading: boolean) => {
+    setLoadingTilesInternal(prev => {
+      const newSet = new Set(prev)
+      if (isLoading) {
+        newSet.add(tileIndex)
+      } else {
+        newSet.delete(tileIndex)
+      }
+      return newSet
+    })
+  }
 
   const setTileState = (tileIndex: number, state: 'diamond' | 'bomb') => {
     setTileStatesInternal(prev => ({ ...prev, [tileIndex]: state }))
@@ -34,6 +49,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const resetGame = () => {
     setGameState('idle')
     setTileStatesInternal({})
+    setLoadingTilesInternal(new Set())
     setWinAmount(0)
   }
 
@@ -43,6 +59,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setGameState,
       tileStates,
       setTileState,
+      loadingTiles,
+      setTileLoading,
       winAmount,
       setWinAmount,
       resetGame
