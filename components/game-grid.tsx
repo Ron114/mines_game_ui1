@@ -207,6 +207,7 @@ export default function GameGrid() {
           box-shadow: 3px 3px 4px rgba(10, 9, 9, 0.4);
           cursor: pointer;
           transition: transform 0.1s ease;
+          overflow: hidden;
         }
 
         .game-tile._loading {
@@ -333,20 +334,31 @@ export default function GameGrid() {
           align-items: center;
           justify-content: center;
           position: relative;
+          border-radius: 12px;
+          overflow: hidden;
         }
 
         .explosion-video {
-          width: 100%;
-          height: 100%;
+          width: calc(100% - 10px);
+          height: calc(100% - 10px);
           object-fit: cover;
-          border-radius: 12px;
+          border-radius: 0;
+          margin: 0;
+          padding: 0;
+          position: absolute;
+          top: 5px;
+          left: 5px;
           filter: drop-shadow(0 0 15px rgba(255, 140, 0, 0.8)) drop-shadow(0 0 25px rgba(255, 69, 0, 0.6));
         }
 
         /* Mobile responsive video styles */
         @media (max-width: 819px) {
-          .explosion-video {
+          .explosion-container {
             border-radius: 8px;
+          }
+          
+          .explosion-video {
+            border-radius: 0;
           }
         }
 
