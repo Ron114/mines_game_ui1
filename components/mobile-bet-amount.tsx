@@ -1,41 +1,54 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useGame } from '../contexts/GameContext'
 
 export default function MobileBetAmount() {
-  const [betAmount, setBetAmount] = useState("100")
+  const { betAmount, setBetAmount } = useGame()
+  const [displayAmount, setDisplayAmount] = useState(betAmount.toString())
   const [showError, setShowError] = useState(false)
+  
+  // Update display when betAmount changes from context
+  useEffect(() => {
+    setDisplayAmount(betAmount.toString())
+  }, [betAmount])
 
   const handleMinClick = () => {
-    setBetAmount("0.1")
+    setBetAmount(1)
+    setDisplayAmount("1")
     setShowError(false)
   }
   
   const handleMaxClick = () => {
-    setBetAmount("1000")
+    setBetAmount(1000)
+    setDisplayAmount("1000")
     setShowError(false)
   }
   
   const handleDecrease = () => {
-    const current = Number.parseFloat(betAmount) || 0
-    const newValue = Math.max(0.1, current - 1)
-    setBetAmount(newValue.toString())
+    const current = betAmount
+    const newValue = Math.max(1, current - 1)
+    setBetAmount(newValue)
+    setDisplayAmount(newValue.toString())
     setShowError(false)
   }
   
   const handleIncrease = () => {
-    const current = Number.parseFloat(betAmount) || 0
+    const current = betAmount
     const newValue = Math.min(1000, current + 1)
-    setBetAmount(newValue.toString())
+    setBetAmount(newValue)
+    setDisplayAmount(newValue.toString())
     setShowError(false)
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace("$", "")
-    setBetAmount(value)
+    setDisplayAmount(value)
     
-    const numValue = Number.parseFloat(value)
-    if (numValue < 0.1) {
+    const numValue = Number.parseFloat(value) || 0
+    setBetAmount(Math.min(1000, Math.max(1, numValue)))
+    
+    if (numValue < 1) {
       setShowError(true)
     } else {
       setShowError(false)
@@ -81,7 +94,7 @@ export default function MobileBetAmount() {
           spellCheck="false"
           tabIndex={-1}
           className="games-input__number"
-          value={`$${betAmount}`}
+          value={`$${displayAmount}`}
           onChange={handleInputChange}
         />
 

@@ -49,7 +49,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [selectedMines, setSelectedMines] = useState(3)
   const [minePositions, setMinePositions] = useState<Set<number>>(new Set())
   const [balance, setBalanceInternal] = useState(1000)
-  const [betAmount, setBetAmount] = useState(100)
+  const [betAmount, setBetAmount] = useState(1)
   const [showAllTiles, setShowAllTiles] = useState(false)
   const [bombHitTile, setBombHitTile] = useState<number | null>(null)
   const [diamondsFound, setDiamondsFound] = useState(0)

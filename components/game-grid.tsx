@@ -2,7 +2,7 @@
 
 import { useGame } from '../contexts/GameContext'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function GameGrid() {
   const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, cashOut, showWinModal, currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile } = useGame()
@@ -13,18 +13,33 @@ export default function GameGrid() {
 
   // Results are now determined by random mine placement
 
+  const [bombClicked, setBombClicked] = useState(false)
+  
+  // Reset bombClicked when game resets
+  useEffect(() => {
+    if (gameState === 'idle' && !showAllTiles) {
+      setBombClicked(false)
+    }
+  }, [gameState, showAllTiles])
+  
   const handleTileClick = (tileIndex: number) => {
     // Only allow clicks when game is active or cashout and tile hasn't been clicked and not loading
-    // Also prevent clicks if bomb was hit (showAllTiles is true)
-    if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex] || loadingTiles.has(tileIndex) || showAllTiles) return
+    // Also prevent clicks if bomb was hit (showAllTiles is true or bombClicked is true)
+    if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex] || loadingTiles.has(tileIndex) || showAllTiles || bombClicked) return
+
+    // Check what type this tile is BEFORE processing
+    const result = getTileType(tileIndex)
+    
+    // If it's a bomb, immediately prevent any further clicks
+    if (result === 'bomb') {
+      setBombClicked(true) // Immediately prevent any other clicks
+    }
 
     // Check if this is the first tile click (deduct bet amount)
     const isFirstClick = Object.keys(tileStates).length === 0
     if (isFirstClick) {
       deductBet()
     }
-
-    const result = getTileType(tileIndex)
     
     // Start loading animation
     setTileLoading(tileIndex, true)
