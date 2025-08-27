@@ -127,8 +127,8 @@ export default function GameGrid() {
             <Image 
               src="/assets/1diamond.png" 
               alt="Diamond" 
-              width={24} 
-              height={24}
+              width={38} 
+              height={38}
             />
           </div>
           <div className="win-text">You win!</div>
@@ -136,8 +136,8 @@ export default function GameGrid() {
             <Image 
               src="/assets/2diamond.png" 
               alt="Diamond" 
-              width={24} 
-              height={24}
+              width={45} 
+              height={45}
             />
           </div>
         </div>
@@ -529,7 +529,7 @@ export default function GameGrid() {
         /* MODAL HEADER - Blue section (25% height) */
         .modal-header {
           height: 25%;
-          background: linear-gradient(135deg, #5cd9f5 0%, #4ac8e8 100%);
+          background: linear-gradient(180deg, #52a5d4 0%, #4e9ed0 55%, #4b74a9 100%);
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -545,7 +545,8 @@ export default function GameGrid() {
 
         .win-text {
           color: white;
-          font-size: 18px;
+          font-family: 'Google Sans', 'Product Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          font-size: 22px;
           font-weight: 700;
           text-align: center;
           flex-grow: 1;
@@ -554,7 +555,7 @@ export default function GameGrid() {
 
         @media (max-width: 819px) {
           .win-text {
-            font-size: 16px;
+            font-size: 18px;
           }
         }
 
@@ -575,8 +576,8 @@ export default function GameGrid() {
 
         @media (max-width: 819px) {
           .header-diamond {
-            width: 20px;
-            height: 20px;
+            width: 28px;
+            height: 28px;
           }
           
           .left-diamond {
@@ -611,14 +612,12 @@ export default function GameGrid() {
         }
 
         .win-amount {
-          background: linear-gradient(135deg, #5cd9f5 0%, #4ac8e8 50%, #94e2fb 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+          color:rgb(171, 222, 247);
+          font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           font-size: 24px;
           font-weight: 700;
           margin-bottom: 12px;
-          text-shadow: none;
+          // text-shadow: 0 1px 0 #bfebfb;
         }
 
         @media (max-width: 819px) {
@@ -653,26 +652,28 @@ export default function GameGrid() {
         }
 
         .multiplier-label {
-          color: rgba(255, 255, 255, 0.5);
+          color: #f4f9fd;
+          font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           font-size: 12px;
-          font-weight: 600;
+          font-weight: 400;
         }
 
         .multiplier-value {
           color: #ffffff;
+          font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           font-size: 12px;
-          font-weight: 600;
+          font-weight: 500;
         }
 
         @media (max-width: 819px) {
           .multiplier-label {
             font-size: 11px;
-            font-weight: 500;
+            font-weight: 400;
           }
           
           .multiplier-value {
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 500;
           }
         }
       `}</style>
