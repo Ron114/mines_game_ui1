@@ -31,6 +31,11 @@ interface GameContextType {
   setShowAllTiles: (show: boolean) => void
   bombHitTile: number | null
   setBombHitTile: (tile: number | null) => void
+  diamondsFound: number
+  multiplierValues: number[]
+  currentCashoutValue: number
+  setCurrentCashoutValue: (value: number) => void
+  animateValueUpdate: (newValue: number) => void
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined)
@@ -47,6 +52,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [betAmount, setBetAmount] = useState(100)
   const [showAllTiles, setShowAllTiles] = useState(false)
   const [bombHitTile, setBombHitTile] = useState<number | null>(null)
+  const [diamondsFound, setDiamondsFound] = useState(0)
+  const [currentCashoutValue, setCurrentCashoutValue] = useState(0)
+  
+  // Multiplier progression based on diamonds found
+  const multiplierValues = [1.8, 2.4, 3.2, 4.5, 5.8, 6.9, 7.5, 9.2, 11.5, 14.8, 18.9, 24.2, 31.8, 42.3, 58.7, 82.4, 118.6, 174.3, 261.5, 402.7, 645.2, 1085.3, 1953.6, 3906.2]
 
   // Load balance from localStorage on mount
   useEffect(() => {
@@ -65,6 +75,26 @@ export function GameProvider({ children }: { children: ReactNode }) {
   // Deduct bet amount from balance
   const deductBet = () => {
     setBalance(balance - betAmount)
+  }
+
+  // Animate cashout value update
+  const animateValueUpdate = (newValue: number) => {
+    const startValue = currentCashoutValue
+    const increment = (newValue - startValue) / 30 // 30 steps for smooth animation
+    let step = 0
+    
+    const animate = () => {
+      if (step <= 30) {
+        const currentValue = startValue + (increment * step)
+        setCurrentCashoutValue(currentValue)
+        step++
+        requestAnimationFrame(animate)
+      } else {
+        setCurrentCashoutValue(newValue)
+      }
+    }
+    
+    animate()
   }
 
   const setTileLoading = (tileIndex: number, isLoading: boolean) => {
@@ -100,9 +130,18 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const setTileState = (tileIndex: number, state: 'diamond' | 'bomb') => {
     setTileStatesInternal(prev => ({ ...prev, [tileIndex]: state }))
     
-    // If it's a diamond, set to cashout state with win amount
+    // If it's a diamond, calculate new multiplier and update cashout value
     if (state === 'diamond') {
-      setWinAmount(108.00) // Example win amount
+      const newDiamondsCount = diamondsFound + 1
+      setDiamondsFound(newDiamondsCount)
+      
+      // Calculate new cashout value based on bet amount and current multiplier
+      const multiplier = multiplierValues[newDiamondsCount - 1] || multiplierValues[multiplierValues.length - 1]
+      const newCashoutValue = betAmount * multiplier
+      
+      // Animate the value update
+      animateValueUpdate(newCashoutValue)
+      setWinAmount(newCashoutValue)
       setGameState('cashout')
     } else if (state === 'bomb') {
       // When bomb is hit, reveal all tiles after explosion
@@ -111,6 +150,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
         setShowAllTiles(true)
         // Auto reset after 4 seconds (increased delay)
         setTimeout(() => {
+          // Reset cashout value immediately when bomb hit
+          setCurrentCashoutValue(0)
           resetGame()
         }, 2500)
       }, 800) // Wait for explosion animation
@@ -118,7 +159,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }
 
   const cashOut = () => {
+    // Add winnings to balance
+    setBalance(balance + currentCashoutValue)
     setShowWinModal(true)
+    
+    // Auto-close modal and reset game after 2.5 seconds
+    setTimeout(() => {
+      setShowWinModal(false)
+      resetGame()
+    }, 2500)
   }
 
   const resetGame = () => {
@@ -129,6 +178,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setShowWinModal(false)
     setShowAllTiles(false)
     setBombHitTile(null)
+    setDiamondsFound(0)
+    setCurrentCashoutValue(0)
     // Generate new mine positions for next game
     generateMinePositions(selectedMines)
   }
@@ -166,7 +217,12 @@ export function GameProvider({ children }: { children: ReactNode }) {
       showAllTiles,
       setShowAllTiles,
       bombHitTile,
-      setBombHitTile
+      setBombHitTile,
+      diamondsFound,
+      multiplierValues,
+      currentCashoutValue,
+      setCurrentCashoutValue,
+      animateValueUpdate
     }}>
       {children}
     </GameContext.Provider>

@@ -3,7 +3,7 @@
 import { useGame } from '../contexts/GameContext'
 
 export default function StartGameButton() {
-  const { gameState, winAmount, resetGame, cashOut, startNewGame } = useGame()
+  const { gameState, currentCashoutValue, resetGame, cashOut, startNewGame } = useGame()
 
   const handleButtonClick = () => {
     if (gameState === 'idle') {
@@ -65,7 +65,7 @@ export default function StartGameButton() {
                 <>
                   <div className="text">Cash Out</div>
                   <div className="_small">
-                    <span className="_roboto">${winAmount.toFixed(2)}</span>
+                    <span className="_roboto">${currentCashoutValue.toFixed(2)}</span>
                   </div>
                 </>
               ) : (

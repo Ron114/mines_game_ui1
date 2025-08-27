@@ -1,17 +1,31 @@
 "use client"
 
+import { useGame } from '../contexts/GameContext'
+
 export default function GameHistory() {
-  const historyItems = ["x1.8", "x2.4", "x3.2", "x4.5", "x5.8", "x6.9", "x7.5"]
+  const { multiplierValues, diamondsFound, gameState } = useGame()
+  
+  // Format multiplier values for display
+  const historyItems = multiplierValues.slice(0, 7).map(val => `x${val}`)
 
   return (
     <div className="game-history">
       <div className="game-history__inner">
         <div className="game-history__inner-container">
-          {historyItems.map((multiplier, index) => (
-            <div key={index} data-history-item="false" className="game-history__item">
-              <div className="game-history__item-text">{multiplier}</div>
-            </div>
-          ))}
+          {historyItems.map((multiplier, index) => {
+            const isActive = diamondsFound === index + 1 && gameState === 'cashout'
+            const isResulted = diamondsFound > index + 1
+            
+            let itemClass = 'game-history__item'
+            if (isActive) itemClass += ' _active'
+            if (isResulted) itemClass += ' _resulted'
+            
+            return (
+              <div key={index} data-history-item="false" className={itemClass}>
+                <div className="game-history__item-text">{multiplier}</div>
+              </div>
+            )
+          })}
         </div>
       </div>
 
@@ -87,6 +101,19 @@ export default function GameHistory() {
           font-weight: 500;
           color: inherit;
           transition: all 0.2s ease;
+        }
+
+        /* Active state - currently selected diamond */
+        .game-history__item._active .game-history__item-text {
+          color: #020202;
+          background: #d26d3d;
+          border-color: #d26d3d;
+          box-shadow: -1px -1px 10px rgba(248, 112, 106, .15);
+        }
+
+        /* Resulted state - previously found diamonds */
+        .game-history__item._resulted .game-history__item-text {
+          background-color: rgba(209, 116, 72, .1);
         }
 
         /* Mobile responsive styles */

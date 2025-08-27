@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 
 export default function GameGrid() {
-  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, cashOut, showWinModal, winAmount, getTileType, deductBet, showAllTiles, bombHitTile } = useGame()
+  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, cashOut, showWinModal, currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile } = useGame()
   const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   
   // Create 25 tiles for 5x5 grid
@@ -159,11 +159,11 @@ export default function GameGrid() {
         </div>
         
         <div className="modal-body">
-          <div className="win-amount">${winAmount.toFixed(2)}</div>
+          <div className="win-amount">${currentCashoutValue.toFixed(2)}</div>
           <div className="modal-divider"></div>
           <div className="multiplier-section">
             <span className="multiplier-label">Multiplier</span>
-            <span className="multiplier-value">x{(winAmount / 100).toFixed(2)}</span>
+            <span className="multiplier-value">x{(currentCashoutValue / betAmount).toFixed(2)}</span>
           </div>
         </div>
       </div>
