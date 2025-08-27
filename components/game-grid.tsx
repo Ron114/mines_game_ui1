@@ -5,23 +5,19 @@ import Image from 'next/image'
 import { useState } from 'react'
 
 export default function GameGrid() {
-  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading } = useGame()
+  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, cashOut, showWinModal, winAmount, getTileType } = useGame()
   const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   
   // Create 25 tiles for 5x5 grid
   const tiles = Array.from({ length: 25 }, (_, index) => index)
 
-  // Predefined results: first tile diamond, second tile bomb
-  const predefinedResults = {
-    0: 'diamond',
-    1: 'bomb'
-  } as const
+  // Results are now determined by random mine placement
 
   const handleTileClick = (tileIndex: number) => {
     // Only allow clicks when game is active or cashout and tile hasn't been clicked and not loading
     if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex] || loadingTiles.has(tileIndex)) return
 
-    const result = predefinedResults[tileIndex as keyof typeof predefinedResults] || 'bomb'
+    const result = getTileType(tileIndex)
     
     // Start loading animation
     setTileLoading(tileIndex, true)
@@ -120,7 +116,8 @@ export default function GameGrid() {
 
   return (
     <div className="table-holder">
-      {/* WIN MODAL - Always visible for now */}
+      {/* WIN MODAL - Only visible when showWinModal is true */}
+      {showWinModal && (
       <div className="win-modal">
         <div className="modal-header">
           <div className="header-diamond left-diamond">
@@ -143,14 +140,15 @@ export default function GameGrid() {
         </div>
         
         <div className="modal-body">
-          <div className="win-amount">$1.03</div>
+          <div className="win-amount">${winAmount.toFixed(2)}</div>
           <div className="modal-divider"></div>
           <div className="multiplier-section">
             <span className="multiplier-label">Multiplier</span>
-            <span className="multiplier-value">x1.03</span>
+            <span className="multiplier-value">x{(winAmount / 100).toFixed(2)}</span>
           </div>
         </div>
       </div>
+      )}
 
       <div className="game-tiles">
         {tiles.map((tileIndex) => (
@@ -175,6 +173,7 @@ export default function GameGrid() {
           </div>
         ))}
       </div>
+
 
       <style jsx>{`
         .table-holder {
@@ -675,6 +674,7 @@ export default function GameGrid() {
             font-weight: 500;
           }
         }
+
       `}</style>
     </div>
   )

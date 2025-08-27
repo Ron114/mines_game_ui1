@@ -1,10 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useGame } from '../contexts/GameContext'
 
 export default function MinesSelector() {
-  const [selectedMines, setSelectedMines] = useState(3)
-  const [customMines, setCustomMines] = useState("3")
+  const { selectedMines, setSelectedMines } = useGame()
+  const [customMines, setCustomMines] = useState(selectedMines.toString())
+  
+  // Update customMines when selectedMines changes from context
+  useEffect(() => {
+    setCustomMines(selectedMines.toString())
+  }, [selectedMines])
 
   const handleMineSelect = (mines: number) => {
     setSelectedMines(mines)

@@ -3,15 +3,15 @@
 import { useGame } from '../contexts/GameContext'
 
 export default function StartGameButton() {
-  const { gameState, setGameState, winAmount, resetGame } = useGame()
+  const { gameState, winAmount, resetGame, cashOut, startNewGame } = useGame()
 
   const handleButtonClick = () => {
     if (gameState === 'idle') {
-      setGameState('active')
+      startNewGame()
     } else if (gameState === 'active') {
       resetGame()
     } else if (gameState === 'cashout') {
-      resetGame()
+      cashOut()
     }
   }
 

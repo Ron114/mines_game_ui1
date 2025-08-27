@@ -14,6 +14,14 @@ interface GameContextType {
   winAmount: number
   setWinAmount: (amount: number) => void
   resetGame: () => void
+  cashOut: () => void
+  showWinModal: boolean
+  setShowWinModal: (show: boolean) => void
+  selectedMines: number
+  setSelectedMines: (mines: number) => void
+  minePositions: Set<number>
+  getTileType: (tileIndex: number) => 'diamond' | 'bomb'
+  startNewGame: () => void
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined)
@@ -23,6 +31,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [tileStates, setTileStatesInternal] = useState<Record<number, 'diamond' | 'bomb' | null>>({})
   const [loadingTiles, setLoadingTilesInternal] = useState<Set<number>>(new Set())
   const [winAmount, setWinAmount] = useState(0)
+  const [showWinModal, setShowWinModal] = useState(false)
+  const [selectedMines, setSelectedMines] = useState(3)
+  const [minePositions, setMinePositions] = useState<Set<number>>(new Set())
 
   const setTileLoading = (tileIndex: number, isLoading: boolean) => {
     setLoadingTilesInternal(prev => {
@@ -36,6 +47,24 @@ export function GameProvider({ children }: { children: ReactNode }) {
     })
   }
 
+  // Generate random mine positions when game starts
+  const generateMinePositions = (numMines: number) => {
+    const positions = new Set<number>()
+    const totalTiles = 25
+    
+    while (positions.size < numMines) {
+      const randomPosition = Math.floor(Math.random() * totalTiles)
+      positions.add(randomPosition)
+    }
+    
+    setMinePositions(positions)
+  }
+
+  // Get tile type based on mine positions
+  const getTileType = (tileIndex: number): 'diamond' | 'bomb' => {
+    return minePositions.has(tileIndex) ? 'bomb' : 'diamond'
+  }
+
   const setTileState = (tileIndex: number, state: 'diamond' | 'bomb') => {
     setTileStatesInternal(prev => ({ ...prev, [tileIndex]: state }))
     
@@ -46,11 +75,24 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const cashOut = () => {
+    setShowWinModal(true)
+  }
+
   const resetGame = () => {
     setGameState('idle')
     setTileStatesInternal({})
     setLoadingTilesInternal(new Set())
     setWinAmount(0)
+    setShowWinModal(false)
+    // Generate new mine positions for next game
+    generateMinePositions(selectedMines)
+  }
+
+  // Generate initial mine positions when selectedMines changes or on first load
+  const startNewGame = () => {
+    generateMinePositions(selectedMines)
+    setGameState('active')
   }
 
   return (
@@ -63,7 +105,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setTileLoading,
       winAmount,
       setWinAmount,
-      resetGame
+      resetGame,
+      cashOut,
+      showWinModal,
+      setShowWinModal,
+      selectedMines,
+      setSelectedMines,
+      minePositions,
+      getTileType,
+      startNewGame
     }}>
       {children}
     </GameContext.Provider>
