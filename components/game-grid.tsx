@@ -120,6 +120,38 @@ export default function GameGrid() {
 
   return (
     <div className="table-holder">
+      {/* WIN MODAL - Always visible for now */}
+      <div className="win-modal">
+        <div className="modal-header">
+          <div className="header-diamond left-diamond">
+            <Image 
+              src="/assets/1diamond.png" 
+              alt="Diamond" 
+              width={24} 
+              height={24}
+            />
+          </div>
+          <div className="win-text">You win!</div>
+          <div className="header-diamond right-diamond">
+            <Image 
+              src="/assets/2diamond.png" 
+              alt="Diamond" 
+              width={24} 
+              height={24}
+            />
+          </div>
+        </div>
+        
+        <div className="modal-body">
+          <div className="win-amount">$1.03</div>
+          <div className="modal-divider"></div>
+          <div className="multiplier-section">
+            <span className="multiplier-label">Multiplier</span>
+            <span className="multiplier-value">x1.03</span>
+          </div>
+        </div>
+      </div>
+
       <div className="game-tiles">
         {tiles.map((tileIndex) => (
           <div 
@@ -467,6 +499,180 @@ export default function GameGrid() {
               height: 8px;      /* 📏 Mobile inner end - should match start */
               opacity: 1;
             }
+          }
+        }
+
+        /* 🏆 WIN MODAL STYLES */
+        .win-modal {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: calc(2.5 * (100% / 5) + 1.5 * 10px); /* 2.5 tiles width + gaps */
+          height: calc(2 * (100% / 5) + 1 * 10px); /* 2 tiles height + 1 gap */
+          z-index: 1000;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 
+                      0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mobile responsive modal */
+        @media (max-width: 819px) {
+          .win-modal {
+            width: calc(2.5 * 62px + 1.5 * 14px); /* 2.5 mobile tiles + gaps */
+            height: calc(2 * 62px + 1 * 14px); /* 2 mobile tiles + 1 gap */
+            border-radius: 12px;
+          }
+        }
+
+        /* MODAL HEADER - Blue section (25% height) */
+        .modal-header {
+          height: 25%;
+          background: linear-gradient(135deg, #5cd9f5 0%, #4ac8e8 100%);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 20px;
+          position: relative;
+        }
+
+        @media (max-width: 819px) {
+          .modal-header {
+            padding: 0 16px;
+          }
+        }
+
+        .win-text {
+          color: white;
+          font-size: 18px;
+          font-weight: 700;
+          text-align: center;
+          flex-grow: 1;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 819px) {
+          .win-text {
+            font-size: 16px;
+          }
+        }
+
+        .header-diamond {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .left-diamond {
+          margin-right: 12px;
+        }
+
+        .right-diamond {
+          margin-left: 12px;
+        }
+
+        @media (max-width: 819px) {
+          .header-diamond {
+            width: 20px;
+            height: 20px;
+          }
+          
+          .left-diamond {
+            margin-right: 8px;
+          }
+          
+          .right-diamond {
+            margin-left: 8px;
+          }
+        }
+
+        /* MODAL BODY - True glass transparency (75% height) */
+        .modal-body {
+          height: 75%;
+          background: rgba(255, 255, 255, 0.02); /* Almost invisible background */
+          backdrop-filter: blur(4px); /* Less blur for more clarity */
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+          border-left: 1px solid rgba(255, 255, 255, 0.05);
+          border-right: 1px solid rgba(255, 255, 255, 0.05);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @media (max-width: 819px) {
+          .modal-body {
+            padding: 16px;
+          }
+        }
+
+        .win-amount {
+          background: linear-gradient(135deg, #5cd9f5 0%, #4ac8e8 50%, #94e2fb 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          font-size: 24px;
+          font-weight: 700;
+          margin-bottom: 12px;
+          text-shadow: none;
+        }
+
+        @media (max-width: 819px) {
+          .win-amount {
+            font-size: 20px;
+            margin-bottom: 10px;
+          }
+        }
+
+        .modal-divider {
+          width: 90%;
+          height: 2px;
+          background: #5cd9f5;
+          border-radius: 1px;
+          margin-bottom: 14px;
+          margin-top: 6px;
+          box-shadow: 0 0 8px rgba(92, 217, 245, 0.8), 0 0 16px rgba(92, 217, 245, 0.4);
+          opacity: 1;
+        }
+
+        @media (max-width: 819px) {
+          .modal-divider {
+            margin-bottom: 12px;
+          }
+        }
+
+        .multiplier-section {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 80%;
+        }
+
+        .multiplier-label {
+          color: rgba(255, 255, 255, 0.5);
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        .multiplier-value {
+          color: #ffffff;
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        @media (max-width: 819px) {
+          .multiplier-label {
+            font-size: 11px;
+            font-weight: 500;
+          }
+          
+          .multiplier-value {
+            font-size: 11px;
+            font-weight: 600;
           }
         }
       `}</style>
