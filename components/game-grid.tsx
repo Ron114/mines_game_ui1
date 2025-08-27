@@ -15,7 +15,8 @@ export default function GameGrid() {
 
   const handleTileClick = (tileIndex: number) => {
     // Only allow clicks when game is active or cashout and tile hasn't been clicked and not loading
-    if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex] || loadingTiles.has(tileIndex)) return
+    // Also prevent clicks if bomb was hit (showAllTiles is true)
+    if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex] || loadingTiles.has(tileIndex) || showAllTiles) return
 
     // Check if this is the first tile click (deduct bet amount)
     const isFirstClick = Object.keys(tileStates).length === 0

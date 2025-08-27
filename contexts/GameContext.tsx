@@ -109,10 +109,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setBombHitTile(tileIndex)
       setTimeout(() => {
         setShowAllTiles(true)
-        // Auto reset after 2 seconds
+        // Auto reset after 4 seconds (increased delay)
         setTimeout(() => {
           resetGame()
-        }, 2000)
+        }, 2500)
       }, 800) // Wait for explosion animation
     }
   }
