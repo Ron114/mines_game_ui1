@@ -136,8 +136,8 @@ export default function GameGrid() {
             <Image 
               src="/assets/2diamond.png" 
               alt="Diamond" 
-              width={45} 
-              height={45}
+              width={55} 
+              height={55}
             />
           </div>
         </div>
@@ -532,7 +532,7 @@ export default function GameGrid() {
           background: linear-gradient(180deg, #52a5d4 0%, #4e9ed0 55%, #4b74a9 100%);
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          justify-content: center;
           padding: 0 20px;
           position: relative;
         }
@@ -549,7 +549,6 @@ export default function GameGrid() {
           font-size: 22px;
           font-weight: 700;
           text-align: center;
-          flex-grow: 1;
           text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
