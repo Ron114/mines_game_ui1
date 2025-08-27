@@ -144,14 +144,19 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setWinAmount(newCashoutValue)
       setGameState('cashout')
     } else if (state === 'bomb') {
-      // When bomb is hit, reveal all tiles after explosion
+      // When bomb is hit, immediately reset game state and button
+      setGameState('idle')
+      setCurrentCashoutValue(0)
+      setDiamondsFound(0)
+      
+      // Set bomb hit tile for explosion animation
       setBombHitTile(tileIndex)
+      
+      // Show all tiles after explosion animation (visual only)
       setTimeout(() => {
         setShowAllTiles(true)
-        // Auto reset after 4 seconds (increased delay)
+        // Auto reset after 2.5 seconds 
         setTimeout(() => {
-          // Reset cashout value immediately when bomb hit
-          setCurrentCashoutValue(0)
           resetGame()
         }, 2500)
       }, 800) // Wait for explosion animation
