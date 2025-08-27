@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 
 export default function GameGrid() {
-  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, cashOut, showWinModal, winAmount, getTileType } = useGame()
+  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, cashOut, showWinModal, winAmount, getTileType, deductBet, showAllTiles, bombHitTile } = useGame()
   const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   
   // Create 25 tiles for 5x5 grid
@@ -16,6 +16,12 @@ export default function GameGrid() {
   const handleTileClick = (tileIndex: number) => {
     // Only allow clicks when game is active or cashout and tile hasn't been clicked and not loading
     if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex] || loadingTiles.has(tileIndex)) return
+
+    // Check if this is the first tile click (deduct bet amount)
+    const isFirstClick = Object.keys(tileStates).length === 0
+    if (isFirstClick) {
+      deductBet()
+    }
 
     const result = getTileType(tileIndex)
     
@@ -49,16 +55,21 @@ export default function GameGrid() {
     const state = tileStates[tileIndex]
     const isAnimating = animatingTiles.has(tileIndex)
     const isLoading = loadingTiles.has(tileIndex)
+    const shouldShowContent = state || (showAllTiles && !isLoading)
     let classes = 'game-tile'
     
     if (isLoading) {
       classes += ' _loading'
     } else if (isAnimating) {
       classes += ' _active _exploding'
-    } else if (state === 'diamond') {
-      classes += ' _active _win'
-    } else if (state === 'bomb') {
-      classes += ' _active _lose'
+    } else if (shouldShowContent) {
+      const tileType = state || getTileType(tileIndex)
+      classes += ' _active'
+      if (tileType === 'diamond') {
+        classes += ' _win'
+      } else if (tileType === 'bomb') {
+        classes += ' _lose'
+      }
     }
     
     return classes
@@ -68,6 +79,7 @@ export default function GameGrid() {
     const state = tileStates[tileIndex]
     const isAnimating = animatingTiles.has(tileIndex)
     const isLoading = loadingTiles.has(tileIndex)
+    const shouldShowContent = state || (showAllTiles && !isLoading)
     
     if (isLoading) {
       return null // Content handled by absolute positioned circles
@@ -85,30 +97,36 @@ export default function GameGrid() {
           </video>
         </div>
       )
-    } else if (state === 'diamond') {
-      return (
-        <div className="tile-content">
-          <Image 
-            src="/assets/diamond.svg" 
-            alt="Diamond" 
-            width={50} 
-            height={50}
-            style={{ filter: 'drop-shadow(0 0 10px rgba(92, 217, 245, 0.6))' }}
-          />
-        </div>
-      )
-    } else if (state === 'bomb') {
-      return (
-        <div className="tile-content">
-          <Image 
-            src="/assets/bomb.svg" 
-            alt="Bomb" 
-            width={45} 
-            height={45}
-            style={{ filter: 'drop-shadow(0 0 10px rgba(255, 68, 68, 0.6))' }}
-          />
-        </div>
-      )
+    } else if (shouldShowContent) {
+      const tileType = state || getTileType(tileIndex)
+      const isHitBomb = bombHitTile === tileIndex
+      const opacity = showAllTiles && !isHitBomb ? 0.3 : 1
+      
+      if (tileType === 'diamond') {
+        return (
+          <div className="tile-content" style={{ opacity }}>
+            <Image 
+              src="/assets/diamond.svg" 
+              alt="Diamond" 
+              width={50} 
+              height={50}
+              style={{ filter: 'drop-shadow(0 0 10px rgba(92, 217, 245, 0.6))' }}
+            />
+          </div>
+        )
+      } else if (tileType === 'bomb') {
+        return (
+          <div className="tile-content" style={{ opacity }}>
+            <Image 
+              src="/assets/bomb.svg" 
+              alt="Bomb" 
+              width={45} 
+              height={45}
+              style={{ filter: 'drop-shadow(0 0 10px rgba(255, 68, 68, 0.6))' }}
+            />
+          </div>
+        )
+      }
     }
     
     return null

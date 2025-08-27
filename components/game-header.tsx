@@ -3,9 +3,11 @@
 import { ChevronLeft, Volume2, Settings } from "lucide-react"
 import { useState } from "react"
 import SettingsModal from "./settings-modal"
+import { useGame } from '../contexts/GameContext'
 
 export default function GameHeader() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const { balance } = useGame()
   return (
     <div className="flex items-center relative px-2 text-white/50 pt-2" style={{ maxWidth: '880px', margin: '0 auto', width: '100%' }}>
       {/* Left side - Back button and Logo */}
@@ -53,7 +55,7 @@ export default function GameHeader() {
             fontWeight: 700,
           }}
         >
-          $1369.4
+          ${balance.toFixed(1)}
         </div>
         <div className="w-7 h-7 ml-3 cursor-pointer relative">
           <div

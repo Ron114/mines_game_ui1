@@ -1,19 +1,34 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useGame } from '../contexts/GameContext'
 
 export default function BetAmountInput() {
-  const [betAmount, setBetAmount] = useState("100")
+  const { betAmount, setBetAmount } = useGame()
+  const [displayAmount, setDisplayAmount] = useState(betAmount.toString())
+  
+  // Update display when betAmount changes from context
+  useEffect(() => {
+    setDisplayAmount(betAmount.toString())
+  }, [betAmount])
 
-  const handleMinClick = () => setBetAmount("1")
-  const handleMaxClick = () => setBetAmount("1000")
+  const handleMinClick = () => {
+    setBetAmount(1)
+    setDisplayAmount("1")
+  }
+  const handleMaxClick = () => {
+    setBetAmount(1000)
+    setDisplayAmount("1000")
+  }
   const handleDecrease = () => {
-    const current = Number.parseFloat(betAmount) || 0
-    setBetAmount(Math.max(1, current - 1).toString())
+    const current = Math.max(1, betAmount - 1)
+    setBetAmount(current)
+    setDisplayAmount(current.toString())
   }
   const handleIncrease = () => {
-    const current = Number.parseFloat(betAmount) || 0
-    setBetAmount(Math.min(1000, current + 1).toString())
+    const current = Math.min(1000, betAmount + 1)
+    setBetAmount(current)
+    setDisplayAmount(current.toString())
   }
 
   return (
@@ -27,8 +42,13 @@ export default function BetAmountInput() {
           id="bet-amount"
           type="text"
           inputMode="decimal"
-          value={`$${betAmount}`}
-          onChange={(e) => setBetAmount(e.target.value.replace("$", ""))}
+          value={`$${displayAmount}`}
+          onChange={(e) => {
+            const value = e.target.value.replace("$", "")
+            setDisplayAmount(value)
+            const numValue = Number.parseFloat(value) || 0
+            setBetAmount(Math.min(1000, Math.max(1, numValue)))
+          }}
           className="games-input__number"
           autoComplete="off"
           spellCheck="false"

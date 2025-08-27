@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, ReactNode } from 'react'
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 
 type GameState = 'idle' | 'active' | 'cashout'
 
@@ -22,6 +22,15 @@ interface GameContextType {
   minePositions: Set<number>
   getTileType: (tileIndex: number) => 'diamond' | 'bomb'
   startNewGame: () => void
+  balance: number
+  setBalance: (balance: number) => void
+  betAmount: number
+  setBetAmount: (amount: number) => void
+  deductBet: () => void
+  showAllTiles: boolean
+  setShowAllTiles: (show: boolean) => void
+  bombHitTile: number | null
+  setBombHitTile: (tile: number | null) => void
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined)
@@ -34,6 +43,29 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [showWinModal, setShowWinModal] = useState(false)
   const [selectedMines, setSelectedMines] = useState(3)
   const [minePositions, setMinePositions] = useState<Set<number>>(new Set())
+  const [balance, setBalanceInternal] = useState(1000)
+  const [betAmount, setBetAmount] = useState(100)
+  const [showAllTiles, setShowAllTiles] = useState(false)
+  const [bombHitTile, setBombHitTile] = useState<number | null>(null)
+
+  // Load balance from localStorage on mount
+  useEffect(() => {
+    const savedBalance = localStorage.getItem('minesGameBalance')
+    if (savedBalance) {
+      setBalanceInternal(Number.parseFloat(savedBalance))
+    }
+  }, [])
+
+  // Save balance to localStorage whenever it changes
+  const setBalance = (newBalance: number) => {
+    setBalanceInternal(newBalance)
+    localStorage.setItem('minesGameBalance', newBalance.toString())
+  }
+
+  // Deduct bet amount from balance
+  const deductBet = () => {
+    setBalance(balance - betAmount)
+  }
 
   const setTileLoading = (tileIndex: number, isLoading: boolean) => {
     setLoadingTilesInternal(prev => {
@@ -72,6 +104,16 @@ export function GameProvider({ children }: { children: ReactNode }) {
     if (state === 'diamond') {
       setWinAmount(108.00) // Example win amount
       setGameState('cashout')
+    } else if (state === 'bomb') {
+      // When bomb is hit, reveal all tiles after explosion
+      setBombHitTile(tileIndex)
+      setTimeout(() => {
+        setShowAllTiles(true)
+        // Auto reset after 2 seconds
+        setTimeout(() => {
+          resetGame()
+        }, 2000)
+      }, 800) // Wait for explosion animation
     }
   }
 
@@ -85,6 +127,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setLoadingTilesInternal(new Set())
     setWinAmount(0)
     setShowWinModal(false)
+    setShowAllTiles(false)
+    setBombHitTile(null)
     // Generate new mine positions for next game
     generateMinePositions(selectedMines)
   }
@@ -113,7 +157,16 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setSelectedMines,
       minePositions,
       getTileType,
-      startNewGame
+      startNewGame,
+      balance,
+      setBalance,
+      betAmount,
+      setBetAmount,
+      deductBet,
+      showAllTiles,
+      setShowAllTiles,
+      bombHitTile,
+      setBombHitTile
     }}>
       {children}
     </GameContext.Provider>
