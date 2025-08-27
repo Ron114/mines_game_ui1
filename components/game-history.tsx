@@ -5,8 +5,16 @@ import { useGame } from '../contexts/GameContext'
 export default function GameHistory() {
   const { multiplierValues, diamondsFound, gameState } = useGame()
   
-  // Format multiplier values for display
-  const historyItems = multiplierValues.slice(0, 7).map(val => `x${val}`)
+  // Format large numbers with k suffix
+  const formatMultiplier = (value: number): string => {
+    if (value >= 1000) {
+      return `x${(value / 1000).toFixed(2)}k`
+    }
+    return `x${value}`
+  }
+  
+  // Format current multiplier values for display (always show first 7)
+  const historyItems = multiplierValues.slice(0, 7).map(val => formatMultiplier(val))
 
   return (
     <div className="game-history">

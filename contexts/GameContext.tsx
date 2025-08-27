@@ -33,10 +33,12 @@ interface GameContextType {
   setBombHitTile: (tile: number | null) => void
   diamondsFound: number
   multiplierValues: number[]
+  getCurrentMultipliers: () => number[]
   currentCashoutValue: number
   setCurrentCashoutValue: (value: number) => void
   animateValueUpdate: (newValue: number) => void
   getNextPotentialValue: () => number
+  formatCurrency: (value: number) => string
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined)
@@ -56,8 +58,31 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [diamondsFound, setDiamondsFound] = useState(0)
   const [currentCashoutValue, setCurrentCashoutValue] = useState(0)
   
-  // Multiplier progression based on diamonds found
-  const multiplierValues = [1.8, 2.4, 3.2, 4.5, 5.8, 6.9, 7.5, 9.2, 11.5, 14.8, 18.9, 24.2, 31.8, 42.3, 58.7, 82.4, 118.6, 174.3, 261.5, 402.7, 645.2, 1085.3, 1953.6, 3906.2]
+  // Complete multiplier mapping based on mine count
+  const multiplierMappings: Record<number, number[]> = {
+    2: [1.03, 1.13, 1.23, 1.36, 1.5, 1.67, 1.86],
+    3: [1.08, 1.23, 1.42, 1.64, 1.92, 2.25, 2.68],
+    4: [1.13, 1.36, 1.64, 2.01, 2.48, 3.1, 3.93],
+    5: [1.19, 1.5, 1.92, 2.48, 3.26, 4.34, 5.89],
+    6: [1.25, 1.67, 2.25, 3.1, 4.34, 6.2, 9.06],
+    7: [1.32, 1.86, 2.68, 3.93, 5.89, 9.06, 14.35],
+    8: [1.4, 2.1, 3.21, 5.05, 8.16, 13.59, 23.48],
+    9: [1.48, 2.38, 3.9, 6.6, 11.56, 21.01, 39.92],
+    10: [1.58, 2.71, 4.8, 8.8, 16.81, 33.62, 70.97],
+    11: [1.7, 3.13, 6, 12.01, 25.21, 56.03, 133.06],
+    12: [1.83, 3.65, 7.64, 16.81, 39.22, 98.04, 266.12],
+    13: [1.98, 4.32, 9.93, 24.28, 63.73, 182.08, 576.6],
+    14: [2.16, 5.18, 13.24, 36.42, 109.25, 364.17, 1380],
+    15: [2.38, 6.33, 18.21, 57.23, 200.29, 801.17, 3800],
+    16: [2.64, 7.92, 26.01, 95.38, 400.58, 2000, 12680],
+    17: [2.97, 10.18, 39.02, 171.68, 901.31, 6000, 57080],
+    18: [3.39, 13.57, 62.43, 343.36, 2400, 24030, 456660],
+    19: [3.96, 19, 109.25, 801.17, 8410, 168240],
+    20: [4.75, 28.5, 218.5, 2400, 50470]
+  }
+
+  // Get current multiplier values based on selected mines
+  const multiplierValues = multiplierMappings[selectedMines] || multiplierMappings[3]
 
   // Load balance from localStorage on mount
   useEffect(() => {
@@ -103,6 +128,14 @@ export function GameProvider({ children }: { children: ReactNode }) {
     const nextMultiplierIndex = diamondsFound // This will be the next diamond's index
     const nextMultiplier = multiplierValues[nextMultiplierIndex] || multiplierValues[multiplierValues.length - 1]
     return betAmount * nextMultiplier
+  }
+
+  // Format currency values with k suffix for thousands
+  const formatCurrency = (value: number): string => {
+    if (value >= 1000) {
+      return `$${(value / 1000).toFixed(2)}k`
+    }
+    return `$${value.toFixed(2)}`
   }
 
   const setTileLoading = (tileIndex: number, isLoading: boolean) => {
@@ -233,10 +266,12 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setBombHitTile,
       diamondsFound,
       multiplierValues,
+      getCurrentMultipliers: () => multiplierValues,
       currentCashoutValue,
       setCurrentCashoutValue,
       animateValueUpdate,
-      getNextPotentialValue
+      getNextPotentialValue,
+      formatCurrency
     }}>
       {children}
     </GameContext.Provider>

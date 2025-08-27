@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 export default function GameGrid() {
-  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, cashOut, showWinModal, currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile, getNextPotentialValue } = useGame()
+  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, showWinModal, currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile, getNextPotentialValue, formatCurrency } = useGame()
   const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   const [hoveredTile, setHoveredTile] = useState<number | null>(null)
   
@@ -175,7 +175,7 @@ export default function GameGrid() {
         </div>
         
         <div className="modal-body">
-          <div className="win-amount">${currentCashoutValue.toFixed(2)}</div>
+          <div className="win-amount">{formatCurrency(currentCashoutValue)}</div>
           <div className="modal-divider"></div>
           <div className="multiplier-section">
             <span className="multiplier-label">Multiplier</span>
@@ -195,7 +195,7 @@ export default function GameGrid() {
             onMouseLeave={() => setHoveredTile(null)}
           >
             <div className="game-tile__inner-possible-win">
-              {hoveredTile === tileIndex && (gameState === 'active' || gameState === 'cashout') ? `$${getNextPotentialValue().toFixed(2)}` : ''}
+              {hoveredTile === tileIndex && (gameState === 'active' || gameState === 'cashout') ? formatCurrency(getNextPotentialValue()) : ''}
             </div>
             <div className="game-tile__inner">
               {renderTileContent(tileIndex)}
