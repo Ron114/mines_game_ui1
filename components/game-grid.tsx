@@ -508,7 +508,7 @@ export default function GameGrid() {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: calc(2.5 * (100% / 5) + 1.5 * 10px); /* 2.5 tiles width + gaps */
+          width: calc(2.5 * (100% / 5)); /* Exactly 3 tiles width */
           height: calc(2 * (100% / 5) + 1 * 10px); /* 2 tiles height + 1 gap */
           z-index: 1000;
           border-radius: 16px;
@@ -520,7 +520,7 @@ export default function GameGrid() {
         /* Mobile responsive modal */
         @media (max-width: 819px) {
           .win-modal {
-            width: calc(2.5 * 62px + 1.5 * 14px); /* 2.5 mobile tiles + gaps */
+            width: calc(3 * 62px); /* Exactly 3 mobile tiles */
             height: calc(2 * 62px + 1 * 14px); /* 2 mobile tiles + 1 gap */
             border-radius: 12px;
           }
@@ -545,7 +545,7 @@ export default function GameGrid() {
 
         .win-text {
           color: white;
-          font-family: 'Google Sans', 'Product Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          font-family: Gilroy, sans-serif;
           font-size: 22px;
           font-weight: 700;
           text-align: center;
@@ -567,11 +567,11 @@ export default function GameGrid() {
         }
 
         .left-diamond {
-          margin-right: 12px;
+          margin-right: 4px;
         }
 
         .right-diamond {
-          margin-left: 12px;
+          margin-left: 0px;
         }
 
         @media (max-width: 819px) {
@@ -581,11 +581,11 @@ export default function GameGrid() {
           }
           
           .left-diamond {
-            margin-right: 8px;
+            margin-right: 3px;
           }
           
           .right-diamond {
-            margin-left: 8px;
+            margin-left: 0px;
           }
         }
 
@@ -613,7 +613,7 @@ export default function GameGrid() {
 
         .win-amount {
           color:rgb(171, 222, 247);
-          font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-family: Gilroy, sans-serif;
           font-size: 24px;
           font-weight: 700;
           margin-bottom: 12px;
@@ -653,14 +653,14 @@ export default function GameGrid() {
 
         .multiplier-label {
           color: #f4f9fd;
-          font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-family: Gilroy, sans-serif;
           font-size: 12px;
           font-weight: 400;
         }
 
         .multiplier-value {
           color: #ffffff;
-          font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-family: Gilroy, sans-serif;
           font-size: 12px;
           font-weight: 500;
         }
