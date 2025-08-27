@@ -36,6 +36,7 @@ interface GameContextType {
   currentCashoutValue: number
   setCurrentCashoutValue: (value: number) => void
   animateValueUpdate: (newValue: number) => void
+  getNextPotentialValue: () => number
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined)
@@ -95,6 +96,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
     
     animate()
+  }
+
+  // Get the potential value for the next diamond
+  const getNextPotentialValue = () => {
+    const nextMultiplierIndex = diamondsFound // This will be the next diamond's index
+    const nextMultiplier = multiplierValues[nextMultiplierIndex] || multiplierValues[multiplierValues.length - 1]
+    return betAmount * nextMultiplier
   }
 
   const setTileLoading = (tileIndex: number, isLoading: boolean) => {
@@ -227,7 +235,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
       multiplierValues,
       currentCashoutValue,
       setCurrentCashoutValue,
-      animateValueUpdate
+      animateValueUpdate,
+      getNextPotentialValue
     }}>
       {children}
     </GameContext.Provider>

@@ -5,8 +5,9 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 export default function GameGrid() {
-  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, cashOut, showWinModal, currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile } = useGame()
+  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, cashOut, showWinModal, currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile, getNextPotentialValue } = useGame()
   const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
+  const [hoveredTile, setHoveredTile] = useState<number | null>(null)
   
   // Create 25 tiles for 5x5 grid
   const tiles = Array.from({ length: 25 }, (_, index) => index)
@@ -190,8 +191,12 @@ export default function GameGrid() {
             key={tileIndex} 
             className={getTileClass(tileIndex)}
             onClick={() => handleTileClick(tileIndex)}
+            onMouseEnter={() => setHoveredTile(tileIndex)}
+            onMouseLeave={() => setHoveredTile(null)}
           >
-            <div className="game-tile__inner-possible-win"></div>
+            <div className="game-tile__inner-possible-win">
+              {hoveredTile === tileIndex && (gameState === 'active' || gameState === 'cashout') ? `$${getNextPotentialValue().toFixed(2)}` : ''}
+            </div>
             <div className="game-tile__inner">
               {renderTileContent(tileIndex)}
             </div>
@@ -301,7 +306,7 @@ export default function GameGrid() {
 
         .game-tile__inner-possible-win {
           z-index: 5;
-          color: rgba(255, 255, 255, 0.3);
+          color: #888;
           opacity: 0;
           justify-content: center;
           align-items: center;
@@ -315,6 +320,7 @@ export default function GameGrid() {
           bottom: 0;
           left: 0;
           right: 0;
+          font-family: 'Roboto', sans-serif;
         }
 
         .game-tile__inner {
@@ -330,6 +336,7 @@ export default function GameGrid() {
         .game-tile:hover .game-tile__inner-possible-win {
           opacity: 1;
         }
+
 
         /* Loading tile states */
         .game-tile._loading .game-tile__inner {
