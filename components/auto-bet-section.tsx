@@ -378,7 +378,7 @@ export default function AutoBetSection() {
 
         /* Desktop input padding */
         .settings-input__wrapper label + .input-button + .input-button + .games-input__wrapper .games-input__number {
-          padding-left: 190px;
+          padding-left: 170px;
         }
 
         /* Mobile input padding */

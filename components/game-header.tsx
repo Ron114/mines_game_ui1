@@ -7,6 +7,7 @@ import { useGame } from '../contexts/GameContext'
 
 export default function GameHeader() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isMuted, setIsMuted] = useState(false)
   const { balance } = useGame()
   return (
     <div className="flex items-center relative px-2 text-white/50 pt-2" style={{ maxWidth: '880px', margin: '0 auto', width: '100%' }}>
@@ -57,16 +58,23 @@ export default function GameHeader() {
         >
           ${balance.toFixed(1)}
         </div>
-        <div className="w-7 h-7 ml-3 cursor-pointer relative">
+        <button 
+          className="w-7 h-7 ml-3 cursor-pointer relative"
+          onClick={() => setIsMuted(!isMuted)}
+        >
           <div
-            className="flex items-center justify-center w-7 h-7 min-w-full min-h-full rounded-full"
+            className="flex items-center justify-center w-7 h-7 min-w-full min-h-full rounded-full relative"
             style={{
               background: "linear-gradient(320.64deg, #17191c -42.09%, #32383e 167.71%)",
             }}
           >
             <Volume2 size={14} className="text-white/70" />
+            {/* Dash overlay when muted */}
+            {isMuted && (
+              <div className="volume-mute-dash"></div>
+            )}
           </div>
-        </div>
+        </button>
 
         <button 
           className="w-7 h-7 ml-3 cursor-pointer relative"
@@ -84,6 +92,26 @@ export default function GameHeader() {
       </div>
 
       <style jsx>{`
+        /* Volume mute dash overlay */
+        .volume-mute-dash {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(-45deg);
+          width: 18px;
+          height: 2px;
+          background: #888;
+          border-radius: 1px;
+          z-index: 10;
+        }
+
+        /* Button reset styles */
+        button {
+          border: none;
+          background: none;
+          outline: none;
+        }
+
         /* Mobile responsive styles */
         @media (max-width: 819px) {
           .balance-label {
@@ -93,6 +121,11 @@ export default function GameHeader() {
           .game-header__logo {
             width: 130px;
             height: 45px;
+          }
+
+          .volume-mute-dash {
+            width: 16px;
+            height: 2px;
           }
         }
 
