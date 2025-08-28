@@ -22,62 +22,138 @@ export default function LimitsModal({ isOpen, onClose }: LimitsModalProps) {
       <div 
         className="relative z-10 w-full mx-4"
         style={{
-          maxWidth: "300px", // Reduced from 384px (max-w-md)
-          background: "rgba(8, 10, 12, 0.95)",
-          borderRadius: "10px", // Reduced from 12px
-          border: "1px solid rgba(255, 255, 255, 0.1)",
-          padding: "18px", // Reduced from 24px
-          minHeight: "300px", // Reduced from 400px
+          width: "17.5rem",
+          height: "max-content",
+          background: "rgba(0, 0, 0, 0.4)",
+          backdropFilter: "blur(1.25rem)",
+          border: "1px solid transparent",
+          borderRadius: "1.5rem",
+          padding: "1.5rem 1.5rem 0",
+          margin: "0 auto",
+          boxShadow: "0 12px 15px rgba(0, 0, 0, 0.25)",
         }}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-white text-lg font-medium">Limits</h2>
-          <button
-            onClick={onClose}
-            className="text-white/70 hover:text-white transition-colors"
-            style={{ fontSize: "18px" }}
-          >
-            <X size={18} />
-          </button>
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute cursor-pointer text-white/75 hover:text-white transition-colors z-10"
+          style={{
+            top: "1.5rem",
+            right: "1.5rem",
+          }}
+        >
+          <X size={16} />
+        </button>
+
+        {/* Title */}
+        <div 
+          className="text-white font-semibold"
+          style={{
+            opacity: 0.5,
+            marginBottom: "1.5rem",
+            fontSize: "1rem",
+            fontWeight: 600,
+          }}
+        >
+          Limits
         </div>
 
-        {/* Min Bet Section */}
-        <div className="mb-4">
-          <label className="block text-white/60 text-xs mb-1.5">Min bet</label>
-          <div
-            className="w-full px-3 py-2.5 rounded-lg text-white text-base font-semibold"
+        {/* Min Bet Block */}
+        <div 
+          style={{
+            background: "linear-gradient(312.27deg, rgba(0, 0, 0, 0.125) 0.02%, rgba(0, 0, 0, 0.376) 100.02%)",
+            borderRadius: "0.375rem",
+            height: "3rem",
+            marginBottom: "1.5rem",
+            padding: "0.5rem 0.75rem",
+            boxShadow: "-0.0625rem -0.0625rem 0.125rem rgba(0, 0, 0, 0.25), 0.0625rem 0.0625rem 0.125rem rgba(255, 255, 255, 0.25)",
+          }}
+        >
+          <div 
+            className="text-white/50"
             style={{
-              background: "rgba(16, 20, 24, 0.8)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              marginBottom: "0.0625rem",
+              fontSize: "0.625rem",
+              fontWeight: 400,
+              lineHeight: "0.75rem",
+            }}
+          >
+            Min bet
+          </div>
+          <div 
+            className="text-white"
+            style={{
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              lineHeight: "0.9375rem",
             }}
           >
             $0.1
           </div>
         </div>
 
-        {/* Max Bet Section */}
-        <div className="mb-4">
-          <label className="block text-white/60 text-xs mb-1.5">Max bet</label>
-          <div
-            className="w-full px-3 py-2.5 rounded-lg text-white text-base font-semibold"
+        {/* Max Bet Block */}
+        <div 
+          style={{
+            background: "linear-gradient(312.27deg, rgba(0, 0, 0, 0.125) 0.02%, rgba(0, 0, 0, 0.376) 100.02%)",
+            borderRadius: "0.375rem",
+            height: "3rem",
+            marginBottom: "1.5rem",
+            padding: "0.5rem 0.75rem",
+            boxShadow: "-0.0625rem -0.0625rem 0.125rem rgba(0, 0, 0, 0.25), 0.0625rem 0.0625rem 0.125rem rgba(255, 255, 255, 0.25)",
+          }}
+        >
+          <div 
+            className="text-white/50"
             style={{
-              background: "rgba(16, 20, 24, 0.8)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              marginBottom: "0.0625rem",
+              fontSize: "0.625rem",
+              fontWeight: 400,
+              lineHeight: "0.75rem",
+            }}
+          >
+            Max bet
+          </div>
+          <div 
+            className="text-white"
+            style={{
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              lineHeight: "0.9375rem",
             }}
           >
             $100
           </div>
         </div>
 
-        {/* Max Profit Section */}
-        <div className="mb-4">
-          <label className="block text-white/60 text-xs mb-1.5">Max Profit</label>
-          <div
-            className="w-full px-3 py-2.5 rounded-lg text-white text-base font-semibold"
+        {/* Max Profit Block */}
+        <div 
+          style={{
+            background: "linear-gradient(312.27deg, rgba(0, 0, 0, 0.125) 0.02%, rgba(0, 0, 0, 0.376) 100.02%)",
+            borderRadius: "0.375rem",
+            height: "3rem",
+            marginBottom: "1.5rem",
+            padding: "0.5rem 0.75rem",
+            boxShadow: "-0.0625rem -0.0625rem 0.125rem rgba(0, 0, 0, 0.25), 0.0625rem 0.0625rem 0.125rem rgba(255, 255, 255, 0.25)",
+          }}
+        >
+          <div 
+            className="text-white/50"
             style={{
-              background: "rgba(16, 20, 24, 0.8)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              marginBottom: "0.0625rem",
+              fontSize: "0.625rem",
+              fontWeight: 400,
+              lineHeight: "0.75rem",
+            }}
+          >
+            Max Profit
+          </div>
+          <div 
+            className="text-white"
+            style={{
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              lineHeight: "0.9375rem",
             }}
           >
             $10000

@@ -210,12 +210,15 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               type="range"
               min="0"
               max="1"
-              step="0.1"
+              step="0.01"
               value={volume}
               onChange={(e) => setVolume(parseFloat(e.target.value))}
               onMouseDown={() => setIsDragging(true)}
               onMouseUp={() => setIsDragging(false)}
+              onTouchStart={() => setIsDragging(true)}
+              onTouchEnd={() => setIsDragging(false)}
               className="absolute w-full h-full opacity-0 cursor-pointer z-20"
+              style={{ margin: 0, padding: 0 }}
             />
             <div
               className="w-full block relative overflow-hidden"
@@ -225,30 +228,37 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 boxShadow: "-0.0625rem -0.0625rem 0.125rem rgba(0, 0, 0, 0.25), 0.0625rem 0.0625rem 0.125rem rgba(255, 255, 255, 0.25), inset 0.125rem 0.125rem 0.5rem 0.0625rem rgba(4, 4, 5, 0.6)",
               }}
             >
+              {/* Green gradient background - only visible portion */}
               <div
-                className="absolute inset-0 overflow-hidden"
+                className="absolute top-0 left-0 h-full overflow-hidden transition-all duration-150 ease-out"
                 style={{
                   background: "linear-gradient(270deg, #01ffa4 -33.45%, rgba(0, 165, 125, 0.5) 100%)",
                   filter: "blur(0.25rem)",
                   borderRadius: "0.5625rem",
                   boxShadow: "0 0 0.625rem #a6ff60",
-                  opacity: volume > 0 ? 1 : 0.3,
+                  width: `${volume * 100}%`,
+                  opacity: volume > 0 ? 1 : 0,
                 }}
               />
+              {/* Dark overlay for remaining portion */}
               <div
-                className="absolute inset-0"
+                className="absolute top-0 h-full transition-all duration-150 ease-out"
                 style={{
                   background: "#051c18",
-                  transform: `translateX(${volume * 100}%)`,
+                  left: `${volume * 100}%`,
+                  right: 0,
                   borderRadius: "0.5625rem",
                 }}
               />
             </div>
+            {/* Draggable button */}
             <div
-              className="absolute top-1/2 -translate-y-1/2 flex items-center justify-end w-full"
+              className="absolute top-1/2 transition-all duration-150 ease-out"
               style={{
-                transform: `translateX(${(volume * 100) - 100}%) translateY(-50%)`,
+                left: `${volume * 100}%`,
+                transform: `translateX(-50%) translateY(-50%)`,
                 pointerEvents: "none",
+                zIndex: 10,
               }}
             >
               <div
@@ -258,19 +268,22 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   borderRadius: "50%",
                   width: "1.5rem",
                   height: "1.5rem",
-                  padding: "0.125rem",
                   boxShadow: "-0.1875rem -0.1875rem 1rem rgba(232, 237, 243, 0.05), 0.1875rem 0.125rem 0.25rem rgba(2, 3, 3, 0.486), inset -1rem -0.375rem 5rem rgba(248, 249, 249, 0.03)",
+                  transition: "all 0.15s ease-out",
+                  transform: isDragging ? "scale(1.1)" : "scale(1)",
                 }}
               >
+                {/* Outer shadow ring */}
                 <div
-                  className="absolute inset-0 rounded-full"
+                  className="absolute inset-0 rounded-full transition-all duration-150 ease-out"
                   style={{
                     background: "linear-gradient(135deg, #000 0%, rgba(255, 255, 255, 0) 100%)",
                     margin: "0.125rem",
                   }}
                 />
+                {/* Inner glowing dot */}
                 <div
-                  className="absolute rounded-full"
+                  className="absolute rounded-full transition-all duration-150 ease-out"
                   style={{
                     background: volume > 0 ? "#00ff75" : "#666",
                     top: "0.25rem",
