@@ -1,6 +1,6 @@
 "use client"
 
-import { X, Target, FileText, Volume2 } from "lucide-react"
+import { X, Target, FileText, Volume2, VolumeX } from "lucide-react"
 import { useState } from "react"
 import LimitsModal from "./limits-modal"
 import RulesModal from "./rules-modal"
@@ -13,6 +13,8 @@ interface SettingsModalProps {
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [isLimitsOpen, setIsLimitsOpen] = useState(false)
   const [isRulesOpen, setIsRulesOpen] = useState(false)
+  const [volume, setVolume] = useState(1)
+  const [isDragging, setIsDragging] = useState(false)
 
   if (!isOpen) return null
 
@@ -29,93 +31,253 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         className="absolute z-10 settings-modal"
         style={{
           width: "280px", // 30% smaller than max-w-md (384px)
-          background: "linear-gradient(135deg, #1a1e22 0%, #12151a 50%, #0a0c0f 100%)",
+          background: "linear-gradient(135deg, rgba(26, 32, 38, 0.95) 0%, rgba(18, 21, 26, 0.95) 50%, rgba(10, 12, 15, 0.95) 100%)",
           borderRadius: "12px",
-          border: "1px solid rgba(255, 255, 255, 0.1)",
+          border: "1px solid rgba(255, 255, 255, 0.15)",
           padding: "18px", // Reduced from 24px
           minHeight: "320px", // Reduced from 400px
+          boxShadow: "0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.35), -0.125rem -0.125rem 0.25rem rgba(255, 255, 255, 0.1)",
+          backdropFilter: "blur(10px)",
         }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-white text-lg font-medium">Settings</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 
+            className="text-white font-semibold relative"
+            style={{
+              color: "rgba(255, 255, 255, 0.5)",
+              marginBottom: "1.5rem",
+              fontSize: "1rem",
+              fontWeight: 600,
+            }}
+          >
+            Settings
+          </h2>
           <button
             onClick={onClose}
-            className="text-white/70 hover:text-white transition-colors"
-            style={{ fontSize: "18px" }}
+            className="cursor-pointer text-white/70 hover:text-white transition-colors absolute z-10"
+            style={{
+              top: "1.5rem",
+              right: "1.5rem",
+            }}
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
         {/* Nickname Section */}
-        <div className="mb-4">
-          <label className="block text-white/60 text-xs mb-1.5">Nickname</label>
+        <div className="mb-6">
           <div
-            className="w-full px-3 py-2.5 rounded-lg text-white text-sm"
+            className="relative"
             style={{
-              background: "rgba(32, 37, 43, 0.8)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              background: "linear-gradient(148.95deg, rgba(190, 191, 192, 0.8) -14.69%, rgba(35, 47, 57, 0.23) 180.58%)",
+              borderRadius: "0.6875rem",
+              height: "2.875rem",
+              padding: "0.0625rem",
+              boxShadow: "inset 0.125rem 0.125rem 0.125rem rgba(26, 32, 38, 0.4)",
             }}
           >
-            Official Fowl
+            <div
+              className="relative w-full h-full"
+              style={{
+                background: "linear-gradient(318.44deg, #1a1b1f 21.28%, #242a30 141.88%)",
+                borderRadius: "0.625rem",
+                boxShadow: "inset 0.125rem 0.1875rem 0.625rem #070709, inset -0.125rem -0.125rem 0.625rem rgba(255, 255, 255, 0.05)",
+              }}
+            >
+              <label 
+                className="absolute text-white/50 font-medium"
+                style={{
+                  fontSize: "0.625rem",
+                  top: "0.5rem",
+                  left: "0.625rem",
+                }}
+              >
+                Nickname
+              </label>
+              <input
+                type="text"
+                defaultValue="Diplomatic Frog"
+                className="absolute w-full h-full bg-transparent border-none outline-none text-white font-bold"
+                style={{
+                  padding: "1.25rem 3.0625rem 0.375rem 0.625rem",
+                  fontSize: "0.8125rem",
+                  color: "#d6e1ef",
+                }}
+              />
+            </div>
           </div>
         </div>
 
         {/* Buttons Section */}
-        <div className="space-y-2.5 mb-4">
+        <div className="space-y-1.5 mb-6">
           <button
             onClick={() => setIsLimitsOpen(true)}
-            className="w-full flex items-center px-3 py-2.5 rounded-lg text-white/70 hover:text-white transition-colors text-sm"
+            className="w-full flex items-center cursor-pointer transition-colors"
             style={{
-              background: "rgba(32, 37, 43, 0.6)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              background: "rgba(255, 255, 255, 0.1)",
+              border: "0.0625rem solid rgba(255, 255, 255, 0.35)",
+              borderRadius: "0.375rem",
+              height: "2.25rem",
+              padding: "0.75rem",
+              boxShadow: "0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.35)",
             }}
           >
-            <Target size={16} className="mr-2.5" />
-            <span>Limits</span>
+            <div 
+              className="flex items-center justify-center mr-3"
+              style={{
+                color: "rgba(255, 255, 255, 0.5)",
+                borderRadius: "0.375rem",
+                width: "1.5rem",
+                height: "1.5rem",
+                fontSize: "0.875rem",
+              }}
+            >
+              <Target size={14} />
+            </div>
+            <span 
+              className="flex-1 text-center font-bold"
+              style={{
+                color: "#fff",
+                opacity: 0.5,
+                fontSize: "0.75rem",
+              }}
+            >
+              Limits
+            </span>
           </button>
 
           <button
             onClick={() => setIsRulesOpen(true)}
-            className="w-full flex items-center px-3 py-2.5 rounded-lg text-white/70 hover:text-white transition-colors text-sm"
+            className="w-full flex items-center cursor-pointer transition-colors mb-6"
             style={{
-              background: "rgba(32, 37, 43, 0.6)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              background: "rgba(255, 255, 255, 0.1)",
+              border: "0.0625rem solid rgba(255, 255, 255, 0.35)",
+              borderRadius: "0.375rem",
+              height: "2.25rem",
+              padding: "0.75rem",
+              boxShadow: "0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.35)",
             }}
           >
-            <FileText size={16} className="mr-2.5" />
-            <span>Rules</span>
+            <div 
+              className="flex items-center justify-center mr-3"
+              style={{
+                color: "rgba(255, 255, 255, 0.5)",
+                borderRadius: "0.375rem",
+                width: "1.5rem",
+                height: "1.5rem",
+                fontSize: "0.875rem",
+              }}
+            >
+              <FileText size={14} />
+            </div>
+            <span 
+              className="flex-1 text-center font-bold"
+              style={{
+                color: "#fff",
+                opacity: 0.5,
+                fontSize: "0.75rem",
+              }}
+            >
+              Rules
+            </span>
           </button>
         </div>
 
         {/* Volume Control */}
-        <div className="flex items-center space-x-3">
-          <Volume2 size={16} className="text-white/60" />
-          <div className="flex-1 relative">
+        <div 
+          className="flex items-center cursor-pointer"
+          style={{
+            margin: "0.75rem 0",
+            height: "2.25rem",
+            padding: "0.75rem",
+          }}
+        >
+          <div 
+            className="flex items-center justify-center mr-3"
+            style={{
+              color: "rgba(255, 255, 255, 0.5)",
+              borderRadius: "0.375rem",
+              width: "1.5rem",
+              height: "1.5rem",
+              fontSize: "0.875rem",
+            }}
+          >
+            {volume === 0 ? <VolumeX size={14} /> : <Volume2 size={14} />}
+          </div>
+          <div className="flex-1 relative" style={{ height: "1.125rem" }}>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.1"
+              value={volume}
+              onChange={(e) => setVolume(parseFloat(e.target.value))}
+              onMouseDown={() => setIsDragging(true)}
+              onMouseUp={() => setIsDragging(false)}
+              className="absolute w-full h-full opacity-0 cursor-pointer z-20"
+            />
             <div
-              className="w-full h-2 rounded-full"
+              className="w-full block relative overflow-hidden"
               style={{
-                background: "rgba(20, 24, 28, 0.9)",
-                border: "1px solid rgba(255, 255, 255, 0.05)",
+                borderRadius: "0.5625rem",
+                height: "1.125rem",
+                boxShadow: "-0.0625rem -0.0625rem 0.125rem rgba(0, 0, 0, 0.25), 0.0625rem 0.0625rem 0.125rem rgba(255, 255, 255, 0.25), inset 0.125rem 0.125rem 0.5rem 0.0625rem rgba(4, 4, 5, 0.6)",
               }}
             >
               <div
-                className="h-full rounded-full relative"
+                className="absolute inset-0 overflow-hidden"
                 style={{
-                  background: "linear-gradient(90deg, #00ff88 0%, #00dd77 50%, #00cc6a 100%)",
-                  width: "65%",
-                  boxShadow: "0 0 8px rgba(0, 255, 136, 0.3)",
+                  background: "linear-gradient(270deg, #01ffa4 -33.45%, rgba(0, 165, 125, 0.5) 100%)",
+                  filter: "blur(0.25rem)",
+                  borderRadius: "0.5625rem",
+                  boxShadow: "0 0 0.625rem #a6ff60",
+                  opacity: volume > 0 ? 1 : 0.3,
+                }}
+              />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: "#051c18",
+                  transform: `translateX(${volume * 100}%)`,
+                  borderRadius: "0.5625rem",
+                }}
+              />
+            </div>
+            <div
+              className="absolute top-1/2 -translate-y-1/2 flex items-center justify-end w-full"
+              style={{
+                transform: `translateX(${(volume * 100) - 100}%) translateY(-50%)`,
+                pointerEvents: "none",
+              }}
+            >
+              <div
+                className="flex items-center justify-center overflow-hidden relative"
+                style={{
+                  background: "linear-gradient(312.89deg, #121416 -8.2%, #353a40 103.29%)",
+                  borderRadius: "50%",
+                  width: "1.5rem",
+                  height: "1.5rem",
+                  padding: "0.125rem",
+                  boxShadow: "-0.1875rem -0.1875rem 1rem rgba(232, 237, 243, 0.05), 0.1875rem 0.125rem 0.25rem rgba(2, 3, 3, 0.486), inset -1rem -0.375rem 5rem rgba(248, 249, 249, 0.03)",
                 }}
               >
                 <div
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2 rounded-full shadow-xl border-2 border-white/20"
+                  className="absolute inset-0 rounded-full"
                   style={{
-                    background: "radial-gradient(circle, #00ff88 0%, #00dd77 70%, #00cc6a 100%)",
-                    width: "18px",
-                    height: "18px",
-                    right: "-9px",
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.4), 0 0 12px rgba(0, 255, 136, 0.4)",
+                    background: "linear-gradient(135deg, #000 0%, rgba(255, 255, 255, 0) 100%)",
+                    margin: "0.125rem",
+                  }}
+                />
+                <div
+                  className="absolute rounded-full"
+                  style={{
+                    background: volume > 0 ? "#00ff75" : "#666",
+                    top: "0.25rem",
+                    bottom: "0.25rem",
+                    left: "0.25rem",
+                    right: "0.25rem",
+                    boxShadow: volume > 0 ? "0 0 0.3125rem #a6ff60, 0 0 0.625rem #76ff60" : "none",
                   }}
                 />
               </div>
