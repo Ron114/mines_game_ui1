@@ -9,14 +9,10 @@ export default function GameGrid() {
   const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   const [hoveredTile, setHoveredTile] = useState<number | null>(null)
   
-  // Create 25 tiles for 5x5 grid
   const tiles = Array.from({ length: 25 }, (_, index) => index)
-
-  // Results are now determined by random mine placement
 
   const [bombClicked, setBombClicked] = useState(false)
   
-  // Reset bombClicked when game resets
   useEffect(() => {
     if (gameState === 'idle' && !showAllTiles) {
       setBombClicked(false)
@@ -24,36 +20,27 @@ export default function GameGrid() {
   }, [gameState, showAllTiles])
   
   const handleTileClick = (tileIndex: number) => {
-    // Only allow clicks when game is active or cashout and tile hasn't been clicked and not loading
-    // Also prevent clicks if bomb was hit (showAllTiles is true or bombClicked is true)
     if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex] || loadingTiles.has(tileIndex) || showAllTiles || bombClicked) return
 
-    // Check what type this tile is BEFORE processing
     const result = getTileType(tileIndex)
     
-    // If it's a bomb, immediately prevent any further clicks
     if (result === 'bomb') {
-      setBombClicked(true) // Immediately prevent any other clicks
+      setBombClicked(true)
     }
 
-    // Check if this is the first tile click (deduct bet amount)
     const isFirstClick = Object.keys(tileStates).length === 0
     if (isFirstClick) {
       deductBet()
     }
     
-    // Start loading animation
     setTileLoading(tileIndex, true)
     
-    // Show loading circles for 400ms, then reveal result
     setTimeout(() => {
       setTileLoading(tileIndex, false)
       
       if (result === 'bomb') {
-        // Start explosion animation
         setAnimatingTiles(prev => new Set(prev).add(tileIndex))
         
-        // After explosion animation, show the bomb
         setTimeout(() => {
           setTileState(tileIndex, result)
           setAnimatingTiles(prev => {
@@ -65,7 +52,7 @@ export default function GameGrid() {
       } else {
         setTileState(tileIndex, result)
       }
-    }, 400) // 400ms loading time for expanding circles
+    }, 400)
   }
 
   const getTileClass = (tileIndex: number) => {
@@ -99,7 +86,7 @@ export default function GameGrid() {
     const shouldShowContent = state || (showAllTiles && !isLoading)
     
     if (isLoading) {
-      return null // Content handled by absolute positioned circles
+      return null
     } else if (isAnimating) {
       return (
         <div className="tile-content explosion-container">
@@ -150,8 +137,7 @@ export default function GameGrid() {
   }
 
   return (
-    <div className="table-holder">
-      {/* WIN MODAL - Only visible when showWinModal is true */}
+          <div className="table-holder">
       {showWinModal && (
       <div className="win-modal">
         <div className="modal-header">
@@ -456,11 +442,10 @@ export default function GameGrid() {
           pointer-events: none;
         }
 
-        /* 🎯 CIRCLE LOADER SIZING - UPDATE THESE VALUES TO CHANGE SIZE */
         .expanding-circles {
           position: relative;
-          width: 64px;          /* 📏 Container size - increase this to make overall loader bigger */
-          height: 64px;         /* 📏 Container size - keep same as width */
+          width: 64px;
+          height: 64px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -472,15 +457,15 @@ export default function GameGrid() {
         }
 
         .outer-circle {
-          width: 44px;          /* 📏 Outer circle size - increase to make outer circle bigger */
-          height: 44px;         /* 📏 Outer circle size - keep same as width */
+          width: 44px;
+          height: 44px;
           background: transparent;
           border: 2px solid rgba(255, 255, 255, 0.4);
         }
 
         .inner-circle {
-          width: 15px;          /* 📏 Inner circle start size - increase to make inner circle bigger */
-          height: 15px;         /* 📏 Inner circle start size - keep same as width */
+          width: 15px;
+          height: 15px;
           background: transparent;
           border: 2px solid rgba(255, 255, 255, 0.9);
           animation: expand-pulse 1.2s ease-in-out infinite;
@@ -488,68 +473,66 @@ export default function GameGrid() {
 
         @keyframes expand-pulse {
           0% {
-            width: 10px;        /* 📏 Inner circle start size - should match .inner-circle width */
-            height: 10px;       /* 📏 Inner circle start size - should match .inner-circle height */
+            width: 10px;
+            height: 10px;
             opacity: 1;
           }
           50% {
-            width: 28px;        /* 📏 Inner circle expanded size - should be smaller than outer circle */
-            height: 28px;       /* 📏 Inner circle expanded size - should be smaller than outer circle */
+            width: 28px;
+            height: 28px;
             opacity: 0.6;
           }
           100% {
-            width: 10px;        /* 📏 Inner circle end size - should match start size */
-            height: 10px;       /* 📏 Inner circle end size - should match start size */
+            width: 10px;
+            height: 10px;
             opacity: 1;
           }
         }
 
-        /* 📱 MOBILE CIRCLE LOADER SIZING - UPDATE THESE FOR MOBILE */
         @media (max-width: 819px) {
           .expanding-circles {
-            width: 28px;        /* 📏 Mobile container size */
-            height: 28px;       /* 📏 Mobile container size */
+            width: 28px;
+            height: 28px;
           }
 
           .outer-circle {
-            width: 28px;        /* 📏 Mobile outer circle size */
-            height: 28px;       /* 📏 Mobile outer circle size */
+            width: 28px;
+            height: 28px;
             border-width: 1px;
           }
 
           .inner-circle {
-            width: 8px;         /* 📏 Mobile inner circle start size */
-            height: 8px;        /* 📏 Mobile inner circle start size */
+            width: 8px;
+            height: 8px;
             border-width: 1px;
           }
 
           @keyframes expand-pulse {
             0% {
-              width: 8px;       /* 📏 Mobile inner start - should match mobile inner-circle */
-              height: 8px;      /* 📏 Mobile inner start - should match mobile inner-circle */
+              width: 8px;
+              height: 8px;
               opacity: 1;
             }
             50% {
-              width: 22px;      /* 📏 Mobile inner expanded - should be smaller than mobile outer */
-              height: 22px;     /* 📏 Mobile inner expanded - should be smaller than mobile outer */
+              width: 22px;
+              height: 22px;
               opacity: 0.6;
             }
             100% {
-              width: 8px;       /* 📏 Mobile inner end - should match start */
-              height: 8px;      /* 📏 Mobile inner end - should match start */
+              width: 8px;
+              height: 8px;
               opacity: 1;
             }
           }
         }
 
-        /* 🏆 WIN MODAL STYLES */
         .win-modal {
           position: absolute;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: calc(2.5 * (100% / 5)); /* Exactly 3 tiles width */
-          height: calc(2 * (100% / 5) + 1 * 10px); /* 2 tiles height + 1 gap */
+          width: calc(2.5 * (100% / 5));
+          height: calc(2 * (100% / 5) + 1 * 10px);
           z-index: 1000;
           border-radius: 16px;
           overflow: hidden;
@@ -557,16 +540,14 @@ export default function GameGrid() {
                       0 8px 16px rgba(0, 0, 0, 0.3);
         }
 
-        /* Mobile responsive modal */
         @media (max-width: 819px) {
           .win-modal {
-            width: calc(3 * 62px); /* Exactly 3 mobile tiles */
-            height: calc(2 * 62px + 1 * 14px); /* 2 mobile tiles + 1 gap */
+            width: calc(3 * 62px);
+            height: calc(2 * 62px + 1 * 14px);
             border-radius: 12px;
           }
         }
 
-        /* MODAL HEADER - Blue section (25% height) */
         .modal-header {
           height: 25%;
           background: linear-gradient(180deg, #52a5d4 0%, #4e9ed0 55%, #4b74a9 100%);
@@ -628,7 +609,6 @@ export default function GameGrid() {
           }
         }
 
-        /* MODAL BODY - True glass transparency (75% height) */
         .modal-body {
           height: 75%;
           background: rgba(255, 255, 255, 0.02); /* Almost invisible background */
@@ -656,7 +636,6 @@ export default function GameGrid() {
           font-size: 24px;
           font-weight: 700;
           margin-bottom: 12px;
-          // text-shadow: 0 1px 0 #bfebfb;
         }
 
         @media (max-width: 819px) {

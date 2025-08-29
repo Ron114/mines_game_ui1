@@ -7,7 +7,6 @@ export default function MinesSelector() {
   const { selectedMines, setSelectedMines } = useGame()
   const [customMines, setCustomMines] = useState(selectedMines.toString())
   
-  // Update customMines when selectedMines changes from context
   useEffect(() => {
     setCustomMines(selectedMines.toString())
   }, [selectedMines])

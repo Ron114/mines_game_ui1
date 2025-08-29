@@ -17,7 +17,6 @@ export default function GameContainer() {
   const [gameMode, setGameMode] = useState<"manual" | "auto">("manual")
   return (
     <div className="game-container mt-2">
-      {/* Desktop Layout */}
       <div className="desktop-layout">
         <div className="mode-tabs">
           <GameModeTabs onModeChange={setGameMode} />
@@ -49,26 +48,20 @@ export default function GameContainer() {
         </div>
       </div>
 
-      {/* Mobile Layout */}
       <div className="mobile-layout">
-        {/* Mobile Header with History */}
         <div className="mobile-history">
           <GameHistory />
         </div>
         
-        {/* Mobile Mode Tabs */}
         <div className="mobile-mode-tabs">
           <GameModeTabs onModeChange={setGameMode} />
         </div>
         
-        {/* Mobile Game Grid */}
         <div className="mobile-chart">
           <GameGrid />
         </div>
         
-        {/* Mobile Game Controls */}
         <div className="mobile-betslip">
-          {/* Conditional Start Button based on mode */}
           {gameMode === "manual" ? (
             <div className="mobile-start-button">
               <StartGameButton />
@@ -79,17 +72,14 @@ export default function GameContainer() {
             </div>
           )}
           
-          {/* Mobile Bet Amount with integrated controls */}
           <div className="mobile-bet-amount">
             <MobileBetAmount />
           </div>
           
-          {/* Mines Selector */}
           <div className="mobile-mines">
             <MinesSelector />
           </div>
           
-          {/* Conditional Sections based on mode */}
           {gameMode === "manual" ? (
             <div className="mobile-game-details">
               <GameDetails />
@@ -101,7 +91,6 @@ export default function GameContainer() {
           )}
         </div>
         
-        {/* Mobile Statistics */}
         <div className="mobile-stats">
           <GameStatistics />
         </div>
@@ -112,12 +101,10 @@ export default function GameContainer() {
           position: relative;
         }
 
-        /* Desktop Layout - Default hidden on mobile */
         .desktop-layout {
           display: none;
         }
 
-        /* Mobile Layout - Default visible */
         .mobile-layout {
           display: flex;
           flex-direction: column;
@@ -126,7 +113,6 @@ export default function GameContainer() {
           gap: 0;
         }
 
-        /* Mobile specific styles */
         .mobile-history {
           margin: 0 10px 8px 10px;
         }
@@ -171,7 +157,6 @@ export default function GameContainer() {
           margin: 16px 10px 0 10px;
         }
 
-        /* Desktop styles - applied when screen is wide enough */
         @media (min-width: 820px) {
           .mobile-layout {
             display: none;

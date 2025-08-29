@@ -8,7 +8,6 @@ export default function MobileBetAmount() {
   const [displayAmount, setDisplayAmount] = useState(betAmount.toString())
   const [showError, setShowError] = useState(false)
   
-  // Update display when betAmount changes from context
   useEffect(() => {
     setDisplayAmount(betAmount.toString())
   }, [betAmount])

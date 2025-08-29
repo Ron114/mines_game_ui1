@@ -7,7 +7,6 @@ export default function BetAmountInput() {
   const { betAmount, setBetAmount } = useGame()
   const [displayAmount, setDisplayAmount] = useState(betAmount.toString())
   
-  // Update display when betAmount changes from context
   useEffect(() => {
     setDisplayAmount(betAmount.toString())
   }, [betAmount])
@@ -185,7 +184,7 @@ export default function BetAmountInput() {
         .button {
           cursor: pointer;
           border-radius: 6px;
-          height: 24px; // Reduced button height from 28px to 24px (15% decrease)
+          height: 24px;
           padding: 1px;
           transition: opacity .5s cubic-bezier(.075,.82,.165,1);
           display: flex;

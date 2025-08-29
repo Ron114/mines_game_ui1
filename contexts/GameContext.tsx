@@ -58,7 +58,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [diamondsFound, setDiamondsFound] = useState(0)
   const [currentCashoutValue, setCurrentCashoutValue] = useState(0)
   
-  // Complete multiplier mapping based on mine count
   const multiplierMappings: Record<number, number[]> = {
     2: [1.03, 1.13, 1.23, 1.36, 1.5, 1.67, 1.86],
     3: [1.08, 1.23, 1.42, 1.64, 1.92, 2.25, 2.68],
@@ -81,10 +80,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
     20: [4.75, 28.5, 218.5, 2400, 50470]
   }
 
-  // Get current multiplier values based on selected mines
   const multiplierValues = multiplierMappings[selectedMines] || multiplierMappings[3]
 
-  // Load balance from localStorage on mount
   useEffect(() => {
     const savedBalance = localStorage.getItem('minesGameBalance')
     if (savedBalance) {
@@ -92,21 +89,18 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  // Save balance to localStorage whenever it changes
   const setBalance = (newBalance: number) => {
     setBalanceInternal(newBalance)
     localStorage.setItem('minesGameBalance', newBalance.toString())
   }
 
-  // Deduct bet amount from balance
   const deductBet = () => {
     setBalance(balance - betAmount)
   }
 
-  // Animate cashout value update
   const animateValueUpdate = (newValue: number) => {
     const startValue = currentCashoutValue
-    const increment = (newValue - startValue) / 30 // 30 steps for smooth animation
+    const increment = (newValue - startValue) / 30
     let step = 0
     
     const animate = () => {
@@ -123,14 +117,12 @@ export function GameProvider({ children }: { children: ReactNode }) {
     animate()
   }
 
-  // Get the potential value for the next diamond
   const getNextPotentialValue = () => {
-    const nextMultiplierIndex = diamondsFound // This will be the next diamond's index
+    const nextMultiplierIndex = diamondsFound
     const nextMultiplier = multiplierValues[nextMultiplierIndex] || multiplierValues[multiplierValues.length - 1]
     return betAmount * nextMultiplier
   }
 
-  // Format currency values with k suffix for thousands
   const formatCurrency = (value: number): string => {
     if (value >= 1000) {
       return `$${(value / 1000).toFixed(2)}k`
@@ -150,7 +142,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
     })
   }
 
-  // Generate random mine positions when game starts
   const generateMinePositions = (numMines: number) => {
     const positions = new Set<number>()
     const totalTiles = 25
@@ -163,7 +154,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setMinePositions(positions)
   }
 
-  // Get tile type based on mine positions
   const getTileType = (tileIndex: number): 'diamond' | 'bomb' => {
     return minePositions.has(tileIndex) ? 'bomb' : 'diamond'
   }
@@ -171,45 +161,36 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const setTileState = (tileIndex: number, state: 'diamond' | 'bomb') => {
     setTileStatesInternal(prev => ({ ...prev, [tileIndex]: state }))
     
-    // If it's a diamond, calculate new multiplier and update cashout value
     if (state === 'diamond') {
       const newDiamondsCount = diamondsFound + 1
       setDiamondsFound(newDiamondsCount)
       
-      // Calculate new cashout value based on bet amount and current multiplier
       const multiplier = multiplierValues[newDiamondsCount - 1] || multiplierValues[multiplierValues.length - 1]
       const newCashoutValue = betAmount * multiplier
       
-      // Animate the value update
       animateValueUpdate(newCashoutValue)
       setWinAmount(newCashoutValue)
       setGameState('cashout')
     } else if (state === 'bomb') {
-      // When bomb is hit, immediately reset game state and button
       setGameState('idle')
       setCurrentCashoutValue(0)
       setDiamondsFound(0)
       
-      // Set bomb hit tile for explosion animation
       setBombHitTile(tileIndex)
       
-      // Show all tiles after explosion animation (visual only)
       setTimeout(() => {
         setShowAllTiles(true)
-        // Auto reset after 2.5 seconds 
         setTimeout(() => {
           resetGame()
         }, 2500)
-      }, 800) // Wait for explosion animation
+      }, 800)
     }
   }
 
   const cashOut = () => {
-    // Add winnings to balance
     setBalance(balance + currentCashoutValue)
     setShowWinModal(true)
     
-    // Auto-close modal and reset game after 2.5 seconds
     setTimeout(() => {
       setShowWinModal(false)
       resetGame()
@@ -226,11 +207,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setBombHitTile(null)
     setDiamondsFound(0)
     setCurrentCashoutValue(0)
-    // Generate new mine positions for next game
     generateMinePositions(selectedMines)
   }
 
-  // Generate initial mine positions when selectedMines changes or on first load
   const startNewGame = () => {
     generateMinePositions(selectedMines)
     setGameState('active')

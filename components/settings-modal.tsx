@@ -30,12 +30,12 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       <div 
         className="absolute z-10 settings-modal"
         style={{
-          width: "280px", // 30% smaller than max-w-md (384px)
+          width: "280px",
           background: "linear-gradient(135deg, rgba(26, 32, 38, 0.95) 0%, rgba(18, 21, 26, 0.95) 50%, rgba(10, 12, 15, 0.95) 100%)",
           borderRadius: "12px",
           border: "1px solid rgba(255, 255, 255, 0.15)",
-          padding: "18px", // Reduced from 24px
-          minHeight: "320px", // Reduced from 400px
+          padding: "18px",
+          minHeight: "320px",
           boxShadow: "0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.35), -0.125rem -0.125rem 0.25rem rgba(255, 255, 255, 0.1)",
           backdropFilter: "blur(10px)",
         }}
