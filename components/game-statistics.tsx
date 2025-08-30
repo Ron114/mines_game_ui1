@@ -6,6 +6,7 @@ export default function GameStatistics() {
   const [activeTab, setActiveTab] = useState("all_bets")
   const [gameData, setGameData] = useState<any[]>([])
   const [isClient, setIsClient] = useState(false)
+  const [enteringRowId, setEnteringRowId] = useState<string | null>(null)
 
   const tabs = [
     { id: "all_bets", label: "All Bets" },
@@ -71,7 +72,7 @@ export default function GameStatistics() {
 
   const generateRandomRow = () => {
     return {
-      id: Date.now() + Math.random(),
+      id: `${Date.now()}-${Math.random()}`,
       game: getRandomGame(),
       icon: getRandomIcon(),
       player: getRandomPlayer(),
@@ -106,13 +107,23 @@ export default function GameStatistics() {
   useEffect(() => {
     if (!isClient) return
     
-    // Add new rows periodically - no visual effects, just data updates
+    // Add new rows periodically with smooth animation
     const interval = setInterval(() => {
+      const newRow = generateRandomRow()
+      
+      // Set the entering row ID to trigger animation
+      setEnteringRowId(newRow.id)
+      
+      // Update game data
       setGameData(prevData => {
-        const newRow = generateRandomRow()
         // Add to top, remove from bottom, keep exact count
-        return [newRow, ...prevData.slice(0, 23)] // Keep only 24 rows total for clean overflow
+        return [newRow, ...prevData.slice(0, 23)] // Keep only 24 rows total
       })
+      
+      // Remove the entering state after animation completes
+      setTimeout(() => {
+        setEnteringRowId(null)
+      }, 100) // Slightly longer delay for smoother transition
       
     }, 1100) // New row every 700ms
     
@@ -183,7 +194,10 @@ export default function GameStatistics() {
               </div>
             ) : (
               gameData.map((row) => (
-              <div key={row.id} className="row">
+              <div 
+                key={row.id} 
+                className={`row ${row.id === enteringRowId ? 'row-entering' : ''}`}
+              >
                 {/* Desktop row */}
                 <div className="desktop-row">
                   <div className="cell _capitalize _nowrap">
@@ -342,9 +356,16 @@ export default function GameStatistics() {
           display: flex;
           padding: 8px 0;
           border-bottom: none;
-          transition: background-color 0.2s ease;
+          transition: transform 0.4s ease-out, background-color 0.2s ease;
           min-height: 28px;
           flex-shrink: 0;
+          transform: translateY(0);
+          opacity: 1;
+        }
+
+        .row-entering {
+          transform: translateY(-28px);
+          opacity: 1;
         }
 
         .row:hover {
