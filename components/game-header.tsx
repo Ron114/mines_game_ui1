@@ -3,10 +3,14 @@
 import { ChevronLeft, Volume2, Settings } from "lucide-react"
 import { useState } from "react"
 import SettingsModal from "./settings-modal"
+import LimitsModal from "./limits-modal"
+import RulesModal from "./rules-modal"
 import { useGame } from '../contexts/GameContext'
 
 export default function GameHeader() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isLimitsOpen, setIsLimitsOpen] = useState(false)
+  const [isRulesOpen, setIsRulesOpen] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const { balance } = useGame()
   return (
@@ -145,7 +149,21 @@ export default function GameHeader() {
       {/* Settings Modal */}
       <SettingsModal 
         isOpen={isSettingsOpen} 
-        onClose={() => setIsSettingsOpen(false)} 
+        onClose={() => setIsSettingsOpen(false)}
+        onOpenLimits={() => setIsLimitsOpen(true)}
+        onOpenRules={() => setIsRulesOpen(true)}
+      />
+      
+      {/* Limits Modal */}
+      <LimitsModal 
+        isOpen={isLimitsOpen} 
+        onClose={() => setIsLimitsOpen(false)} 
+      />
+      
+      {/* Rules Modal */}
+      <RulesModal 
+        isOpen={isRulesOpen} 
+        onClose={() => setIsRulesOpen(false)} 
       />
     </div>
   )
