@@ -128,7 +128,7 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
                 />
               </h2>
               
-              <ul style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.875rem", lineHeight: "1.4", listStyle: "none", paddingLeft: 0 }}>
+              <ul style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.7rem", lineHeight: "1.4", listStyle: "none", paddingLeft: 0 }}>
                 <li style={{ marginBottom: "0.5rem" }}>• Choose the number of mines and press "Start Game" to begin</li>
                 <li style={{ marginBottom: "0.5rem" }}>• Look for the gems but beware of mines!</li>
                 <li>• Cash Out before you hit a mine and a reward is yours!</li>
@@ -172,21 +172,21 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
               </h2>
 
               <h3 style={{ color: "white", fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.5rem" }}>Place Bet</h3>
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", marginBottom: "1rem" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", marginBottom: "1rem" }}>
                 Enter a valid amount in the field "Amount".<br />
                 Choose the number of mines from 2 to 24. The more mines are on the playing field, the higher the winning multiplier will be, as well as blow up chance.<br />
                 Press "Start Game"
               </p>
 
               <h3 style={{ color: "white", fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.5rem" }}>Gameplay</h3>
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", marginBottom: "1rem" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", marginBottom: "1rem" }}>
                 Open tiles looking for gems. With each opened gem payout multiplier increases.<br />
                 But if you hit a mine you lose your bet. So choose wisely!<br />
                 Use the "Game details" table to evaluate your chances.
               </p>
 
               <h3 style={{ color: "white", fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.5rem" }}>Cash Out</h3>
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", marginBottom: "1rem" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", marginBottom: "1rem" }}>
                 When you've found one or more gems - you can press "Cash Out" to collect your reward.<br />
                 Win amount = current payout multiplier * bet amount.<br />
                 Win amount is rounded down to two decimal places.<br />
@@ -194,23 +194,23 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
               </p>
 
               <h3 style={{ color: "white", fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.5rem" }}>Min & Max Multiplier</h3>
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", marginBottom: "1rem" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", marginBottom: "1rem" }}>
                 The minimum win multiplier is х1.03.<br />
                 The maximum win multiplier is х4940285 (it could be achieved for setting with 13 mines & 12 successively opened tiles). However, the maximum win is limited by the operator and can be accessed from the "Limits" section in the settings menu.
               </p>
 
               <h3 style={{ color: "white", fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.5rem" }}>Cancel</h3>
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", marginBottom: "1rem" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", marginBottom: "1rem" }}>
                 You can cancel the bet only if you haven't opened any tiles yet.
               </p>
 
               <h3 style={{ color: "white", fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.5rem" }}>Mine risk calculation formula</h3>
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", marginBottom: "1rem" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", marginBottom: "1rem" }}>
                 Mine risk = Mines Quantity / (All Tiles - Opened Tiles) * 100%
               </p>
 
               <h3 style={{ color: "white", fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.5rem" }}>RTP</h3>
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", marginBottom: "1rem" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", marginBottom: "1rem" }}>
                 Game relies on a coefficient called "RTP" (Return to Player) which is the statistical average of payouts over billions of rounds.<br />
                 Mines has a minimum RTP of 94.40%. The maximum RTP of 95.30% can be achieved by cashing out at a multiplier of x1.03.
               </p>
@@ -252,13 +252,13 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
                 />
               </h2>
 
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", marginBottom: "1rem" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", marginBottom: "1rem" }}>
                 You can switch to the Auto mode and configure the bet settings so the system will play instead of you.
               </p>
 
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", marginBottom: "0.5rem" }}>Settings:</p>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", marginBottom: "0.5rem" }}>Settings:</p>
 
-              <ul style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", listStyle: "none", paddingLeft: 0, marginBottom: "1rem" }}>
+              <ul style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", listStyle: "none", paddingLeft: 0, marginBottom: "1rem" }}>
                 <li style={{ marginBottom: "0.25rem" }}>• choose tiles to be opened on the playfield</li>
                 <li style={{ marginBottom: "0.25rem" }}>• number of mines</li>
                 <li style={{ marginBottom: "0.25rem" }}>• bet amount. This sum will be applied for every auto game</li>
@@ -267,7 +267,7 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
                 <li style={{ marginBottom: "0.25rem" }}>• "stop at any win" toggle will stop autoplay on win, even if number of rounds in the queue &gt; 0</li>
               </ul>
 
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4" }}>
                 You can stop autobetting by clicking on "Stop Autoplay" button.
               </p>
             </div>
@@ -308,11 +308,11 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
                 />
               </h2>
 
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", marginBottom: "1rem" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", marginBottom: "1rem" }}>
                 Click the gear icon in the top right corner of the screen to open the settings menu. In Settings you can:
               </p>
 
-              <ul style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", listStyle: "none", paddingLeft: 0 }}>
+              <ul style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", listStyle: "none", paddingLeft: 0 }}>
                 <li style={{ marginBottom: "0.25rem" }}>• сhange the nickname</li>
                 <li style={{ marginBottom: "0.25rem" }}>• view bet limits: Minimum bet, Maximum bet, Maximum Profit</li>
                 <li>• turn on/off sounds</li>
@@ -355,17 +355,17 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
                 />
               </h2>
 
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", marginBottom: "1rem" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", marginBottom: "1rem" }}>
                 At the bottom of each Turbo game there is a panel with information about:
               </p>
 
-              <ul style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", listStyle: "none", paddingLeft: 0, marginBottom: "1rem" }}>
+              <ul style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", listStyle: "none", paddingLeft: 0, marginBottom: "1rem" }}>
                 <li style={{ marginBottom: "0.25rem" }}>• "All bets" - recently played games across all users</li>
                 <li style={{ marginBottom: "0.25rem" }}>• "Top bets" - recent winning bets with multiplier above x10</li>
                 <li style={{ marginBottom: "0.25rem" }}>• "My bets" - list of your recent bets</li>
               </ul>
 
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4" }}>
                 You can click on any bet to see the details.
               </p>
             </div>
@@ -406,11 +406,11 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
                 />
               </h2>
 
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", marginBottom: "1rem" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", marginBottom: "1rem" }}>
                 We prioritize the security and satisfaction of our players, even in the event of unexpected internet connection interruptions. Here's how we handle such situations:
               </p>
 
-              <ul style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", listStyle: "none", paddingLeft: 0 }}>
+              <ul style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", listStyle: "none", paddingLeft: 0 }}>
                 <li style={{ marginBottom: "0.5rem" }}>• If a bet is placed after a disconnection, it will not be sent to the server, no funds will be deducted, and the game will not proceed.</li>
                 <li>• If a disconnection occurs during an active game, the game state on the server will remain unchanged. Players will be able to resume the game once the connection is restored.</li>
               </ul>
@@ -451,10 +451,10 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
                 />
               </h2>
 
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4", marginBottom: "0.5rem" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4", marginBottom: "0.5rem" }}>
                 Game version: "1.0.3"
               </p>
-              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.8125rem", lineHeight: "1.4" }}>
+              <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.6875rem", lineHeight: "1.4" }}>
                 RNG version: "2.0.0"
               </p>
             </div>
