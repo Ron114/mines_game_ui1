@@ -78,16 +78,16 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 borderRadius: "0.625rem",
                 boxShadow: "inset 0.125rem 0.1875rem 0.625rem #070709, inset -0.125rem -0.125rem 0.625rem rgba(255, 255, 255, 0.05)",
                 border: "none",
-                borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
-                borderRight: "1px solid rgba(255, 255, 255, 0.15)",
               }}
             >
               <label 
-                className="absolute text-white/50 font-medium"
+                className="absolute font-medium"
                 style={{
                   fontSize: "0.625rem",
                   top: "0.5rem",
                   left: "0.625rem",
+                  color: "rgba(255, 255, 255, 0.6)",
+                  zIndex: 10,
                 }}
               >
                 Nickname
@@ -95,8 +95,13 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <input
                 type="text"
                 defaultValue="Diplomatic Frog"
-                className="absolute w-full h-full bg-transparent border-none outline-none text-white font-bold"
+                className="absolute w-full h-full outline-none text-white font-bold"
                 style={{
+                  background: "#000000",
+                  border: "none",
+                  borderBottom: "1px solid rgba(255, 255, 255, 0.3)",
+                  borderRight: "1px solid rgba(255, 255, 255, 0.3)",
+                  borderRadius: "0.625rem",
                   padding: "1.25rem 3.0625rem 0.375rem 0.625rem",
                   fontSize: "0.8125rem",
                   color: "#d6e1ef",
