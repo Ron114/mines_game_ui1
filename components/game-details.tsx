@@ -1,8 +1,30 @@
 "use client"
 
 import Image from "next/image"
+import { useGame } from '../contexts/GameContext'
 
 export default function GameDetails() {
+  const { 
+    gameState, 
+    selectedMines, 
+    diamondsFound, 
+    tileStates 
+  } = useGame()
+  
+  // Calculate dynamic values
+  const totalTiles = 25
+  const openedTiles = Object.keys(tileStates).length
+  
+  // Gems left = total safe tiles (25 - mines) minus gems already found
+  const gemsLeft = gameState === 'idle' ? 0 : (totalTiles - selectedMines) - diamondsFound
+  
+  // Mine risk = mines remaining / tiles remaining * 100
+  // Only calculate when game is active and tiles remain
+  const tilesRemaining = totalTiles - openedTiles
+  const mineRisk = gameState === 'idle' || tilesRemaining === 0 ? 0 : 
+    Math.round((selectedMines / tilesRemaining) * 100)
+  
+  const openedTilesDisplay = `${openedTiles}/${totalTiles}`
   return (
     <div className="game-details">
       <div className="game-details__inner">
@@ -14,7 +36,7 @@ export default function GameDetails() {
               <Image src="/assets/icon-crystal.svg" alt="Crystal" width={20} height={20} />
             </div>
             <div className="game-details__row-text">Gems left</div>
-            <div className="game-details__row-value">0</div>
+            <div className="game-details__row-value">{gemsLeft}</div>
           </div>
 
           <div className="game-details__row">
@@ -22,7 +44,7 @@ export default function GameDetails() {
               <Image src="/assets/icon-bomb.svg" alt="Mine" width={20} height={20} />
             </div>
             <div className="game-details__row-text">Mine risk:</div>
-            <div className="game-details__row-value">0%</div>
+            <div className="game-details__row-value">{mineRisk}%</div>
           </div>
 
           <div className="game-details__row">
@@ -30,7 +52,7 @@ export default function GameDetails() {
               <Image src="/assets/icon-tiles.svg" alt="Tiles" width={20} height={20} />
             </div>
             <div className="game-details__row-text">Opened tiles</div>
-            <div className="game-details__row-value">0/25</div>
+            <div className="game-details__row-value">{openedTilesDisplay}</div>
           </div>
         </div>
       </div>
