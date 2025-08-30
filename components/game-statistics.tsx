@@ -125,7 +125,7 @@ export default function GameStatistics() {
         setEnteringRowId(null)
       }, 100) // Slightly longer delay for smoother transition
       
-    }, 1100) // New row every 700ms
+    }, 1100) // New row every 1100ms
     
     return () => clearInterval(interval)
   }, [isClient])

@@ -180,7 +180,7 @@ export default function GameGrid() {
             onMouseEnter={() => setHoveredTile(tileIndex)}
             onMouseLeave={() => setHoveredTile(null)}
           >
-            <div className="game-tile__inner-possible-win">
+            <div className="game-tile__inner-possible-win desktop-only">
               {hoveredTile === tileIndex && (gameState === 'active' || gameState === 'cashout') ? formatCurrency(getNextPotentialValue()) : ''}
             </div>
             <div className="game-tile__inner">
@@ -319,8 +319,18 @@ export default function GameGrid() {
           display: flex;
         }
 
-        .game-tile:hover .game-tile__inner-possible-win {
-          opacity: 1;
+        /* Desktop only hover effect for potential earnings */
+        @media (min-width: 820px) {
+          .game-tile:hover .game-tile__inner-possible-win {
+            opacity: 1;
+          }
+        }
+        
+        /* Hide potential earnings on mobile */
+        @media (max-width: 819px) {
+          .game-tile__inner-possible-win {
+            display: none !important;
+          }
         }
 
 
@@ -542,8 +552,8 @@ export default function GameGrid() {
 
         @media (max-width: 819px) {
           .win-modal {
-            width: calc(3 * 62px);
-            height: calc(2 * 62px + 1 * 14px);
+            width: calc(3 * 62px + 2 * 14px);
+            height: calc(3 * 52px + 2 * 14px);
             border-radius: 12px;
           }
         }
