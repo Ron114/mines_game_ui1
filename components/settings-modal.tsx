@@ -2,17 +2,15 @@
 
 import { X, Target, FileText, Volume2, VolumeX } from "lucide-react"
 import { useState } from "react"
-import LimitsModal from "./limits-modal"
-import RulesModal from "./rules-modal"
 
 interface SettingsModalProps {
   isOpen: boolean
   onClose: () => void
+  onOpenLimits?: () => void
+  onOpenRules?: () => void
 }
 
-export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
-  const [isLimitsOpen, setIsLimitsOpen] = useState(false)
-  const [isRulesOpen, setIsRulesOpen] = useState(false)
+export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRules }: SettingsModalProps) {
   const [volume, setVolume] = useState(1)
   const [isDragging, setIsDragging] = useState(false)
 
@@ -109,7 +107,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         {/* Buttons Section */}
         <div className="space-y-1.5 mb-6">
           <button
-            onClick={() => setIsLimitsOpen(true)}
+            onClick={() => {
+              onClose()
+              onOpenLimits?.()
+            }}
             className="w-full flex items-center cursor-pointer transition-colors"
             style={{
               background: "rgba(255, 255, 255, 0.1)",
@@ -145,7 +146,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           </button>
 
           <button
-            onClick={() => setIsRulesOpen(true)}
+            onClick={() => {
+              onClose()
+              onOpenRules?.()
+            }}
             className="w-full flex items-center cursor-pointer transition-colors mb-6"
             style={{
               background: "rgba(255, 255, 255, 0.1)",
@@ -296,15 +300,6 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         </div>
       </div>
 
-      {/* Nested Modals */}
-      <LimitsModal 
-        isOpen={isLimitsOpen} 
-        onClose={() => setIsLimitsOpen(false)} 
-      />
-      <RulesModal 
-        isOpen={isRulesOpen} 
-        onClose={() => setIsRulesOpen(false)} 
-      />
 
       {/* Responsive positioning styles */}
       <style jsx>{`
