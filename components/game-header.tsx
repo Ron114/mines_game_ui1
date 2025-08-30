@@ -165,6 +165,7 @@ export default function GameHeader() {
         isOpen={isRulesOpen} 
         onClose={() => setIsRulesOpen(false)} 
       />
+
     </div>
   )
 }

@@ -2,15 +2,17 @@
 
 import { X, Target, FileText, Volume2, VolumeX } from "lucide-react"
 import { useState } from "react"
+import LimitsModal from "./limits-modal"
+import RulesModal from "./rules-modal"
 
 interface SettingsModalProps {
   isOpen: boolean
   onClose: () => void
-  onOpenLimits?: () => void
-  onOpenRules?: () => void
 }
 
-export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRules }: SettingsModalProps) {
+export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
+  const [isLimitsOpen, setIsLimitsOpen] = useState(false)
+  const [isRulesOpen, setIsRulesOpen] = useState(false)
   const [volume, setVolume] = useState(1)
   const [isDragging, setIsDragging] = useState(false)
 
@@ -23,13 +25,13 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
         className="absolute z-10 settings-modal pointer-events-auto"
         style={{
           width: "280px",
-          background: "rgba(0, 0, 0, 0.4)",
-          borderRadius: "25px",
-          border: "none",
-          padding: "18px 18px 12px 18px",
-          minHeight: "280px",
-          boxShadow: "0 0 1.25rem rgba(0, 0, 0, 0.5)",
-          backdropFilter: "blur(1.25rem)",
+          background: "linear-gradient(135deg, rgba(26, 32, 38, 0.95) 0%, rgba(18, 21, 26, 0.95) 50%, rgba(10, 12, 15, 0.95) 100%)",
+          borderRadius: "12px",
+          border: "1px solid rgba(255, 255, 255, 0.15)",
+          padding: "18px",
+          minHeight: "320px",
+          boxShadow: "0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.35), -0.125rem -0.125rem 0.25rem rgba(255, 255, 255, 0.1)",
+          backdropFilter: "blur(10px)",
         }}
       >
         {/* Header */}
@@ -76,16 +78,16 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
                 borderRadius: "0.625rem",
                 boxShadow: "inset 0.125rem 0.1875rem 0.625rem #070709, inset -0.125rem -0.125rem 0.625rem rgba(255, 255, 255, 0.05)",
                 border: "none",
+                borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
+                borderRight: "1px solid rgba(255, 255, 255, 0.15)",
               }}
             >
               <label 
-                className="absolute font-medium"
+                className="absolute text-white/50 font-medium"
                 style={{
                   fontSize: "0.625rem",
                   top: "0.5rem",
                   left: "0.625rem",
-                  color: "rgba(255, 255, 255, 0.6)",
-                  zIndex: 10,
                 }}
               >
                 Nickname
@@ -93,13 +95,8 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
               <input
                 type="text"
                 defaultValue="Diplomatic Frog"
-                className="absolute w-full h-full outline-none text-white font-bold"
+                className="absolute w-full h-full bg-transparent border-none outline-none text-white font-bold"
                 style={{
-                  background: "#000000",
-                  border: "none",
-                  borderBottom: "1px solid rgba(255, 255, 255, 0.3)",
-                  borderRight: "1px solid rgba(255, 255, 255, 0.3)",
-                  borderRadius: "0.625rem",
                   padding: "1.25rem 3.0625rem 0.375rem 0.625rem",
                   fontSize: "0.8125rem",
                   color: "#d6e1ef",
@@ -110,12 +107,9 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
         </div>
 
         {/* Buttons Section */}
-        <div className="space-y-1.5 mb-4">
+        <div className="space-y-1.5 mb-6">
           <button
-            onClick={() => {
-              onClose()
-              onOpenLimits?.()
-            }}
+            onClick={() => setIsLimitsOpen(true)}
             className="w-full flex items-center cursor-pointer transition-colors"
             style={{
               background: "rgba(255, 255, 255, 0.1)",
@@ -151,10 +145,7 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
           </button>
 
           <button
-            onClick={() => {
-              onClose()
-              onOpenRules?.()
-            }}
+            onClick={() => setIsRulesOpen(true)}
             className="w-full flex items-center cursor-pointer transition-colors mb-6"
             style={{
               background: "rgba(255, 255, 255, 0.1)",
@@ -194,7 +185,7 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
         <div 
           className="flex items-center cursor-pointer"
           style={{
-            margin: "0rem 0 0.25rem 0",
+            margin: "0.5rem 0 0.25rem 0",
             height: "2.25rem",
             padding: "0.75rem",
           }}
@@ -305,6 +296,15 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
         </div>
       </div>
 
+      {/* Nested Modals */}
+      <LimitsModal 
+        isOpen={isLimitsOpen} 
+        onClose={() => setIsLimitsOpen(false)} 
+      />
+      <RulesModal 
+        isOpen={isRulesOpen} 
+        onClose={() => setIsRulesOpen(false)} 
+      />
 
       {/* Responsive positioning styles */}
       <style jsx>{`
