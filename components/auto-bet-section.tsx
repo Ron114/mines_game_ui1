@@ -246,7 +246,7 @@ export default function AutoBetSection() {
 
         .settings-input__wrapper label {
           align-items: center;
-          min-width: 120px;
+          min-width: 95px;
           display: flex;
           white-space: nowrap;
         }
@@ -261,13 +261,13 @@ export default function AutoBetSection() {
           top: 4px;
         }
 
-        /* Desktop button positioning (original values) */
+        /* Desktop button positioning - adjusted for reduced label width */
         .settings-input__wrapper label + .input-button {
-          left: 124px;
+          left: 98px;
         }
 
         .settings-input__wrapper label + .input-button + .input-button {
-          left: 205px;
+          left: 178px;
         }
 
         /* Mobile button positioning */
