@@ -1,9 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function GameStatistics() {
   const [activeTab, setActiveTab] = useState("all_bets")
+  const [gameData, setGameData] = useState<any[]>([])
+  const [isClient, setIsClient] = useState(false)
+  const [isShifting, setIsShifting] = useState(false)
 
   const tabs = [
     { id: "all_bets", label: "All Bets" },
@@ -14,107 +17,115 @@ export default function GameStatistics() {
   const columns = ["Game", "Player", "Time", "Bet Amount", "Multiplier", "Payout"]
   const mobileColumns = ["Game", "Multiplier", "Payout"]
 
-  const gameData = [
-    { 
-      game: "Turboplinko", 
-      iconClass: "_turboplinko",
-      player: "ind_turbo_4826597", 
-      time: "12:12 PM", 
-      betAmount: "$0.11", 
-      multiplier: "5.70x", 
-      payout: "$0.88" 
-    },
-    { 
-      game: "Mines", 
-      iconClass: "_mines",
-      player: "SmartHornet744", 
-      time: "12:12 PM", 
-      betAmount: "$9.41", 
-      multiplier: "1.36x", 
-      payout: "$0.08" 
-    },
-    { 
-      game: "Hi-lo", 
-      iconClass: "_hilo",
-      player: "Tremendous Dinosa...", 
-      time: "12:12 PM", 
-      betAmount: "$0.10", 
-      multiplier: "1.60x", 
-      payout: "$160.00" 
-    },
-    { 
-      game: "Hi-lo", 
-      iconClass: "_hilo",
-      player: "20908c8d-7dc2-448...", 
-      time: "12:11 PM", 
-      betAmount: "$0.23", 
-      multiplier: "0.00x", 
-      payout: "$0.00" 
-    },
-    { 
-      game: "Fruit Towers", 
-      iconClass: "_fruittowers",
-      player: "player123", 
-      time: "12:10 PM", 
-      betAmount: "$0.15", 
-      multiplier: "1.90x", 
-      payout: "$0.28" 
-    },
-    { 
-      game: "Dice Twice", 
-      iconClass: "_dice",
-      player: "player456", 
-      time: "12:09 PM", 
-      betAmount: "$0.03", 
-      multiplier: "1.01x", 
-      payout: "$0.03" 
-    },
-    { 
-      game: "Dice Twice", 
-      iconClass: "_dice",
-      player: "player789", 
-      time: "12:08 PM", 
-      betAmount: "$0.50", 
-      multiplier: "0.00x", 
-      payout: "$0.00" 
-    },
-    { 
-      game: "Fruit Towers", 
-      iconClass: "_fruittowers",
-      player: "player101", 
-      time: "12:07 PM", 
-      betAmount: "$0.25", 
-      multiplier: "0.00x", 
-      payout: "$0.00" 
-    },
-    { 
-      game: "Turboplinko", 
-      iconClass: "_turboplinko",
-      player: "player102", 
-      time: "12:06 PM", 
-      betAmount: "$5.85", 
-      multiplier: "0.54x", 
-      payout: "$3.14" 
-    },
-    { 
-      game: "Mines", 
-      iconClass: "_mines",
-      player: "player103", 
-      time: "12:05 PM", 
-      betAmount: "$0.62", 
-      multiplier: "1.36x", 
-      payout: "$0.84" 
-    },
-    { 
-      game: "Mines", 
-      iconClass: "_mines",
-      player: "player104", 
-      time: "12:04 PM", 
-      betAmount: "$1.00", 
-      multiplier: "0.00x", 
-      payout: "$0.00" 
-    }
+  const gameIcons = [
+    { name: "hamsta", url: "/assets/icon-hamsta.svg" },
+    { name: "mines", url: "/assets/icon-mines.svg" },
+    { name: "dice", url: "/assets/icon-dice.svg" },
+    { name: "turboplinko", url: "/assets/icon-turboplinko.svg" },
+    { name: "crash", url: "/assets/icon-crash.svg" },
+    { name: "towers", url: "/assets/icon-towers.svg" },
+    { name: "fruittowers", url: "/assets/icon-fruittowers.svg" },
+    { name: "ballandball", url: "/assets/icon-ballandball.svg" }
   ]
+
+  const gameNames = ["Turboplinko", "Mines", "Hamsta", "Crash", "Fruit Towers", "Dice", "Towers", "Ball and Ball"]
+  const players = [
+    "ind_turbo_4826597", "SmartHornet744", "Tremendous Dinosa...", "20908c8d-7dc2-448...",
+    "player123", "player456", "player789", "player101", "player102", "player103", "player104",
+    "CryptoKing999", "DiamondHands22", "LuckyGamer", "BetMaster", "WinnerCircle", "HighRoller",
+    "FortuneFinder", "GoldRush", "StrikeLuck", "BigWinner", "ProGamer123", "VegasVibe"
+  ]
+
+  const getRandomIcon = () => {
+    return gameIcons[Math.floor(Math.random() * gameIcons.length)]
+  }
+
+  const getRandomGame = () => {
+    return gameNames[Math.floor(Math.random() * gameNames.length)]
+  }
+
+  const getRandomPlayer = () => {
+    return players[Math.floor(Math.random() * players.length)]
+  }
+
+  const getRandomTime = () => {
+    const hour = Math.floor(Math.random() * 12) + 1
+    const minute = Math.floor(Math.random() * 60).toString().padStart(2, '0')
+    const period = Math.random() > 0.5 ? 'AM' : 'PM'
+    return `${hour}:${minute} ${period}`
+  }
+
+  const getRandomBet = () => {
+    const amounts = ["0.01", "0.05", "0.10", "0.25", "0.50", "1.00", "2.50", "5.00", "10.00", "25.00", "50.00", "100.00"]
+    return `$${amounts[Math.floor(Math.random() * amounts.length)]}`
+  }
+
+  const getRandomMultiplier = () => {
+    const multipliers = ["0.00x", "1.01x", "1.25x", "1.50x", "2.00x", "3.50x", "5.00x", "10.00x", "25.00x", "100.00x"]
+    return multipliers[Math.floor(Math.random() * multipliers.length)]
+  }
+
+  const getRandomPayout = () => {
+    const payouts = ["0.00", "0.05", "0.25", "1.50", "5.00", "25.00", "100.00", "250.00", "1000.00"]
+    return `$${payouts[Math.floor(Math.random() * payouts.length)]}`
+  }
+
+  const generateRandomRow = () => {
+    return {
+      id: Date.now() + Math.random(),
+      game: getRandomGame(),
+      icon: getRandomIcon(),
+      player: getRandomPlayer(),
+      time: getRandomTime(),
+      betAmount: getRandomBet(),
+      multiplier: getRandomMultiplier(),
+      payout: getRandomPayout()
+    }
+  }
+
+  // Generate initial static data (no randomness during SSR)
+  const generateStaticData = () => {
+    const staticRows = [
+      { id: 1, game: "Mines", icon: { name: "mines", url: "/assets/icon-mines.svg" }, player: "Player1", time: "12:00 PM", betAmount: "$1.00", multiplier: "1.50x", payout: "$1.50" },
+      { id: 2, game: "Crash", icon: { name: "crash", url: "/assets/icon-crash.svg" }, player: "Player2", time: "12:01 PM", betAmount: "$0.50", multiplier: "2.00x", payout: "$1.00" },
+      { id: 3, game: "Dice", icon: { name: "dice", url: "/assets/icon-dice.svg" }, player: "Player3", time: "12:02 PM", betAmount: "$2.00", multiplier: "1.25x", payout: "$2.50" }
+    ]
+    // Duplicate rows for clean display (24 total rows to prevent overflow)
+    const duplicatedRows = []
+    for (let i = 0; i < 6; i++) { // Only 6 visible rows initially
+      duplicatedRows.push({ ...staticRows[i % 3], id: i + 100 })
+    }
+    return duplicatedRows
+  }
+
+  useEffect(() => {
+    setIsClient(true)
+    // Initialize with static data first
+    setGameData(generateStaticData())
+  }, [])
+
+  useEffect(() => {
+    if (!isClient) return
+    
+    // Add new rows periodically with clean list shift
+    const interval = setInterval(() => {
+      // First, add the new row immediately (no stretching)
+      setGameData(prevData => {
+        const newRow = generateRandomRow()
+        // Add to top, remove from bottom, keep exact count
+        return [newRow, ...prevData.slice(0, 23)] // Keep only 24 rows total for clean overflow
+      })
+      
+      // Then trigger the visual shift effect
+      setIsShifting(true)
+      setTimeout(() => {
+        setIsShifting(false)
+      }, 150)
+      
+    }, 2000) // New row every 2 seconds
+    
+    return () => clearInterval(interval)
+  }, [isClient])
 
   return (
     <div className="game-statistic">
@@ -155,13 +166,39 @@ export default function GameStatistics() {
           </div>
           
           <div className="separator"></div>
-          <div className="rows">
-            {gameData.map((row, index) => (
-              <div key={index} className="row">
+          <div className={`rows ${isShifting ? 'shifting' : ''}`}>
+            {!isClient ? (
+              <div className="row">
+                <div className="desktop-row">
+                  <div className="cell _capitalize _nowrap">
+                    <div className="icon folders-icon" style={{ backgroundImage: "url('/assets/icon-mines.svg')" }}></div>
+                    Loading...
+                  </div>
+                  <div className="cell player">Loading...</div>
+                  <div className="cell _time">--:-- --</div>
+                  <div className="cell amount">$--.--</div>
+                  <div className="cell multiplier">-.--x</div>
+                  <div className="cell payout">$--.--</div>
+                </div>
+                <div className="mobile-row">
+                  <div className="cell _capitalize _nowrap">
+                    <div className="icon folders-icon" style={{ backgroundImage: "url('/assets/icon-mines.svg')" }}></div>
+                    Loading...
+                  </div>
+                  <div className="cell _fw500">-.--x</div>
+                  <div className="cell _fw600">$--.--</div>
+                </div>
+              </div>
+            ) : (
+              gameData.map((row) => (
+              <div key={row.id} className="row">
                 {/* Desktop row */}
                 <div className="desktop-row">
                   <div className="cell _capitalize _nowrap">
-                    <div className={`icon folders-icon ${row.iconClass}`}></div>
+                    <div 
+                      className="icon folders-icon"
+                      style={{ backgroundImage: `url('${row.icon.url}')` }}
+                    ></div>
                     {row.game}
                   </div>
                   <div className="cell player">{row.player}</div>
@@ -174,14 +211,18 @@ export default function GameStatistics() {
                 {/* Mobile row - exact reference structure */}
                 <div className="mobile-row">
                   <div className="cell _capitalize _nowrap">
-                    <div className={`icon folders-icon ${row.iconClass}`}></div>
+                    <div 
+                      className="icon folders-icon"
+                      style={{ backgroundImage: `url('${row.icon.url}')` }}
+                    ></div>
                     {row.game}
                   </div>
                   <div className="cell _fw500">{row.multiplier}</div>
                   <div className="cell _fw600">{row.payout}</div>
                 </div>
               </div>
-            ))}
+            ))
+            )}
           </div>
         </div>
       </div>
@@ -293,8 +334,14 @@ export default function GameStatistics() {
         }
 
         .rows {
-          height: 285px;
+          height: 285px; /* Fixed height to show exactly 6 rows */
           overflow: hidden;
+          position: relative;
+        }
+
+        .rows.shifting {
+          transform: translateY(8px); /* Subtle shift, no stretching */
+          transition: transform 0.15s ease-out;
         }
 
         .row {
@@ -304,30 +351,29 @@ export default function GameStatistics() {
           backface-visibility: hidden;
           cursor: pointer;
           align-items: center;
-          animation-duration: .5s;
-          animation-timing-function: ease-out;
-          animation-fill-mode: forwards;
           display: flex;
           padding: 12px 0;
           border-bottom: 1px solid rgba(26, 28, 31, .3);
           transition: background-color 0.2s ease;
+          min-height: 48px;
+          flex-shrink: 0;
         }
 
         .row:hover {
           background-color: rgba(255, 255, 255, 0.02);
         }
 
-        .row:nth-child(odd) {
-          animation-name: row-odd;
-        }
 
         .cell {
           flex: 1;
           display: flex;
           justify-content: center;
           align-items: center;
-          color: #fff;
+          color: rgb(255, 255, 255);
           font-size: 12px;
+          font-family: 'Gilroy', sans-serif;
+          font-weight: 400;
+          line-height: 12px;
           padding: 0 10px;
         }
 
@@ -351,15 +397,6 @@ export default function GameStatistics() {
           background-repeat: no-repeat;
           background-position: center;
           vertical-align: middle;
-        }
-
-        .icon.folders-icon._turboplinko,
-        .icon.folders-icon._mines,
-        .icon.folders-icon._hilo,
-        .icon.folders-icon._fruittowers,
-        .icon.folders-icon._dice {
-          background-color: rgba(255, 255, 255, .5);
-          border-radius: 50%;
         }
 
         .cell.player {
@@ -398,14 +435,6 @@ export default function GameStatistics() {
           white-space: nowrap;
         }
 
-        @keyframes row-odd {
-          from {
-            transform: translateY(0px);
-          }
-          to {
-            transform: translateY(0px);
-          }
-        }
 
         /* Mobile responsive styles */
         @media (max-width: 819px) {
