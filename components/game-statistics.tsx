@@ -6,7 +6,6 @@ export default function GameStatistics() {
   const [activeTab, setActiveTab] = useState("all_bets")
   const [gameData, setGameData] = useState<any[]>([])
   const [isClient, setIsClient] = useState(false)
-  const [isShifting, setIsShifting] = useState(false)
 
   const tabs = [
     { id: "all_bets", label: "All Bets" },
@@ -107,22 +106,15 @@ export default function GameStatistics() {
   useEffect(() => {
     if (!isClient) return
     
-    // Add new rows periodically with clean list shift
+    // Add new rows periodically - no visual effects, just data updates
     const interval = setInterval(() => {
-      // First, add the new row immediately (no stretching)
       setGameData(prevData => {
         const newRow = generateRandomRow()
         // Add to top, remove from bottom, keep exact count
         return [newRow, ...prevData.slice(0, 23)] // Keep only 24 rows total for clean overflow
       })
       
-      // Then trigger the visual shift effect
-      setIsShifting(true)
-      setTimeout(() => {
-        setIsShifting(false)
-      }, 150)
-      
-    }, 2000) // New row every 2 seconds
+    }, 1100) // New row every 700ms
     
     return () => clearInterval(interval)
   }, [isClient])
@@ -166,7 +158,7 @@ export default function GameStatistics() {
           </div>
           
           <div className="separator"></div>
-          <div className={`rows ${isShifting ? 'shifting' : ''}`}>
+          <div className="rows">
             {!isClient ? (
               <div className="row">
                 <div className="desktop-row">
@@ -334,15 +326,11 @@ export default function GameStatistics() {
         }
 
         .rows {
-          height: 285px; /* Fixed height to show exactly 6 rows */
+          height: 280px; /* Reduced height for smaller rows */
           overflow: hidden;
           position: relative;
         }
 
-        .rows.shifting {
-          transform: translateY(8px); /* Subtle shift, no stretching */
-          transition: transform 0.15s ease-out;
-        }
 
         .row {
           -webkit-transform-style: preserve-3d;
@@ -352,15 +340,33 @@ export default function GameStatistics() {
           cursor: pointer;
           align-items: center;
           display: flex;
-          padding: 12px 0;
-          border-bottom: 1px solid rgba(26, 28, 31, .3);
+          padding: 8px 0;
+          border-bottom: none;
           transition: background-color 0.2s ease;
-          min-height: 48px;
+          min-height: 28px;
           flex-shrink: 0;
         }
 
         .row:hover {
           background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Desktop hover effects */
+        @media (min-width: 820px) {
+          .row:hover .desktop-row .cell {
+            color: rgb(255, 255, 255) !important;
+          }
+          
+          .row:hover .desktop-row .cell.player,
+          .row:hover .desktop-row .cell._time {
+            color: rgb(255, 255, 255) !important;
+          }
+          
+          .row:hover .desktop-row .cell.amount,
+          .row:hover .desktop-row .cell.multiplier,
+          .row:hover .desktop-row .cell.payout {
+            color: rgb(255, 255, 255) !important;
+          }
         }
 
 
@@ -389,9 +395,9 @@ export default function GameStatistics() {
 
         /* Game icon styles for both desktop and mobile */
         .icon.folders-icon {
-          width: 16px;
-          height: 16px;
-          margin-right: 8px;
+          width: 12px;
+          height: 12px;
+          margin-right: 6px;
           display: inline-block;
           background-size: contain;
           background-repeat: no-repeat;
