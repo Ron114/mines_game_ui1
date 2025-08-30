@@ -25,13 +25,13 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         className="absolute z-10 settings-modal pointer-events-auto"
         style={{
           width: "280px",
-          background: "linear-gradient(135deg, rgba(26, 32, 38, 0.95) 0%, rgba(18, 21, 26, 0.95) 50%, rgba(10, 12, 15, 0.95) 100%)",
+          background: "rgba(0, 0, 0, 0.4)",
           borderRadius: "25px",
           border: "none",
           padding: "18px 18px 12px 18px",
           minHeight: "280px",
-          boxShadow: "0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.35)",
-          backdropFilter: "blur(10px)",
+          boxShadow: "0 0 1.25rem rgba(0, 0, 0, 0.5)",
+          backdropFilter: "blur(1.25rem)",
         }}
       >
         {/* Header */}
