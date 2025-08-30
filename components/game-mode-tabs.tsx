@@ -1,21 +1,27 @@
 "use client"
 
 import { useState } from "react"
+import { useGame } from '../contexts/GameContext'
 
 interface GameModeTabsProps {
   onModeChange?: (mode: "manual" | "auto") => void
 }
 
 export default function GameModeTabs({ onModeChange }: GameModeTabsProps) {
+  const { gameState } = useGame()
   const [activeMode, setActiveMode] = useState<"manual" | "auto">("manual")
+  
+  // Disable when game is active or in cashout state
+  const isDisabled = gameState === 'active' || gameState === 'cashout'
 
   const handleModeChange = (mode: "manual" | "auto") => {
+    if (isDisabled) return
     setActiveMode(mode)
     onModeChange?.(mode)
   }
 
   return (
-    <div className="game-mode-tabs">
+    <div className={`game-mode-tabs ${isDisabled ? '_disabled' : ''}`}>
       <div className={`mode-btn ${activeMode === "manual" ? "active" : ""}`} onClick={() => handleModeChange("manual")}>
         <div className="mode-btn__inner">
           <div className="mode-btn__text">Manual</div>
@@ -33,6 +39,12 @@ export default function GameModeTabs({ onModeChange }: GameModeTabsProps) {
         .game-mode-tabs {
           margin: 5px 0 10px;
           display: flex;
+          transition: opacity 0.3s ease;
+        }
+
+        .game-mode-tabs._disabled {
+          opacity: 0.4;
+          pointer-events: none;
         }
 
         /* Mobile responsive styles */

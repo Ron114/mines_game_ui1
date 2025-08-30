@@ -4,34 +4,42 @@ import { useState, useEffect } from "react"
 import { useGame } from '../contexts/GameContext'
 
 export default function BetAmountInput() {
-  const { betAmount, setBetAmount } = useGame()
+  const { betAmount, setBetAmount, gameState, tileStates } = useGame()
   const [displayAmount, setDisplayAmount] = useState(betAmount.toString())
+  
+  // Disable after first tile is clicked (when tileStates has any entries)
+  const hasClickedTile = Object.keys(tileStates).length > 0
+  const isDisabled = hasClickedTile && (gameState === 'active' || gameState === 'cashout')
   
   useEffect(() => {
     setDisplayAmount(betAmount.toString())
   }, [betAmount])
 
   const handleMinClick = () => {
+    if (isDisabled) return
     setBetAmount(1)
     setDisplayAmount("1")
   }
   const handleMaxClick = () => {
+    if (isDisabled) return
     setBetAmount(1000)
     setDisplayAmount("1000")
   }
   const handleDecrease = () => {
+    if (isDisabled) return
     const current = Math.max(1, betAmount - 1)
     setBetAmount(current)
     setDisplayAmount(current.toString())
   }
   const handleIncrease = () => {
+    if (isDisabled) return
     const current = Math.min(1000, betAmount + 1)
     setBetAmount(current)
     setDisplayAmount(current.toString())
   }
 
   return (
-    <div className="input-text__wrapper">
+    <div className={`input-text__wrapper ${isDisabled ? '_disabled' : ''}`}>
       <div className="games-input__wrapper">
         <label htmlFor="bet-amount">
           Bet Amount
@@ -43,6 +51,7 @@ export default function BetAmountInput() {
           inputMode="decimal"
           value={`$${displayAmount}`}
           onChange={(e) => {
+            if (isDisabled) return
             const value = e.target.value.replace("$", "")
             setDisplayAmount(value)
             const numValue = Number.parseFloat(value) || 0
@@ -52,6 +61,7 @@ export default function BetAmountInput() {
           autoComplete="off"
           spellCheck="false"
           tabIndex={-1}
+          disabled={isDisabled}
         />
       </div>
 
@@ -84,6 +94,12 @@ export default function BetAmountInput() {
       <style jsx>{`
         .input-text__wrapper {
           margin-bottom: 20px;
+          transition: opacity 0.3s ease;
+        }
+
+        .input-text__wrapper._disabled {
+          opacity: 0.4;
+          pointer-events: none;
         }
 
         /* Mobile responsive styles */

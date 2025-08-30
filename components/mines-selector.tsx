@@ -4,32 +4,38 @@ import { useState, useEffect } from "react"
 import { useGame } from '../contexts/GameContext'
 
 export default function MinesSelector() {
-  const { selectedMines, setSelectedMines } = useGame()
+  const { selectedMines, setSelectedMines, gameState } = useGame()
   const [customMines, setCustomMines] = useState(selectedMines.toString())
+  
+  // Disable when game is active or in cashout state
+  const isDisabled = gameState === 'active' || gameState === 'cashout'
   
   useEffect(() => {
     setCustomMines(selectedMines.toString())
   }, [selectedMines])
 
   const handleMineSelect = (mines: number) => {
+    if (isDisabled) return
     setSelectedMines(mines)
     setCustomMines(mines.toString())
   }
 
   const handleDecrease = () => {
+    if (isDisabled) return
     const current = Math.max(1, selectedMines - 1)
     setSelectedMines(current)
     setCustomMines(current.toString())
   }
 
   const handleIncrease = () => {
+    if (isDisabled) return
     const current = Math.min(24, selectedMines + 1)
     setSelectedMines(current)
     setCustomMines(current.toString())
   }
 
   return (
-    <div className="settings-input__wrapper _mines">
+    <div className={`settings-input__wrapper _mines ${isDisabled ? '_disabled' : ''}`}>
       <div className="settings-input__wrapper-inner">
         <button className={`button _sm ${selectedMines === 3 ? "_active" : ""}`} onClick={() => handleMineSelect(3)}>
           <div className="button__inner">
@@ -57,6 +63,7 @@ export default function MinesSelector() {
             type="text"
             value={customMines}
             onChange={(e) => {
+              if (isDisabled) return
               const value = Number.parseInt(e.target.value) || 1
               setCustomMines(e.target.value)
               setSelectedMines(Math.min(24, Math.max(1, value)))
@@ -64,6 +71,7 @@ export default function MinesSelector() {
             className="games-input__number"
             autoComplete="off"
             spellCheck="false"
+            disabled={isDisabled}
           />
         </div>
 
@@ -95,6 +103,12 @@ export default function MinesSelector() {
           box-shadow: inset 2px 2px 2px rgba(26, 32, 38, .4);
           margin-bottom: 8px;
           display: flex;
+          transition: opacity 0.3s ease;
+        }
+
+        .settings-input__wrapper._mines._disabled {
+          opacity: 0.4;
+          pointer-events: none;
         }
 
         /* Mobile responsive styles */

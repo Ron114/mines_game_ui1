@@ -4,9 +4,13 @@ import { useState, useEffect } from "react"
 import { useGame } from '../contexts/GameContext'
 
 export default function MobileBetAmount() {
-  const { betAmount, setBetAmount } = useGame()
+  const { betAmount, setBetAmount, gameState, tileStates } = useGame()
   const [displayAmount, setDisplayAmount] = useState(betAmount.toString())
   const [showError, setShowError] = useState(false)
+  
+  // Disable after first tile is clicked (when tileStates has any entries)
+  const hasClickedTile = Object.keys(tileStates).length > 0
+  const isDisabled = hasClickedTile && (gameState === 'active' || gameState === 'cashout')
   
   useEffect(() => {
     setDisplayAmount(betAmount.toString())
