@@ -26,21 +26,21 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         style={{
           width: "280px",
           background: "linear-gradient(135deg, rgba(26, 32, 38, 0.95) 0%, rgba(18, 21, 26, 0.95) 50%, rgba(10, 12, 15, 0.95) 100%)",
-          borderRadius: "12px",
+          borderRadius: "20px",
           border: "1px solid rgba(255, 255, 255, 0.15)",
-          padding: "18px",
-          minHeight: "320px",
+          padding: "18px 18px 12px 18px",
+          minHeight: "280px",
           boxShadow: "0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.35), -0.125rem -0.125rem 0.25rem rgba(255, 255, 255, 0.1)",
           backdropFilter: "blur(10px)",
         }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-3">
           <h2 
             className="text-white font-semibold relative"
             style={{
               color: "rgba(255, 255, 255, 0.5)",
-              marginBottom: "1.5rem",
+              marginBottom: "0.75rem",
               fontSize: "1rem",
               fontWeight: 600,
             }}
@@ -60,7 +60,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         </div>
 
         {/* Nickname Section */}
-        <div className="mb-6">
+        <div className="mb-4">
           <div
             className="relative"
             style={{
@@ -77,6 +77,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 background: "linear-gradient(318.44deg, #1a1b1f 21.28%, #242a30 141.88%)",
                 borderRadius: "0.625rem",
                 boxShadow: "inset 0.125rem 0.1875rem 0.625rem #070709, inset -0.125rem -0.125rem 0.625rem rgba(255, 255, 255, 0.05)",
+                border: "none",
+                borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
+                borderRight: "1px solid rgba(255, 255, 255, 0.15)",
               }}
             >
               <label 
@@ -104,7 +107,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         </div>
 
         {/* Buttons Section */}
-        <div className="space-y-1.5 mb-6">
+        <div className="space-y-1.5 mb-4">
           <button
             onClick={() => setIsLimitsOpen(true)}
             className="w-full flex items-center cursor-pointer transition-colors"
@@ -182,7 +185,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         <div 
           className="flex items-center cursor-pointer"
           style={{
-            margin: "0.75rem 0",
+            margin: "0rem 0 0.25rem 0",
             height: "2.25rem",
             padding: "0.75rem",
           }}
