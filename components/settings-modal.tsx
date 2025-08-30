@@ -19,16 +19,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50">
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/50"
-        onClick={onClose}
-      />
-      
+    <div className="fixed inset-0 z-50 pointer-events-none">
       {/* Modal positioned below settings icon */}
       <div 
-        className="absolute z-10 settings-modal"
+        className="absolute z-10 settings-modal pointer-events-auto"
         style={{
           width: "280px",
           background: "linear-gradient(135deg, rgba(26, 32, 38, 0.95) 0%, rgba(18, 21, 26, 0.95) 50%, rgba(10, 12, 15, 0.95) 100%)",
