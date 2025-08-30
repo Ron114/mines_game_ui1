@@ -26,11 +26,11 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         style={{
           width: "280px",
           background: "linear-gradient(135deg, rgba(26, 32, 38, 0.95) 0%, rgba(18, 21, 26, 0.95) 50%, rgba(10, 12, 15, 0.95) 100%)",
-          borderRadius: "20px",
-          border: "1px solid rgba(255, 255, 255, 0.15)",
+          borderRadius: "25px",
+          border: "none",
           padding: "18px 18px 12px 18px",
           minHeight: "280px",
-          boxShadow: "0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.35), -0.125rem -0.125rem 0.25rem rgba(255, 255, 255, 0.1)",
+          boxShadow: "0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.35)",
           backdropFilter: "blur(10px)",
         }}
       >
