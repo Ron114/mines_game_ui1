@@ -50,9 +50,10 @@ export default function GameGrid() {
           })
         }, 400)
       } else {
+        // Diamond reveals much faster
         setTileState(tileIndex, result)
       }
-    }, 400)
+    }, 190)
   }
 
   const getTileClass = (tileIndex: number) => {
