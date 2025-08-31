@@ -778,7 +778,7 @@ export default function GameGrid() {
             }
             100% {
               opacity: 0;
-              transform: translateY(-25px);
+              transform: translateY(-15px);
             }
           }
         }
