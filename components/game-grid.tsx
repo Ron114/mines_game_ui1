@@ -330,7 +330,7 @@ export default function GameGrid() {
           align-items: center;
           width: 100%;
           height: 100%;
-          transition: opacity 0.5s ease-in;
+          transition: opacity 0.2s ease-in;
           display: flex;
         }
 
