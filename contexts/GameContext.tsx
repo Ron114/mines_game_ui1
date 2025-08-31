@@ -190,6 +190,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const cashOut = () => {
     setBalance(balance + currentCashoutValue)
     setShowWinModal(true)
+    setShowAllTiles(true)
     
     setTimeout(() => {
       setShowWinModal(false)

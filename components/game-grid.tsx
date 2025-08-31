@@ -160,8 +160,9 @@ export default function GameGrid() {
             <Image 
               src="/assets/1diamond.png" 
               alt="Diamond" 
-              width={38} 
-              height={38}
+              width={42} 
+              height={42}
+              className="diamond-image"
             />
           </div>
           <div className="win-text">You win!</div>
@@ -171,6 +172,7 @@ export default function GameGrid() {
               alt="Diamond" 
               width={55} 
               height={55}
+              className="diamond-image"
             />
           </div>
         </div>
@@ -575,7 +577,7 @@ export default function GameGrid() {
 
         .modal-header {
           height: 25%;
-          background: linear-gradient(180deg, #52a5d4 0%, #4e9ed0 55%, #4b74a9 100%);
+          background: rgba(0, 195, 255, 0.8);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -621,8 +623,8 @@ export default function GameGrid() {
 
         @media (max-width: 819px) {
           .header-diamond {
-            width: 28px;
-            height: 28px;
+            width: 48px;
+            height: 48px;
           }
           
           .left-diamond {
@@ -636,17 +638,19 @@ export default function GameGrid() {
 
         .modal-body {
           height: 75%;
-          background: rgba(255, 255, 255, 0.02); /* Almost invisible background */
-          backdrop-filter: blur(4px); /* Less blur for more clarity */
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.03);
+          backdrop-filter: blur(20px);
+          border-top: 1px solid rgba(255, 255, 255, 0.25);
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           padding: 20px;
-          border-left: 1px solid rgba(255, 255, 255, 0.05);
-          border-right: 1px solid rgba(255, 255, 255, 0.05);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          border-left: 1px solid rgba(255, 255, 255, 0.15);
+          border-right: 1px solid rgba(255, 255, 255, 0.15);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                      inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
         @media (max-width: 819px) {
