@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useAudioContext } from '../contexts/AudioContext'
+import StartAutoplayButton from './start-autoplay-button'
 
 export default function AutoBetSection() {
   const { playSound } = useAudioContext()
@@ -137,7 +138,8 @@ export default function AutoBetSection() {
         </div>
       </div>
 
-
+      {/* Start Autoplay Button */}
+      <StartAutoplayButton />
 
       <style jsx>{`
         .game-autobet {

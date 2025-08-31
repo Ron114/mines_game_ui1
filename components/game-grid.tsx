@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import { useAudioContext } from '../contexts/AudioContext'
 
 export default function GameGrid() {
-  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, showWinModal, currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile, getNextPotentialValue, formatCurrency } = useGame()
+  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, showWinModal, currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile, getNextPotentialValue, formatCurrency, selectedMines } = useGame()
   const { playSound } = useAudioContext()
   const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   const [hoveredTile, setHoveredTile] = useState<number | null>(null)
@@ -20,6 +20,16 @@ export default function GameGrid() {
       setBombClicked(false)
     }
   }, [gameState, showAllTiles])
+
+  const getDiamondSound = () => {
+    if (selectedMines < 10) {
+      return '/assets/audio/diamond1.mp3'
+    } else if (selectedMines >= 10 && selectedMines < 20) {
+      return '/assets/audio/diamond2.mp3'
+    } else {
+      return '/assets/audio/diamond3.mp3'
+    }
+  }
   
   const handleTileClick = (tileIndex: number) => {
     if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex] || loadingTiles.has(tileIndex) || showAllTiles || bombClicked) return
@@ -54,7 +64,7 @@ export default function GameGrid() {
           })
         }, 400)
       } else {
-        playSound('/assets/audio/diamond1.mp3')
+        playSound(getDiamondSound())
         setTileState(tileIndex, result)
       }
     }, 190)
