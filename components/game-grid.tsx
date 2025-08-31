@@ -577,7 +577,7 @@ export default function GameGrid() {
 
         .modal-header {
           height: 25%;
-          background: rgba(0, 195, 255, 0.8);
+          background: #00c3ff;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -638,19 +638,18 @@ export default function GameGrid() {
 
         .modal-body {
           height: 75%;
-          background: rgba(255, 255, 255, 0.03);
-          backdrop-filter: blur(20px);
-          border-top: 1px solid rgba(255, 255, 255, 0.25);
+          background: rgba(255, 255, 255, 0.00);
+          backdrop-filter: blur(2px);
+          border-top: 1px solid rgba(255, 255, 255, 0.2);
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           padding: 20px;
-          border-left: 1px solid rgba(255, 255, 255, 0.15);
-          border-right: 1px solid rgba(255, 255, 255, 0.15);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
-                      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          border-left: 1px solid rgba(255, 255, 255, 0.1);
+          border-right: 1px solid rgba(255, 255, 255, 0.1);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
         }
 
         @media (max-width: 819px) {
