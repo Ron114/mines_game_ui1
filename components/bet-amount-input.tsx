@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { useGame } from '../contexts/GameContext'
+import { useAudioContext } from '../contexts/AudioContext'
 
 export default function BetAmountInput() {
   const { betAmount, setBetAmount, gameState, tileStates } = useGame()
+  const { playSound } = useAudioContext()
   const [displayAmount, setDisplayAmount] = useState(betAmount.toString())
   
   // Disable after first tile is clicked (when tileStates has any entries)
@@ -17,22 +19,26 @@ export default function BetAmountInput() {
 
   const handleMinClick = () => {
     if (isDisabled) return
+    playSound('/assets/audio/amount.mp3')
     setBetAmount(1)
     setDisplayAmount("1")
   }
   const handleMaxClick = () => {
     if (isDisabled) return
+    playSound('/assets/audio/amount.mp3')
     setBetAmount(1000)
     setDisplayAmount("1000")
   }
   const handleDecrease = () => {
     if (isDisabled) return
+    playSound('/assets/audio/amount.mp3')
     const current = Math.max(1, betAmount - 1)
     setBetAmount(current)
     setDisplayAmount(current.toString())
   }
   const handleIncrease = () => {
     if (isDisabled) return
+    playSound('/assets/audio/amount.mp3')
     const current = Math.min(1000, betAmount + 1)
     setBetAmount(current)
     setDisplayAmount(current.toString())

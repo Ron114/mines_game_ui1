@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useGame } from '../contexts/GameContext'
+import { useAudioContext } from '../contexts/AudioContext'
 
 interface GameModeTabsProps {
   onModeChange?: (mode: "manual" | "auto") => void
@@ -9,6 +10,7 @@ interface GameModeTabsProps {
 
 export default function GameModeTabs({ onModeChange }: GameModeTabsProps) {
   const { gameState } = useGame()
+  const { playSound } = useAudioContext()
   const [activeMode, setActiveMode] = useState<"manual" | "auto">("manual")
   
   // Disable when game is active or in cashout state
@@ -16,6 +18,7 @@ export default function GameModeTabs({ onModeChange }: GameModeTabsProps) {
 
   const handleModeChange = (mode: "manual" | "auto") => {
     if (isDisabled) return
+    playSound('/assets/audio/button_click.mp3')
     setActiveMode(mode)
     onModeChange?.(mode)
   }

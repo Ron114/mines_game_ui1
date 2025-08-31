@@ -2,6 +2,7 @@
 
 import { X, Target, FileText, Volume2, VolumeX } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
+import { useAudioContext } from '../contexts/AudioContext'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -12,9 +13,10 @@ interface SettingsModalProps {
 }
 
 export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRules, triggerRef }: SettingsModalProps) {
-  const [volume, setVolume] = useState(1)
+  const { volume, setVolume, isMuted, setMuted } = useAudioContext()
   const [isDragging, setIsDragging] = useState(false)
   const [modalPosition, setModalPosition] = useState({ top: 60, right: 20 })
+  const modalRef = useRef<HTMLDivElement>(null)
 
   // Calculate modal position based on settings button position
   useEffect(() => {
@@ -34,10 +36,27 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
     }
   }, [isOpen, triggerRef])
 
+  // Handle click outside to close modal
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose()
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside)
+      }
+    }
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
   return (
       <div 
+        ref={modalRef}
         className="absolute z-10 settings-modal pointer-events-auto"
         style={{
           width: "280px",
@@ -214,8 +233,9 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
             padding: "0.75rem",
           }}
         >
-          <div 
-            className="flex items-center justify-center mr-3"
+          <button
+            onClick={() => setMuted(!isMuted)}
+            className="flex items-center justify-center mr-3 cursor-pointer border-none bg-transparent outline-none"
             style={{
               color: "rgba(255, 255, 255, 0.5)",
               borderRadius: "0.375rem",
@@ -224,8 +244,8 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
               fontSize: "0.875rem",
             }}
           >
-            {volume === 0 ? <VolumeX size={14} /> : <Volume2 size={14} />}
-          </div>
+            {isMuted || volume === 0 ? <VolumeX size={14} /> : <Volume2 size={14} />}
+          </button>
           <div className="flex-1 relative" style={{ height: "1.125rem" }}>
             <input
               type="range"

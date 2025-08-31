@@ -1,16 +1,20 @@
 "use client"
 
 import { useGame } from '../contexts/GameContext'
+import { useAudioContext } from '../contexts/AudioContext'
 
 export default function StartGameButton() {
   const { gameState, currentCashoutValue, resetGame, cashOut, startNewGame, formatCurrency } = useGame()
+  const { playSound } = useAudioContext()
 
   const handleButtonClick = () => {
     if (gameState === 'idle') {
+      playSound('/assets/audio/roll.mp3')
       startNewGame()
     } else if (gameState === 'active') {
       resetGame()
     } else if (gameState === 'cashout') {
+      playSound('/assets/audio/cashout.mp3')
       cashOut()
     }
   }

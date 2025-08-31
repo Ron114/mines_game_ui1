@@ -1,17 +1,19 @@
 import GameHeader from "./game-header"
 import GameContainer from "./game-container"
 import { GameProvider } from "../contexts/GameContext"
+import { AudioProvider } from "../contexts/AudioContext"
 
 export default function GameModal() {
   return (
     <GameProvider>
-      <div className="game-modal-wrapper">
-        <div className="game-modal-content">
-          <div className="flex flex-col overflow-y-auto h-full">
-            <GameHeader />
-            <GameContainer />
+      <AudioProvider>
+        <div className="game-modal-wrapper">
+          <div className="game-modal-content">
+            <div className="flex flex-col overflow-y-auto h-full">
+              <GameHeader />
+              <GameContainer />
+            </div>
           </div>
-        </div>
 
         <style jsx>{`
           /* Desktop layout */
@@ -64,7 +66,8 @@ export default function GameModal() {
             }
           }
         `}</style>
-      </div>
+        </div>
+      </AudioProvider>
     </GameProvider>
   )
 }

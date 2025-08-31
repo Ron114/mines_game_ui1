@@ -6,13 +6,14 @@ import SettingsModal from "./settings-modal"
 import LimitsModal from "./limits-modal"
 import RulesModal from "./rules-modal"
 import { useGame } from '../contexts/GameContext'
+import { useAudioContext } from '../contexts/AudioContext'
 
 export default function GameHeader() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isLimitsOpen, setIsLimitsOpen] = useState(false)
   const [isRulesOpen, setIsRulesOpen] = useState(false)
-  const [isMuted, setIsMuted] = useState(false)
   const { balance } = useGame()
+  const { isMuted, setMuted } = useAudioContext()
   const settingsButtonRef = useRef<HTMLButtonElement>(null)
   return (
     <div className="flex items-center relative px-2 text-white/50 pt-2" style={{ maxWidth: '880px', margin: '0 auto', width: '100%' }}>
@@ -65,7 +66,7 @@ export default function GameHeader() {
         </div>
         <button 
           className="w-7 h-7 ml-3 cursor-pointer relative"
-          onClick={() => setIsMuted(!isMuted)}
+          onClick={() => setMuted(!isMuted)}
         >
           <div
             className="flex items-center justify-center w-7 h-7 min-w-full min-h-full rounded-full relative"

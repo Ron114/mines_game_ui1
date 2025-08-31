@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { useGame } from '../contexts/GameContext'
+import { useAudioContext } from '../contexts/AudioContext'
 
 export default function MinesSelector() {
   const { selectedMines, setSelectedMines, gameState } = useGame()
+  const { playSound } = useAudioContext()
   const [customMines, setCustomMines] = useState(selectedMines.toString())
   
   // Disable when game is active or in cashout state
@@ -16,12 +18,14 @@ export default function MinesSelector() {
 
   const handleMineSelect = (mines: number) => {
     if (isDisabled) return
+    playSound('/assets/audio/difficulty.mp3')
     setSelectedMines(mines)
     setCustomMines(mines.toString())
   }
 
   const handleDecrease = () => {
     if (isDisabled) return
+    playSound('/assets/audio/difficulty.mp3')
     const current = Math.max(1, selectedMines - 1)
     setSelectedMines(current)
     setCustomMines(current.toString())
@@ -29,6 +33,7 @@ export default function MinesSelector() {
 
   const handleIncrease = () => {
     if (isDisabled) return
+    playSound('/assets/audio/difficulty.mp3')
     const current = Math.min(24, selectedMines + 1)
     setSelectedMines(current)
     setCustomMines(current.toString())

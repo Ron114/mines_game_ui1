@@ -1,8 +1,10 @@
 "use client"
 
 import { useState } from "react"
+import { useAudioContext } from '../contexts/AudioContext'
 
 export default function AutoBetSection() {
+  const { playSound } = useAudioContext()
   const [numberOfRounds, setNumberOfRounds] = useState("")
   const [onWinAmount, setOnWinAmount] = useState("100")
   const [onLossAmount, setOnLossAmount] = useState("100")
@@ -11,13 +13,20 @@ export default function AutoBetSection() {
   const [stopAtAnyWin, setStopAtAnyWin] = useState(false)
 
   const handleWinModeChange = (mode: "reset" | "increase") => {
+    playSound('/assets/audio/button_click.mp3')
     setOnWinMode(mode)
     setOnWinAmount(mode === "reset" ? "0" : "100")
   }
 
   const handleLossModeChange = (mode: "reset" | "increase") => {
+    playSound('/assets/audio/button_click.mp3')
     setOnLossMode(mode)
     setOnLossAmount(mode === "reset" ? "0" : "100")
+  }
+
+  const handleStopAtWinChange = (checked: boolean) => {
+    playSound('/assets/audio/button_click.mp3')
+    setStopAtAnyWin(checked)
   }
 
   return (
@@ -121,7 +130,7 @@ export default function AutoBetSection() {
               id="on_any_win" 
               className="switcher__input"
               checked={stopAtAnyWin}
-              onChange={(e) => setStopAtAnyWin(e.target.checked)}
+              onChange={(e) => handleStopAtWinChange(e.target.checked)}
             />
             <label htmlFor="on_any_win" className="switcher__label"></label>
           </div>
@@ -303,7 +312,7 @@ export default function AutoBetSection() {
 
         .input-button.active .input-button__text {
           color: #fff;
-          opacity: 1;
+          opacity: .6; /* Keep grey even when active */
         }
 
         .input-button__text {
@@ -313,6 +322,22 @@ export default function AutoBetSection() {
           font-size: 11px;
           font-weight: 700;
           line-height: 1.45;
+        }
+
+        /* Desktop hover effects */
+        @media (min-width: 820px) {
+          .input-button:hover .input-button__text {
+            opacity: 1; /* White on hover for desktop */
+          }
+        }
+
+        /* Mobile - always grey */
+        @media (max-width: 819px) {
+          .input-button .input-button__text,
+          .input-button.active .input-button__text,
+          .input-button:hover .input-button__text {
+            opacity: .6; /* Always grey on mobile */
+          }
         }
 
         .settings-input__wrapper .games-input__wrapper {

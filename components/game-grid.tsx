@@ -3,9 +3,11 @@
 import { useGame } from '../contexts/GameContext'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
+import { useAudioContext } from '../contexts/AudioContext'
 
 export default function GameGrid() {
   const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, showWinModal, currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile, getNextPotentialValue, formatCurrency } = useGame()
+  const { playSound } = useAudioContext()
   const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   const [hoveredTile, setHoveredTile] = useState<number | null>(null)
   
@@ -22,6 +24,7 @@ export default function GameGrid() {
   const handleTileClick = (tileIndex: number) => {
     if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex] || loadingTiles.has(tileIndex) || showAllTiles || bombClicked) return
 
+    playSound('/assets/audio/tile_click.mp3')
     const result = getTileType(tileIndex)
     
     if (result === 'bomb') {
@@ -39,6 +42,7 @@ export default function GameGrid() {
       setTileLoading(tileIndex, false)
       
       if (result === 'bomb') {
+        playSound('/assets/audio/bomb.mp3')
         setAnimatingTiles(prev => new Set(prev).add(tileIndex))
         
         setTimeout(() => {
@@ -50,7 +54,7 @@ export default function GameGrid() {
           })
         }, 400)
       } else {
-        // Diamond reveals much faster
+        playSound('/assets/audio/diamond1.mp3')
         setTileState(tileIndex, result)
       }
     }, 190)
