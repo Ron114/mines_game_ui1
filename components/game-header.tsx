@@ -1,7 +1,7 @@
 "use client"
 
 import { ChevronLeft, Volume2, Settings } from "lucide-react"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import SettingsModal from "./settings-modal"
 import LimitsModal from "./limits-modal"
 import RulesModal from "./rules-modal"
@@ -13,6 +13,7 @@ export default function GameHeader() {
   const [isRulesOpen, setIsRulesOpen] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const { balance } = useGame()
+  const settingsButtonRef = useRef<HTMLButtonElement>(null)
   return (
     <div className="flex items-center relative px-2 text-white/50 pt-2" style={{ maxWidth: '880px', margin: '0 auto', width: '100%' }}>
       {/* Left side - Back button and Logo */}
@@ -81,6 +82,7 @@ export default function GameHeader() {
         </button>
 
         <button 
+          ref={settingsButtonRef}
           className="w-7 h-7 ml-3 cursor-pointer relative"
           onClick={() => setIsSettingsOpen(true)}
         >
@@ -152,6 +154,7 @@ export default function GameHeader() {
         onClose={() => setIsSettingsOpen(false)}
         onOpenLimits={() => setIsLimitsOpen(true)}
         onOpenRules={() => setIsRulesOpen(true)}
+        triggerRef={settingsButtonRef}
       />
       
       {/* Limits Modal */}

@@ -1,35 +1,55 @@
 "use client"
 
 import { X, Target, FileText, Volume2, VolumeX } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 
 interface SettingsModalProps {
   isOpen: boolean
   onClose: () => void
   onOpenLimits?: () => void
   onOpenRules?: () => void
+  triggerRef?: React.RefObject<HTMLElement>
 }
 
-export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRules }: SettingsModalProps) {
+export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRules, triggerRef }: SettingsModalProps) {
   const [volume, setVolume] = useState(1)
   const [isDragging, setIsDragging] = useState(false)
+  const [modalPosition, setModalPosition] = useState({ top: 60, right: 20 })
+
+  // Calculate modal position based on settings button position
+  useEffect(() => {
+    if (isOpen && triggerRef?.current) {
+      const triggerRect = triggerRef.current.getBoundingClientRect()
+      const headerContainer = triggerRef.current.closest('.flex.items-center.relative') as HTMLElement
+      
+      if (headerContainer) {
+        const containerRect = headerContainer.getBoundingClientRect()
+        
+        // Position modal below the settings button with some spacing
+        const top = triggerRect.bottom - containerRect.top + 10
+        const right = containerRect.right - triggerRect.right
+        
+        setModalPosition({ top, right })
+      }
+    }
+  }, [isOpen, triggerRef])
 
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 pointer-events-none">
-      {/* Modal positioned below settings icon */}
       <div 
         className="absolute z-10 settings-modal pointer-events-auto"
         style={{
           width: "280px",
-          background: "linear-gradient(135deg, rgba(26, 32, 38, 0.95) 0%, rgba(18, 21, 26, 0.95) 50%, rgba(10, 12, 15, 0.95) 100%)",
+          background: "linear-gradient(135deg, rgba(31, 32, 33, 0.95) 0%, rgba(18, 21, 26, 0.95) 50%, rgba(10, 12, 15, 0.95) 100%)",
           borderRadius: "28px",
           border: "1px solid rgba(255, 255, 255, 0.15)",
           padding: "18px",
           minHeight: "260px",
           boxShadow: "0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.35), -0.125rem -0.125rem 0.25rem rgba(255, 255, 255, 0.1)",
           backdropFilter: "blur(10px)",
+          top: `${modalPosition.top}px`,
+          right: `${modalPosition.right}px`,
         }}
       >
         {/* Header */}
@@ -298,27 +318,13 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
             </div>
           </div>
         </div>
-      </div>
 
-
-      {/* Responsive positioning styles */}
+      {/* Mobile fallback positioning */}
       <style jsx>{`
-        .settings-modal {
-          top: 60px;
-          right: 20px;
-        }
-
-        @media (min-width: 1200px) {
-          .settings-modal {
-            top: calc(150px + (100vw - 1200px) * 0.09);
-            right: calc((98vw - 880px) / 2 + 20px);
-          }
-        }
-
         @media (max-width: 920px) {
           .settings-modal {
-            top: 60px;
-            right: 20px;
+            top: 60px !important;
+            right: 20px !important;
             left: auto;
           }
         }
