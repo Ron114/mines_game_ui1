@@ -37,8 +37,7 @@ export default function GameHistory() {
 
       <style jsx>{`
         .game-history {
-          background-image: linear-gradient(360deg, rgba(194, 108, 66, 0.79) 0%, rgba(35, 38, 43, 0) 100%),
-            linear-gradient(90.51deg, #5d666f 9.05%, rgba(18, 20, 21, 0.33) 105.67%);
+          background: #0c0c0e;
           border-radius: 5px;
           height: 41px;
           padding: 1px;
@@ -102,11 +101,12 @@ export default function GameHistory() {
           width: 100%;
           height: 100%;
           display: flex;
-          box-shadow: -1px -1px 10px rgba(141, 68, 37, .3);
+          box-shadow: -1px -1px 10px rgba(141, 68, 37, .2);
           font-size: 10px;
           font-weight: 500;
           color: inherit;
           transition: all 0.2s ease;
+          background: #000;
         }
 
         /* Active state - currently selected diamond */

@@ -114,7 +114,7 @@ export default function GameContainer() {
         }
 
         .mobile-history {
-          margin: 0 10px 8px 10px;
+          margin: 0 0 8px 0;
         }
 
         .mobile-mode-tabs {
