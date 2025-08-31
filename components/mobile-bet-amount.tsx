@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { useGame } from '../contexts/GameContext'
+import { useAudioContext } from '../contexts/AudioContext'
 
 export default function MobileBetAmount() {
   const { betAmount, setBetAmount, gameState, tileStates } = useGame()
+  const { playSound } = useAudioContext()
   const [displayAmount, setDisplayAmount] = useState(betAmount.toString())
   const [showError, setShowError] = useState(false)
   
@@ -17,18 +19,24 @@ export default function MobileBetAmount() {
   }, [betAmount])
 
   const handleMinClick = () => {
+    if (isDisabled) return
+    playSound('/assets/audio/amount.mp3')
     setBetAmount(1)
     setDisplayAmount("1")
     setShowError(false)
   }
   
   const handleMaxClick = () => {
+    if (isDisabled) return
+    playSound('/assets/audio/amount.mp3')
     setBetAmount(1000)
     setDisplayAmount("1000")
     setShowError(false)
   }
   
   const handleDecrease = () => {
+    if (isDisabled) return
+    playSound('/assets/audio/amount.mp3')
     const current = betAmount
     const newValue = Math.max(1, current - 1)
     setBetAmount(newValue)
@@ -37,6 +45,8 @@ export default function MobileBetAmount() {
   }
   
   const handleIncrease = () => {
+    if (isDisabled) return
+    playSound('/assets/audio/amount.mp3')
     const current = betAmount
     const newValue = Math.min(1000, current + 1)
     setBetAmount(newValue)

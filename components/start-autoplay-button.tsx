@@ -109,15 +109,15 @@ export default function StartAutoplayButton() {
           transition: opacity 0.3s ease;
         }
 
-        /* Mobile - always show glow effect */
+        /* Mobile - use same dim effect as desktop */
         @media (max-width: 819px) {
           .btn-new._placebet ._bg11 {
-            opacity: 1;
+            opacity: 0.3;
           }
 
           .btn-new._placebet ._bg2,
           .btn-new._placebet ._bg22 {
-            opacity: 1;
+            opacity: 0;
           }
         }
 
