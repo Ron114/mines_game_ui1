@@ -742,10 +742,10 @@ export default function GameGrid() {
         }
 
         .animated-amount {
-          font-family: 'Roboto', sans-serif;
-          font-size: 0.7825rem;
+          // font-family: 'Roboto', sans-serif;
+          font-size: 0.7325rem;
           font-weight: 600;
-          color:rgb(164, 255, 211);
+          color:rgb(67, 242, 157);
           // text-shadow: 0 0 10px rgba(211, 241, 227, 0.6);
           animation: winAmountRiseUp 2.7s ease-out forwards;
         }
@@ -763,8 +763,8 @@ export default function GameGrid() {
 
         @media (max-width: 819px) {
           .win-amount-animation {
-            top: 50px;
-            right: 20px;
+            top:30px;
+            right: 140px;
           }
           
           .animated-amount {

@@ -63,6 +63,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [currentCashoutValue, setCurrentCashoutValue] = useState(0)
   const [showWinAnimation, setShowWinAnimation] = useState(false)
   const [winAnimationAmount, setWinAnimationAmount] = useState(0)
+  const [isCashingOut, setIsCashingOut] = useState(false)
   
   const multiplierMappings: Record<number, number[]> = {
     2: [1.03, 1.13, 1.23, 1.36, 1.5, 1.67, 1.86],
@@ -194,6 +195,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }
 
   const cashOut = () => {
+    if (isCashingOut) return
+    
+    setIsCashingOut(true)
     setWinAnimationAmount(currentCashoutValue)
     setShowWinAnimation(true)
     
@@ -222,6 +226,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setCurrentCashoutValue(0)
     setShowWinAnimation(false)
     setWinAnimationAmount(0)
+    setIsCashingOut(false)
     generateMinePositions(selectedMines)
   }
 
