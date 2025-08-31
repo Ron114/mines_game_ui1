@@ -39,6 +39,10 @@ interface GameContextType {
   animateValueUpdate: (newValue: number) => void
   getNextPotentialValue: () => number
   formatCurrency: (value: number) => string
+  showWinAnimation: boolean
+  setShowWinAnimation: (show: boolean) => void
+  winAnimationAmount: number
+  setWinAnimationAmount: (amount: number) => void
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined)
@@ -57,6 +61,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [bombHitTile, setBombHitTile] = useState<number | null>(null)
   const [diamondsFound, setDiamondsFound] = useState(0)
   const [currentCashoutValue, setCurrentCashoutValue] = useState(0)
+  const [showWinAnimation, setShowWinAnimation] = useState(false)
+  const [winAnimationAmount, setWinAnimationAmount] = useState(0)
   
   const multiplierMappings: Record<number, number[]> = {
     2: [1.03, 1.13, 1.23, 1.36, 1.5, 1.67, 1.86],
@@ -188,14 +194,20 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }
 
   const cashOut = () => {
-    setBalance(balance + currentCashoutValue)
-    setShowWinModal(true)
-    setShowAllTiles(true)
+    setWinAnimationAmount(currentCashoutValue)
+    setShowWinAnimation(true)
     
     setTimeout(() => {
-      setShowWinModal(false)
-      resetGame()
-    }, 2500)
+      setBalance(balance + currentCashoutValue)
+      setShowWinModal(true)
+      setShowAllTiles(true)
+      setShowWinAnimation(false)
+      
+      setTimeout(() => {
+        setShowWinModal(false)
+        resetGame()
+      }, 2500)
+    }, 1500)
   }
 
   const resetGame = () => {
@@ -208,6 +220,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setBombHitTile(null)
     setDiamondsFound(0)
     setCurrentCashoutValue(0)
+    setShowWinAnimation(false)
+    setWinAnimationAmount(0)
     generateMinePositions(selectedMines)
   }
 
@@ -251,7 +265,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setCurrentCashoutValue,
       animateValueUpdate,
       getNextPotentialValue,
-      formatCurrency
+      formatCurrency,
+      showWinAnimation,
+      setShowWinAnimation,
+      winAnimationAmount,
+      setWinAnimationAmount
     }}>
       {children}
     </GameContext.Provider>

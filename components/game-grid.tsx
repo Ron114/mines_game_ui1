@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import { useAudioContext } from '../contexts/AudioContext'
 
 export default function GameGrid() {
-  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, showWinModal, currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile, getNextPotentialValue, formatCurrency, selectedMines } = useGame()
+  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, showWinModal, currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile, getNextPotentialValue, formatCurrency, selectedMines, showWinAnimation, winAnimationAmount } = useGame()
   const { playSound } = useAudioContext()
   const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   const [hoveredTile, setHoveredTile] = useState<number | null>(null)
@@ -186,6 +186,15 @@ export default function GameGrid() {
           </div>
         </div>
       </div>
+      )}
+
+      {/* Win Amount Animation */}
+      {showWinAnimation && (
+        <div className="win-amount-animation">
+          <div className="animated-amount">
+            +{formatCurrency(winAnimationAmount)}
+          </div>
+        </div>
       )}
 
       <div className="game-tiles">
@@ -720,6 +729,57 @@ export default function GameGrid() {
           .multiplier-value {
             font-size: 11px;
             font-weight: 500;
+          }
+        }
+
+        /* Win Amount Animation */
+        .win-amount-animation {
+          position: fixed;
+          top: 130px;
+          right: 375px;
+          z-index: 2000;
+          pointer-events: none;
+        }
+
+        .animated-amount {
+          font-family: 'Roboto', sans-serif;
+          font-size: 0.7825rem;
+          font-weight: 600;
+          color:rgb(164, 255, 211);
+          // text-shadow: 0 0 10px rgba(211, 241, 227, 0.6);
+          animation: winAmountRiseUp 2.7s ease-out forwards;
+        }
+
+        @keyframes winAmountRiseUp {
+          0% {
+            opacity: 1;
+            transform: translateY(10px);
+          }
+          80% {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+        }
+
+        @media (max-width: 819px) {
+          .win-amount-animation {
+            top: 50px;
+            right: 20px;
+          }
+          
+          .animated-amount {
+            font-size: 0.75rem;
+          }
+          
+          @keyframes winAmountRiseUp {
+            0% {
+              opacity: 1;
+              transform: translateY(8px);
+            }
+            100% {
+              opacity: 0;
+              transform: translateY(-25px);
+            }
           }
         }
 
