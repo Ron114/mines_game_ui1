@@ -24,10 +24,10 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
         style={{
           width: "280px",
           background: "linear-gradient(135deg, rgba(26, 32, 38, 0.95) 0%, rgba(18, 21, 26, 0.95) 50%, rgba(10, 12, 15, 0.95) 100%)",
-          borderRadius: "12px",
+          borderRadius: "28px",
           border: "1px solid rgba(255, 255, 255, 0.15)",
           padding: "18px",
-          minHeight: "320px",
+          minHeight: "260px",
           boxShadow: "0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.35), -0.125rem -0.125rem 0.25rem rgba(255, 255, 255, 0.1)",
           backdropFilter: "blur(10px)",
         }}
@@ -310,7 +310,7 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
 
         @media (min-width: 1200px) {
           .settings-modal {
-            top: 155px;
+            top: calc(150px + (100vw - 1200px) * 0.09);
             right: calc((98vw - 880px) / 2 + 20px);
           }
         }
