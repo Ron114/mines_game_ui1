@@ -746,6 +746,7 @@ export default function GameGrid() {
           font-weight: 600;
           color: #7CFC00;
           animation: winAmountRiseUp 2.7s ease-out forwards;
+          animation-fill-mode: forwards;
         }
 
         @keyframes winAmountRiseUp {
@@ -753,7 +754,7 @@ export default function GameGrid() {
             opacity: 1;
             transform: translateY(10px);
           }
-          80% {
+          100% {
             opacity: 0;
             transform: translateY(-20px);
           }

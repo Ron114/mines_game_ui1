@@ -116,15 +116,17 @@ export default function GameStatistics() {
         return [newRow, ...prevData.slice(0, 23)] // Keep only 24 rows total
       })
       
-      // Start animation with the container positioned above to hide the new row
+      // Start animation immediately - smooth slide from -36 to 0
       setAnimationOffset(-36)
       
-      // Then slide down to show the new row
-      setTimeout(() => {
-        setAnimationOffset(0)
-      }, 50) // Small delay to ensure row is added
+      // Use requestAnimationFrame for smoother transition
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setAnimationOffset(0)
+        })
+      })
       
-    }, 2000) // New row every 2000ms for better visibility
+    }, 1100) // Slightly faster interval
     
     return () => clearInterval(interval)
   }, [isClient])
@@ -196,7 +198,7 @@ export default function GameStatistics() {
                 className="rows-container"
                 style={{
                   transform: `translateY(${animationOffset}px)`,
-                  transition: animationOffset === 0 ? 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none'
+                  transition: 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)'
                 }}
               >
                 {gameData.map((row, index) => (
