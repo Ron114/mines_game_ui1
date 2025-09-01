@@ -742,11 +742,9 @@ export default function GameGrid() {
         }
 
         .animated-amount {
-          // font-family: 'Roboto', sans-serif;
           font-size: 0.7325rem;
           font-weight: 600;
-          color:rgb(67, 242, 157);
-          // text-shadow: 0 0 10px rgba(211, 241, 227, 0.6);
+          color: #7CFC00;
           animation: winAmountRiseUp 2.7s ease-out forwards;
         }
 
@@ -763,7 +761,7 @@ export default function GameGrid() {
 
         @media (max-width: 819px) {
           .win-amount-animation {
-            top:30px;
+            top: 30px;
             right: 140px;
           }
           
@@ -780,6 +778,14 @@ export default function GameGrid() {
               opacity: 0;
               transform: translateY(-15px);
             }
+          }
+        }
+
+        /* Extra large screens (1400px+) */
+        @media (min-width: 1400px) {
+          .win-amount-animation {
+            top: 150px;
+            right: calc(50% - 300px);
           }
         }
 
