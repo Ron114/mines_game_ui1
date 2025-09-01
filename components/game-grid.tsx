@@ -259,7 +259,7 @@ export default function GameGrid() {
             width: 100%;
             max-width: 100%;
             grid-gap: calc((100vw - 20px) / 30);
-            padding-bottom: 30px;
+            // padding-bottom: 30px;
             grid-template-rows: repeat(5, calc((100vw - 20px) / 6));
             grid-template-columns: repeat(5, calc((100vw - 20px) / 6));
             justify-content: center;
