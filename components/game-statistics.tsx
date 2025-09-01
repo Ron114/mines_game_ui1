@@ -28,12 +28,10 @@ export default function GameStatistics() {
     { name: "ballandball", url: "/assets/icon-ballandball.svg" }
   ]
 
-  const gameNames = ["Turboplinko", "Mines", "Hamsta", "Crash", "Fruit Towers", "Dice", "Towers", "Ball and Ball"]
+  const gameNames = ["Limbo Rider", "Ball & Ball", "Crash X Football", "Mines", "Turboplinko", "Fruit Towers", "Turbomines", "Crash X"]
   const players = [
-    "ind_turbo_4826597", "SmartHornet744", "Tremendous Dinosa...", "20908c8d-7dc2-448...",
-    "player123", "player456", "player789", "player101", "player102", "player103", "player104",
-    "CryptoKing999", "DiamondHands22", "LuckyGamer", "BetMaster", "WinnerCircle", "HighRoller",
-    "FortuneFinder", "GoldRush", "StrikeLuck", "BigWinner", "ProGamer123", "VegasVibe"
+    "Statutory Panda", "Civil Macaw", "11293635-a0T", "Tremendous Tiger", "10382644", "JUMBO95", 
+    "Minor Barracuda", "Youthful Worm", "BlackHat", "Uddityy ***ate"
   ]
 
   const getRandomIcon = () => {
@@ -49,24 +47,21 @@ export default function GameStatistics() {
   }
 
   const getRandomTime = () => {
-    const hour = Math.floor(Math.random() * 12) + 1
-    const minute = Math.floor(Math.random() * 60).toString().padStart(2, '0')
-    const period = Math.random() > 0.5 ? 'AM' : 'PM'
-    return `${hour}:${minute} ${period}`
+    return "11:57 PM" // All entries show the same time as in the new image
   }
 
   const getRandomBet = () => {
-    const amounts = ["0.01", "0.05", "0.10", "0.25", "0.50", "1.00", "2.50", "5.00", "10.00", "25.00", "50.00", "100.00"]
+    const amounts = ["0.00", "1.18", "0.05", "0.00", "0.35", "0.55", "0.34", "0.19", "0.71", "0.06"]
     return `$${amounts[Math.floor(Math.random() * amounts.length)]}`
   }
 
   const getRandomMultiplier = () => {
-    const multipliers = ["0.00x", "1.01x", "1.25x", "1.50x", "2.00x", "3.50x", "5.00x", "10.00x", "25.00x", "100.00x"]
+    const multipliers = ["0.00x", "0.00x", "3.13x", "0.00x", "0.96x", "0.28x", "0.00x", "0.00x", "1.93x", "0.00x"]
     return multipliers[Math.floor(Math.random() * multipliers.length)]
   }
 
   const getRandomPayout = () => {
-    const payouts = ["0.00", "0.05", "0.25", "1.50", "5.00", "25.00", "100.00", "250.00", "1000.00"]
+    const payouts = ["0.00", "0.00", "0.17", "0.00", "0.33", "0.15", "0.00", "0.00", "1.35", "0.00"]
     return `$${payouts[Math.floor(Math.random() * payouts.length)]}`
   }
 
@@ -83,19 +78,21 @@ export default function GameStatistics() {
     }
   }
 
-  // Generate initial static data (no randomness during SSR)
+  // Generate initial static data matching the new image exactly
   const generateStaticData = () => {
     const staticRows = [
-      { id: 1, game: "Mines", icon: { name: "mines", url: "/assets/icon-mines.svg" }, player: "Player1", time: "12:00 PM", betAmount: "$1.00", multiplier: "1.50x", payout: "$1.50" },
-      { id: 2, game: "Crash", icon: { name: "crash", url: "/assets/icon-crash.svg" }, player: "Player2", time: "12:01 PM", betAmount: "$0.50", multiplier: "2.00x", payout: "$1.00" },
-      { id: 3, game: "Dice", icon: { name: "dice", url: "/assets/icon-dice.svg" }, player: "Player3", time: "12:02 PM", betAmount: "$2.00", multiplier: "1.25x", payout: "$2.50" }
+      { id: 1, game: "Limbo Rider", icon: { name: "dice", url: "/assets/icon-dice.svg" }, player: "Statutory Panda", time: "11:57 PM", betAmount: "$0.00", multiplier: "0.00x", payout: "$0.00" },
+      { id: 2, game: "Ball & Ball", icon: { name: "ballandball", url: "/assets/icon-ballandball.svg" }, player: "Civil Macaw", time: "11:57 PM", betAmount: "$1.18", multiplier: "0.00x", payout: "$0.00" },
+      { id: 3, game: "Crash X Football", icon: { name: "crash", url: "/assets/icon-crash.svg" }, player: "11293635-a0T", time: "11:57 PM", betAmount: "$0.05", multiplier: "3.13x", payout: "$0.17" },
+      { id: 4, game: "Mines", icon: { name: "mines", url: "/assets/icon-mines.svg" }, player: "Tremendous Tiger", time: "11:57 PM", betAmount: "$0.00", multiplier: "0.00x", payout: "$0.00" },
+      { id: 5, game: "Turboplinko", icon: { name: "turboplinko", url: "/assets/icon-turboplinko.svg" }, player: "10382644", time: "11:57 PM", betAmount: "$0.35", multiplier: "0.96x", payout: "$0.33" },
+      { id: 6, game: "Turboplinko", icon: { name: "turboplinko", url: "/assets/icon-turboplinko.svg" }, player: "JUMBO95", time: "11:57 PM", betAmount: "$0.55", multiplier: "0.28x", payout: "$0.15" },
+      { id: 7, game: "Fruit Towers", icon: { name: "fruittowers", url: "/assets/icon-fruittowers.svg" }, player: "Minor Barracuda", time: "11:57 PM", betAmount: "$0.34", multiplier: "0.00x", payout: "$0.00" },
+      { id: 8, game: "Turbomines", icon: { name: "mines", url: "/assets/icon-mines.svg" }, player: "Youthful Worm", time: "11:57 PM", betAmount: "$0.19", multiplier: "0.00x", payout: "$0.00" },
+      { id: 9, game: "Crash X", icon: { name: "crash", url: "/assets/icon-crash.svg" }, player: "BlackHat", time: "11:57 PM", betAmount: "$0.71", multiplier: "1.93x", payout: "$1.35" },
+      { id: 10, game: "Limbo Rider", icon: { name: "dice", url: "/assets/icon-dice.svg" }, player: "Uddityy ***ate", time: "11:57 PM", betAmount: "$0.06", multiplier: "0.00x", payout: "$0.00" }
     ]
-    // Duplicate rows for clean display (24 total rows to prevent overflow)
-    const duplicatedRows = []
-    for (let i = 0; i < 6; i++) { // Only 6 visible rows initially
-      duplicatedRows.push({ ...staticRows[i % 3], id: i + 100 })
-    }
-    return duplicatedRows
+    return staticRows
   }
 
   useEffect(() => {
@@ -111,22 +108,18 @@ export default function GameStatistics() {
     const interval = setInterval(() => {
       const newRow = generateRandomRow()
       
-      // Add the new row FIRST (it will be above visible area)
-      setGameData(prevData => {
-        return [newRow, ...prevData.slice(0, 23)] // Keep only 24 rows total
-      })
+      // Start by moving the entire visible list down
+      setAnimationOffset(36) // Move the whole list down by one row height
       
-      // Start animation immediately - smooth slide from -36 to 0
-      setAnimationOffset(-36)
-      
-      // Use requestAnimationFrame for smoother transition
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setAnimationOffset(0)
+      // After the list has moved down, add the new row and reset position
+      setTimeout(() => {
+        setGameData(prevData => {
+          return [newRow, ...prevData.slice(0, 23)] // Keep only 24 rows total
         })
-      })
+        setAnimationOffset(0) // Reset to original position with new row at top
+      }, 400) // Wait for the downward animation to complete
       
-    }, 1100) // Slightly faster interval
+    }, 1500) // Timing to match reference
     
     return () => clearInterval(interval)
   }, [isClient])
@@ -198,7 +191,7 @@ export default function GameStatistics() {
                 className="rows-container"
                 style={{
                   transform: `translateY(${animationOffset}px)`,
-                  transition: 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)'
+                  transition: animationOffset !== 0 ? 'transform 0.4s ease-out' : 'none'
                 }}
               >
                 {gameData.map((row, index) => (
