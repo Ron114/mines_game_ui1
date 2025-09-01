@@ -108,16 +108,18 @@ export default function GameStatistics() {
     const interval = setInterval(() => {
       const newRow = generateRandomRow()
       
-      // Start by moving the entire visible list down
-      setAnimationOffset(36) // Move the whole list down by one row height
+      // Add new row immediately (it will be hidden above the viewport)
+      setGameData(prevData => {
+        return [newRow, ...prevData.slice(0, 23)] // Keep only 24 rows total
+      })
       
-      // After the list has moved down, add the new row and reset position
+      // Start animation by moving the whole list down to reveal the new row
+      setAnimationOffset(36)
+      
+      // After animation completes, reset position
       setTimeout(() => {
-        setGameData(prevData => {
-          return [newRow, ...prevData.slice(0, 23)] // Keep only 24 rows total
-        })
-        setAnimationOffset(0) // Reset to original position with new row at top
-      }, 400) // Wait for the downward animation to complete
+        setAnimationOffset(0) // Reset to original position instantly
+      }, 400)
       
     }, 1500) // Timing to match reference
     
@@ -191,7 +193,7 @@ export default function GameStatistics() {
                 className="rows-container"
                 style={{
                   transform: `translateY(${animationOffset}px)`,
-                  transition: animationOffset !== 0 ? 'transform 0.4s ease-out' : 'none'
+                  transition: animationOffset === 36 ? 'transform 0.4s ease-out' : 'none'
                 }}
               >
                 {gameData.map((row, index) => (
@@ -350,6 +352,7 @@ export default function GameStatistics() {
         .rows-container {
           position: relative;
           width: 100%;
+          top: -36px;
         }
 
         .row {
@@ -358,7 +361,7 @@ export default function GameStatistics() {
           display: flex;
           padding: 8px 0;
           border-bottom: none;
-          min-height: 28px;
+          height: 36px;
           flex-shrink: 0;
           opacity: 1;
         }
