@@ -6,7 +6,7 @@ export default function GameStatistics() {
   const [activeTab, setActiveTab] = useState("all_bets")
   const [gameData, setGameData] = useState<any[]>([])
   const [isClient, setIsClient] = useState(false)
-  const [enteringRowId, setEnteringRowId] = useState<string | null>(null)
+  const [animationOffset, setAnimationOffset] = useState(0)
 
   const tabs = [
     { id: "all_bets", label: "All Bets" },
@@ -111,21 +111,20 @@ export default function GameStatistics() {
     const interval = setInterval(() => {
       const newRow = generateRandomRow()
       
-      // Set the entering row ID to trigger animation
-      setEnteringRowId(newRow.id)
-      
-      // Update game data
+      // Add the new row FIRST (it will be above visible area)
       setGameData(prevData => {
-        // Add to top, remove from bottom, keep exact count
         return [newRow, ...prevData.slice(0, 23)] // Keep only 24 rows total
       })
       
-      // Remove the entering state after animation completes
-      setTimeout(() => {
-        setEnteringRowId(null)
-      }, 100) // Slightly longer delay for smoother transition
+      // Start animation with the container positioned above to hide the new row
+      setAnimationOffset(-36)
       
-    }, 1100) // New row every 1100ms
+      // Then slide down to show the new row
+      setTimeout(() => {
+        setAnimationOffset(0)
+      }, 50) // Small delay to ensure row is added
+      
+    }, 2000) // New row every 2000ms for better visibility
     
     return () => clearInterval(interval)
   }, [isClient])
@@ -193,11 +192,18 @@ export default function GameStatistics() {
                 </div>
               </div>
             ) : (
-              gameData.map((row) => (
               <div 
-                key={row.id} 
-                className={`row ${row.id === enteringRowId ? 'row-entering' : ''}`}
+                className="rows-container"
+                style={{
+                  transform: `translateY(${animationOffset}px)`,
+                  transition: animationOffset === 0 ? 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none'
+                }}
               >
+                {gameData.map((row, index) => (
+                <div 
+                  key={row.id} 
+                  className="row"
+                >
                 {/* Desktop row */}
                 <div className="desktop-row">
                   <div className="cell _capitalize _nowrap">
@@ -227,7 +233,8 @@ export default function GameStatistics() {
                   <div className="cell _fw600">{row.payout}</div>
                 </div>
               </div>
-            ))
+            ))}
+              </div>
             )}
           </div>
         </div>
@@ -345,26 +352,19 @@ export default function GameStatistics() {
           position: relative;
         }
 
+        .rows-container {
+          position: relative;
+          width: 100%;
+        }
 
         .row {
-          -webkit-transform-style: preserve-3d;
-          transform-style: preserve-3d;
-          -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
           cursor: pointer;
           align-items: center;
           display: flex;
           padding: 8px 0;
           border-bottom: none;
-          transition: transform 0.4s ease-out, background-color 0.2s ease;
           min-height: 28px;
           flex-shrink: 0;
-          transform: translateY(0);
-          opacity: 1;
-        }
-
-        .row-entering {
-          transform: translateY(-28px);
           opacity: 1;
         }
 
