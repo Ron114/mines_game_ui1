@@ -252,16 +252,16 @@ export default function GameGrid() {
         @media (max-width: 819px) {
           .table-holder {
             margin-top: 0;
-            padding: 0;
+            padding: 0 10px;
           }
 
           .game-tiles {
-            grid-gap: 14px;
-            padding-bottom: 30px;
-            max-width: calc(100vw - 20px);
             width: 100%;
-            grid-template-rows: repeat(5, 62px);
-            grid-template-columns: repeat(5, 62px);
+            max-width: 100%;
+            grid-gap: calc((100vw - 20px) / 30);
+            padding-bottom: 30px;
+            grid-template-rows: repeat(5, calc((100vw - 20px) / 6));
+            grid-template-columns: repeat(5, calc((100vw - 20px) / 6));
             justify-content: center;
           }
         }
