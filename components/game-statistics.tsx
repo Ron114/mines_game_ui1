@@ -78,7 +78,7 @@ export default function GameStatistics() {
     }
   }
 
-  // Generate initial static data matching the new image exactly
+  // Generate initial static data matching the reference gif exactly
   const generateStaticData = () => {
     const staticRows = [
       { id: 1, game: "Limbo Rider", icon: { name: "dice", url: "/assets/icon-dice.svg" }, player: "Statutory Panda", time: "11:57 PM", betAmount: "$0.00", multiplier: "0.00x", payout: "$0.00" },
@@ -90,7 +90,9 @@ export default function GameStatistics() {
       { id: 7, game: "Fruit Towers", icon: { name: "fruittowers", url: "/assets/icon-fruittowers.svg" }, player: "Minor Barracuda", time: "11:57 PM", betAmount: "$0.34", multiplier: "0.00x", payout: "$0.00" },
       { id: 8, game: "Turbomines", icon: { name: "mines", url: "/assets/icon-mines.svg" }, player: "Youthful Worm", time: "11:57 PM", betAmount: "$0.19", multiplier: "0.00x", payout: "$0.00" },
       { id: 9, game: "Crash X", icon: { name: "crash", url: "/assets/icon-crash.svg" }, player: "BlackHat", time: "11:57 PM", betAmount: "$0.71", multiplier: "1.93x", payout: "$1.35" },
-      { id: 10, game: "Limbo Rider", icon: { name: "dice", url: "/assets/icon-dice.svg" }, player: "Uddityy ***ate", time: "11:57 PM", betAmount: "$0.06", multiplier: "0.00x", payout: "$0.00" }
+      { id: 10, game: "Limbo Rider", icon: { name: "dice", url: "/assets/icon-dice.svg" }, player: "Uddityy ***ate", time: "11:57 PM", betAmount: "$0.06", multiplier: "0.00x", payout: "$0.00" },
+      { id: 11, game: "Limbo Rider", icon: { name: "dice", url: "/assets/icon-dice.svg" }, player: "Statutory Panda", time: "11:57 PM", betAmount: "$0.00", multiplier: "0.00x", payout: "$0.00" },
+      { id: 12, game: "Ball & Ball", icon: { name: "ballandball", url: "/assets/icon-ballandball.svg" }, player: "Civil Macaw", time: "11:57 PM", betAmount: "$1.18", multiplier: "0.00x", payout: "$0.00" }
     ]
     return staticRows
   }
@@ -104,20 +106,22 @@ export default function GameStatistics() {
   useEffect(() => {
     if (!isClient) return
     
+    let currentIndex = 0
+    const allStaticRows = generateStaticData()
+    
     // Add new rows periodically with smooth animation
     const interval = setInterval(() => {
-      const newRow = generateRandomRow()
-      
-      // Add new row immediately (it will be hidden above the viewport)
-      setGameData(prevData => {
-        return [newRow, ...prevData.slice(0, 23)] // Keep only 24 rows total
-      })
-      
-      // Start animation by moving the whole list down to reveal the new row
+      // Start animation by moving the whole list down first
       setAnimationOffset(36)
       
-      // After animation completes, reset position
+      // After animation completes, add next row from static data and reset position
       setTimeout(() => {
+        const nextRow = { ...allStaticRows[currentIndex % allStaticRows.length], id: Date.now() }
+        currentIndex++
+        
+        setGameData(prevData => {
+          return [nextRow, ...prevData.slice(0, 9)] // Keep only 10 rows visible
+        })
         setAnimationOffset(0) // Reset to original position instantly
       }, 400)
       
@@ -359,7 +363,7 @@ export default function GameStatistics() {
           cursor: pointer;
           align-items: center;
           display: flex;
-          padding: 8px 0;
+          padding: 0;
           border-bottom: none;
           height: 36px;
           flex-shrink: 0;
