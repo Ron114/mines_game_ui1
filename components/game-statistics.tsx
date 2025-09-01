@@ -123,9 +123,9 @@ export default function GameStatistics() {
           return [nextRow, ...prevData.slice(0, 9)] // Keep only 10 rows visible
         })
         setAnimationOffset(0) // Reset to original position instantly
-      }, 400)
+      }, 300)
       
-    }, 1500) // Timing to match reference
+    }, 1200) // Timing to match reference
     
     return () => clearInterval(interval)
   }, [isClient])
@@ -403,7 +403,7 @@ export default function GameStatistics() {
           font-family: 'Gilroy', sans-serif;
           font-weight: 400;
           line-height: 12px;
-          padding: 0 10px;
+          padding: 8px 10px;
         }
 
         .cell:first-child {
