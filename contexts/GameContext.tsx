@@ -200,18 +200,21 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setIsCashingOut(true)
     setWinAnimationAmount(currentCashoutValue)
     setShowWinAnimation(true)
+    setBalance(balance + currentCashoutValue)
+    setShowWinModal(true)
     
     setTimeout(() => {
-      setBalance(balance + currentCashoutValue)
-      setShowWinModal(true)
       setShowAllTiles(true)
+    }, 120)
+    
+    setTimeout(() => {
       setShowWinAnimation(false)
-      
-      setTimeout(() => {
-        setShowWinModal(false)
-        resetGame()
-      }, 2500)
-    }, 1500)
+    }, 2700)
+    
+    setTimeout(() => {
+      setShowWinModal(false)
+      resetGame()
+    }, 2500)
   }
 
   const resetGame = () => {
