@@ -758,7 +758,7 @@ export default function GameGrid() {
             transform: translateY(-20px);
           }
         }
-
+// hii
         @media (max-width: 819px) {
           .win-amount-animation {
             top: 30px;
