@@ -4,6 +4,15 @@ import { createContext, useContext, useState, ReactNode, useEffect } from 'react
 
 type GameState = 'idle' | 'active' | 'cashout'
 
+interface AutoPlayConfig {
+  numberOfRounds: number
+  onWinMode: 'reset' | 'increase'
+  onWinAmount: number
+  onLossMode: 'reset' | 'increase'
+  onLossAmount: number
+  stopAtAnyWin: boolean
+}
+
 interface GameContextType {
   gameState: GameState
   setGameState: (state: GameState) => void
@@ -47,6 +56,27 @@ interface GameContextType {
   setIsDimmingCheckout: (dimming: boolean) => void
   clearAllAnimations: () => void
   clearCashOutTimers: () => void
+  
+  // Auto-play functionality
+  isAutoPlaying: boolean
+  setIsAutoPlaying: (playing: boolean) => void
+  autoPlayConfig: AutoPlayConfig
+  setAutoPlayConfig: (config: AutoPlayConfig) => void
+  selectedTilesForAuto: Set<number>
+  setSelectedTilesForAuto: (tiles: Set<number>) => void
+  currentRound: number
+  setCurrentRound: (round: number) => void
+  autoPlayTimers: NodeJS.Timeout[]
+  setAutoPlayTimers: (timers: NodeJS.Timeout[]) => void
+  clearAutoPlayTimers: () => void
+  startAutoPlay: () => void
+  stopAutoPlay: () => void
+  resetAutoPlayState: () => void
+  isAutoMode: boolean
+  setIsAutoMode: (auto: boolean) => void
+  toggleTileForAutoPlay: (tileIndex: number) => void
+  executeAutoPlayRound: () => void
+  updateBetAfterResult: (won: boolean) => void
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined)
@@ -70,6 +100,21 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [isCashingOut, setIsCashingOut] = useState(false)
   const [isDimmingCheckout, setIsDimmingCheckout] = useState(false)
   const [cashOutTimers, setCashOutTimers] = useState<NodeJS.Timeout[]>([])
+  
+  // Auto-play state
+  const [isAutoPlaying, setIsAutoPlaying] = useState(false)
+  const [autoPlayConfig, setAutoPlayConfig] = useState<AutoPlayConfig>({
+    numberOfRounds: 0,
+    onWinMode: 'reset',
+    onWinAmount: 0,
+    onLossMode: 'reset', 
+    onLossAmount: 0,
+    stopAtAnyWin: false
+  })
+  const [selectedTilesForAuto, setSelectedTilesForAuto] = useState<Set<number>>(new Set())
+  const [currentRound, setCurrentRound] = useState(0)
+  const [autoPlayTimers, setAutoPlayTimers] = useState<NodeJS.Timeout[]>([])
+  const [isAutoMode, setIsAutoMode] = useState(false)
   
   const multiplierMappings: Record<number, number[]> = {
     2: [1.03, 1.13, 1.23, 1.36, 1.5, 1.67, 1.86],
@@ -204,11 +249,253 @@ export function GameProvider({ children }: { children: ReactNode }) {
     cashOutTimers.forEach(timer => clearTimeout(timer))
     setCashOutTimers([])
   }
+  
+  const clearAutoPlayTimers = () => {
+    autoPlayTimers.forEach(timer => clearTimeout(timer))
+    setAutoPlayTimers([])
+  }
+  
+  const resetAutoPlayState = () => {
+    clearAutoPlayTimers()
+    setIsAutoPlaying(false)
+    setCurrentRound(0)
+    setSelectedTilesForAuto(new Set())
+  }
+  
+  const toggleTileForAutoPlay = (tileIndex: number) => {
+    if (!isAutoMode || gameState !== 'idle') return
+    
+    setSelectedTilesForAuto(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(tileIndex)) {
+        newSet.delete(tileIndex)
+      } else {
+        newSet.add(tileIndex)
+      }
+      return newSet
+    })
+  }
+  
+  const updateBetAfterResult = (won: boolean) => {
+    const config = autoPlayConfig
+    let newBetAmount = betAmount
+    
+    if (won && config.onWinMode === 'increase') {
+      newBetAmount = betAmount + (betAmount * config.onWinAmount / 100)
+    } else if (won && config.onWinMode === 'reset') {
+      newBetAmount = 1
+    } else if (!won && config.onLossMode === 'increase') {
+      newBetAmount = betAmount + (betAmount * config.onLossAmount / 100)
+    } else if (!won && config.onLossMode === 'reset') {
+      newBetAmount = 1
+    }
+    
+    setBetAmount(Math.max(0.01, Math.min(newBetAmount, balance)))
+  }
+  
+  const executeAutoPlayRound = () => {
+    console.log('🔵 executeAutoPlayRound called', {
+      selectedTilesCount: selectedTilesForAuto.size,
+      selectedTiles: Array.from(selectedTilesForAuto),
+      balance,
+      betAmount,
+      isAutoPlaying,
+      gameState
+    })
+    
+    if (selectedTilesForAuto.size === 0) {
+      console.log('🔴 executeAutoPlayRound failed - no tiles selected')
+      stopAutoPlay()
+      return
+    }
+    
+    if (balance < betAmount) {
+      console.log('🔴 executeAutoPlayRound failed - insufficient balance')
+      stopAutoPlay()
+      return
+    }
+    
+    // Clean all tiles and start fresh round
+    setTileStatesInternal({})
+    setLoadingTilesInternal(new Set())
+    setShowAllTiles(false)
+    setBombHitTile(null)
+    setDiamondsFound(0)
+    setCurrentCashoutValue(0)
+    setWinAmount(0)
+    setShowWinModal(false)
+    setShowWinAnimation(false)
+    generateMinePositions(selectedMines)
+    setGameState('active')
+    deductBet()
+    
+    const tilesToClick = Array.from(selectedTilesForAuto)
+    let hasBomb = false
+    let bombTileIndex = -1
+    
+    // Check all selected tiles for bombs
+    for (const tileIndex of tilesToClick) {
+      const result = getTileType(tileIndex)
+      if (result === 'bomb') {
+        hasBomb = true
+        bombTileIndex = tileIndex
+        break
+      }
+    }
+    
+    console.log('🟠 Game setup complete, will reveal tiles in 300ms', {
+      tilesToClick,
+      hasBomb,
+      bombTileIndex,
+      gameState
+    })
+    
+    // Small delay then reveal all tiles at once (no loading animation)
+    setTimeout(() => {
+      console.log('🟣 Revealing tiles now', { tilesToClick, isAutoPlaying })
+      
+      // Reveal all selected tiles at once
+      tilesToClick.forEach(tileIndex => {
+        const result = getTileType(tileIndex)
+        console.log(`🔷 Setting tile ${tileIndex} to ${result}`)
+        setTileState(tileIndex, result)
+      })
+      
+      if (hasBomb) {
+        // If there's a bomb, update bet for loss
+        updateBetAfterResult(false)
+        
+        // Set bomb hit tile for animation
+        setBombHitTile(bombTileIndex)
+        
+        // Show all tiles after bomb animation
+        setTimeout(() => {
+          setShowAllTiles(true)
+          
+          // Reset and continue to next round
+          const nextRoundTimer = setTimeout(() => {
+            if (!isAutoPlaying) return // Stop if auto-play was stopped
+            
+            resetGame()
+            const nextRound = currentRound + 1
+            setCurrentRound(nextRound)
+            
+            if (autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds) {
+              executeAutoPlayRound()
+            } else {
+              stopAutoPlay()
+            }
+          }, 2000)
+          
+          setAutoPlayTimers(prev => [...prev, nextRoundTimer])
+        }, 800)
+      } else {
+        // All tiles are diamonds - win!
+        updateBetAfterResult(true)
+        
+        // Calculate win amount
+        const multiplier = multiplierValues[tilesToClick.length - 1] || multiplierValues[0]
+        const winAmount = betAmount * multiplier
+        
+        // Update balance, show win modal and win animation all at same time
+        setBalance(balance + winAmount)
+        setCurrentCashoutValue(winAmount)
+        setWinAmount(winAmount)
+        setShowWinModal(true)
+        setShowAllTiles(true) // Show all tiles at same time as modal
+        
+        // Show win amount animation (green text rising)
+        setWinAnimationAmount(winAmount)
+        setShowWinAnimation(true)
+        
+        // Hide win animation after its duration
+        const winAnimTimer = setTimeout(() => {
+          setShowWinAnimation(false)
+        }, 2700)
+        setAutoPlayTimers(prev => [...prev, winAnimTimer])
+        
+        // Hide modal and continue to next round
+        const modalTimer = setTimeout(() => {
+          setShowWinModal(false)
+        }, 2500)
+        setAutoPlayTimers(prev => [...prev, modalTimer])
+        
+        // Schedule next round
+        const nextRoundTimer = setTimeout(() => {
+          if (!isAutoPlaying) return // Stop if auto-play was stopped
+          
+          resetGame()
+          
+          // Check if should stop on win
+          if (autoPlayConfig.stopAtAnyWin) {
+            stopAutoPlay()
+            return
+          }
+          
+          const nextRound = currentRound + 1
+          setCurrentRound(nextRound)
+          
+          if (autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds) {
+            executeAutoPlayRound()
+          } else {
+            stopAutoPlay()
+          }
+        }, 3000)
+        
+        setAutoPlayTimers(prev => [...prev, nextRoundTimer])
+      }
+    }, 300) // Small delay for smooth reveal
+  }
+  
+  const startAutoPlay = () => {
+    console.log('🟢 startAutoPlay called', {
+      selectedTilesCount: selectedTilesForAuto.size,
+      selectedTiles: Array.from(selectedTilesForAuto),
+      balance,
+      betAmount,
+      isAutoPlaying
+    })
+    
+    // Check if we have tiles selected and sufficient balance
+    if (selectedTilesForAuto.size === 0 || balance < betAmount) {
+      console.log('🔴 startAutoPlay failed - no tiles or insufficient balance')
+      return
+    }
+    
+    console.log('🟡 Setting isAutoPlaying = true and calling executeAutoPlayRound after state update')
+    setIsAutoPlaying(true)
+    setCurrentRound(0)
+    
+    // Execute the first round after state updates
+    setTimeout(() => {
+      executeAutoPlayRound()
+    }, 50)
+  }
+  
+  const stopAutoPlay = () => {
+    // Clear all timers immediately
+    clearAutoPlayTimers()
+    setIsAutoPlaying(false)
+    
+    // Reset tiles immediately but let modal disappear on its own
+    setTileStatesInternal({})
+    setLoadingTilesInternal(new Set())
+    setShowAllTiles(false)
+    setBombHitTile(null)
+    setDiamondsFound(0)
+    setCurrentCashoutValue(0)
+    setWinAmount(0)
+    
+    // Reset game state
+    setGameState('idle')
+    
+    // Modal will disappear on its own timer if it's showing
+    // Don't force close it immediately
+  }
 
   const cashOut = () => {
     if (isCashingOut) return
     
-    // Clear any existing timers first
     clearCashOutTimers()
     
     setIsCashingOut(true)
@@ -322,7 +609,27 @@ export function GameProvider({ children }: { children: ReactNode }) {
       isDimmingCheckout,
       setIsDimmingCheckout,
       clearAllAnimations,
-      clearCashOutTimers
+      clearCashOutTimers,
+      
+      isAutoPlaying,
+      setIsAutoPlaying,
+      autoPlayConfig,
+      setAutoPlayConfig,
+      selectedTilesForAuto,
+      setSelectedTilesForAuto,
+      currentRound,
+      setCurrentRound,
+      autoPlayTimers,
+      setAutoPlayTimers,
+      clearAutoPlayTimers,
+      startAutoPlay,
+      stopAutoPlay,
+      resetAutoPlayState,
+      isAutoMode,
+      setIsAutoMode,
+      toggleTileForAutoPlay,
+      executeAutoPlayRound,
+      updateBetAfterResult
     }}>
       {children}
     </GameContext.Provider>

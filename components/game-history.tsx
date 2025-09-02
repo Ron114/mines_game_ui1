@@ -3,7 +3,7 @@
 import { useGame } from '../contexts/GameContext'
 
 export default function GameHistory() {
-  const { multiplierValues, diamondsFound, gameState } = useGame()
+  const { multiplierValues, diamondsFound, gameState, isAutoMode, selectedTilesForAuto } = useGame()
   
   const formatMultiplier = (value: number): string => {
     if (value >= 1000) {
@@ -19,8 +19,15 @@ export default function GameHistory() {
       <div className="game-history__inner">
         <div className="game-history__inner-container">
           {historyItems.map((multiplier, index) => {
-            const isActive = diamondsFound === index + 1 && gameState === 'cashout'
-            const isResulted = diamondsFound > index + 1
+            // In auto mode, show active state based on selected tiles count
+            // In manual mode, show active state based on actual diamonds found
+            const selectedTilesCount = selectedTilesForAuto.size
+            const isActive = isAutoMode 
+              ? index + 1 === selectedTilesCount && selectedTilesCount > 0
+              : diamondsFound === index + 1 && gameState === 'cashout'
+            const isResulted = isAutoMode 
+              ? index + 1 < selectedTilesCount 
+              : diamondsFound > index + 1
             
             let itemClass = 'game-history__item'
             if (isActive) itemClass += ' _active'

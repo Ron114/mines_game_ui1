@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useGame } from '../contexts/GameContext'
 import GameModeTabs from "./game-mode-tabs"
 import GameHistory from "./game-history"
 import BetAmountInput from "./bet-amount-input"
@@ -15,11 +16,21 @@ import GameStatistics from "./game-statistics"
 
 export default function GameContainer() {
   const [gameMode, setGameMode] = useState<"manual" | "auto">("manual")
+  const { setIsAutoMode, resetAutoPlayState } = useGame()
+  
+  const handleModeChange = (mode: "manual" | "auto") => {
+    setGameMode(mode)
+    setIsAutoMode(mode === "auto")
+    if (mode === "manual") {
+      resetAutoPlayState()
+    }
+  }
+  
   return (
     <div className="game-container mt-2">
       <div className="desktop-layout">
         <div className="mode-tabs">
-          <GameModeTabs onModeChange={setGameMode} />
+          <GameModeTabs onModeChange={handleModeChange} />
         </div>
         
         <div className="history">
@@ -54,7 +65,7 @@ export default function GameContainer() {
         </div>
         
         <div className="mobile-mode-tabs">
-          <GameModeTabs onModeChange={setGameMode} />
+          <GameModeTabs onModeChange={handleModeChange} />
         </div>
         
         <div className="mobile-chart">

@@ -6,7 +6,12 @@ import { useState, useEffect } from 'react'
 import { useAudioContext } from '../contexts/AudioContext'
 
 export default function GameGrid() {
-  const { gameState, tileStates, setTileState, loadingTiles, setTileLoading, showWinModal, currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile, getNextPotentialValue, formatCurrency, selectedMines, showWinAnimation, winAnimationAmount } = useGame()
+  const { 
+    gameState, tileStates, setTileState, loadingTiles, setTileLoading, showWinModal, 
+    currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile, 
+    getNextPotentialValue, formatCurrency, selectedMines, showWinAnimation, winAnimationAmount,
+    isAutoMode, selectedTilesForAuto, toggleTileForAutoPlay, isAutoPlaying 
+  } = useGame()
   const { playSound } = useAudioContext()
   const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   const [hoveredTile, setHoveredTile] = useState<number | null>(null)
@@ -32,6 +37,14 @@ export default function GameGrid() {
   }
   
   const handleTileClick = (tileIndex: number) => {
+    // Auto mode tile selection (pre-selection phase)
+    if (isAutoMode && gameState === 'idle' && !isAutoPlaying) {
+      playSound('/assets/audio/tile_click.mp3')
+      toggleTileForAutoPlay(tileIndex)
+      return
+    }
+    
+    // Regular game tile clicking
     if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex] || loadingTiles.has(tileIndex) || showAllTiles || bombClicked) return
 
     playSound('/assets/audio/tile_click.mp3')
@@ -75,6 +88,7 @@ export default function GameGrid() {
     const isAnimating = animatingTiles.has(tileIndex)
     const isLoading = loadingTiles.has(tileIndex)
     const shouldShowContent = state || (showAllTiles && !isLoading)
+    const isSelectedForAuto = isAutoMode && selectedTilesForAuto.has(tileIndex)
     let classes = 'game-tile'
     
     if (isLoading) {
@@ -89,6 +103,8 @@ export default function GameGrid() {
       } else if (tileType === 'bomb') {
         classes += ' _lose'
       }
+    } else if (isSelectedForAuto) {
+      classes += ' _selected-auto'
     }
     
     return classes
@@ -207,10 +223,14 @@ export default function GameGrid() {
             onMouseLeave={() => setHoveredTile(null)}
           >
             <div className="game-tile__inner-possible-win desktop-only">
-              {hoveredTile === tileIndex && (gameState === 'active' || gameState === 'cashout') ? formatCurrency(getNextPotentialValue()) : ''}
+              {hoveredTile === tileIndex && (gameState === 'active' || gameState === 'cashout') && !isAutoMode ? formatCurrency(getNextPotentialValue()) : ''}
             </div>
             <div className="game-tile__inner">
               {renderTileContent(tileIndex)}
+              {/* Auto-play selection indicator */}
+              {isAutoMode && selectedTilesForAuto.has(tileIndex) && !tileStates[tileIndex] && (
+                <div className="indicator"></div>
+              )}
             </div>
             {/* EXPANDING CIRCLES LOADER */}
             {loadingTiles.has(tileIndex) && (
@@ -274,6 +294,49 @@ export default function GameGrid() {
             max-width: 540px;
           }
         }
+        
+        /* Auto-play selected tile - show indicator in center */
+        .game-tile._selected-auto .game-tile__inner {
+          opacity: 1;
+          background-image: linear-gradient(317.11deg, #0a0b0d -17.46%, #32383e 197.04%);
+          border-radius: 12px;
+          width: calc(100% - 2px);
+          height: calc(100% - 2px);
+          box-shadow: inset -2px -2px 6px rgba(76, 79, 81, .26), inset 4px 4px 3px rgba(10, 9, 9, .49);
+        }
+        
+        .game-tile__inner .indicator {
+          background-image: linear-gradient(309.32deg, #7b8793 -.32%, transparent 93.22%), radial-gradient(139.29% 139.29% at -25% -18.75%, rgba(0, 0, 0, .3) 0%, rgba(11, 32, 51, 0) 100%);
+          border-radius: 4px;
+          width: 8px;
+          height: 8px;
+          position: relative;
+          box-shadow: inset 2px 2px 2px rgba(26, 32, 38, .4);
+        }
+        
+        .game-tile__inner .indicator:after {
+          content: "";
+          background-image: linear-gradient(#fc7c1f, #fc7c1f);
+          border-radius: 3px;
+          width: 6px;
+          height: 6px;
+          position: absolute;
+          top: 1px;
+          left: 1px;
+          box-shadow: .6px .6px 2px rgba(231, 150, 75, .79), inset -.2px -.2px .4px rgba(87, 71, 46, .2);
+        }
+        
+        @media (max-width: 819px) {
+          .game-tile__inner .indicator {
+            width: 6px;
+            height: 6px;
+          }
+          
+          .game-tile__inner .indicator:after {
+            width: 4px;
+            height: 4px;
+          }
+        }
 
         .game-tile {
           text-align: center;
@@ -315,6 +378,7 @@ export default function GameGrid() {
         .game-tile:hover:not(._loading) {
           transform: scale(0.98);
         }
+        
 
         .game-tile__inner-possible-win {
           z-index: 5;

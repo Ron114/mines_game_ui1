@@ -5,14 +5,14 @@ import { useGame } from '../contexts/GameContext'
 import { useAudioContext } from '../contexts/AudioContext'
 
 export default function MinesSelector() {
-  const { selectedMines, setSelectedMines, gameState } = useGame()
+  const { selectedMines, setSelectedMines, gameState, setSelectedTilesForAuto, isAutoMode, isAutoPlaying } = useGame()
   const { playSound } = useAudioContext()
   const [customMines, setCustomMines] = useState(selectedMines.toString())
   const [showError, setShowError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   
-  // Disable when game is active or in cashout state
-  const isDisabled = gameState === 'active' || gameState === 'cashout'
+  // Disable when game is active, in cashout state, or auto-playing
+  const isDisabled = gameState === 'active' || gameState === 'cashout' || isAutoPlaying
   
   useEffect(() => {
     setCustomMines(selectedMines.toString())
@@ -27,6 +27,10 @@ export default function MinesSelector() {
     playSound('/assets/audio/difficulty.mp3')
     setSelectedMines(mines)
     setCustomMines(mines.toString())
+    // Reset selected tiles when mines count changes in auto mode
+    if (isAutoMode) {
+      setSelectedTilesForAuto(new Set())
+    }
   }
 
   const handleDecrease = () => {
@@ -41,6 +45,10 @@ export default function MinesSelector() {
       setErrorMessage('Please choose from 2 to 24 mines')
     }
     setCustomMines(current.toString())
+    // Reset selected tiles when mines count changes in auto mode
+    if (isAutoMode) {
+      setSelectedTilesForAuto(new Set())
+    }
   }
 
   const handleIncrease = () => {
@@ -55,6 +63,10 @@ export default function MinesSelector() {
       setErrorMessage('Please choose from 2 to 24 mines')
     }
     setCustomMines(current.toString())
+    // Reset selected tiles when mines count changes in auto mode
+    if (isAutoMode) {
+      setSelectedTilesForAuto(new Set())
+    }
   }
 
   return (
@@ -119,12 +131,20 @@ export default function MinesSelector() {
               if (value >= 2 && value <= 24) {
                 setSelectedMines(value)
                 setShowError(false)
+                // Reset selected tiles when mines count changes in auto mode
+                if (isAutoMode) {
+                  setSelectedTilesForAuto(new Set())
+                }
               } else {
                 // Show error but allow the input
                 setShowError(true)
                 setErrorMessage('Please choose from 2 to 24 mines')
                 if (value >= 2 && value <= 24) {
                   setSelectedMines(value)
+                  // Reset selected tiles when mines count changes in auto mode
+                  if (isAutoMode) {
+                    setSelectedTilesForAuto(new Set())
+                  }
                 }
               }
             }}

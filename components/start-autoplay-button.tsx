@@ -3,41 +3,38 @@
 import { useGame } from '../contexts/GameContext'
 
 export default function StartAutoplayButton() {
-  const { gameState, setGameState, resetGame } = useGame()
+  const { 
+    gameState, 
+    isAutoPlaying, 
+    selectedTilesForAuto, 
+    startAutoPlay, 
+    stopAutoPlay,
+    balance,
+    betAmount
+  } = useGame()
 
   const handleButtonClick = () => {
-    if (gameState === 'idle') {
-      setGameState('active')
-    } else if (gameState === 'active') {
-      resetGame()
+    if (isAutoPlaying) {
+      stopAutoPlay()
+    } else {
+      startAutoPlay()
     }
   }
 
   const getButtonText = () => {
-    switch (gameState) {
-      case 'active':
-        return 'Stop Autoplay'
-      default:
-        return 'Start Autoplay'
+    if (isAutoPlaying) {
+      return 'Stop Autoplay'
+    } else {
+      return 'Start Autoplay'
     }
   }
 
   const getButtonClass = () => {
-    switch (gameState) {
-      case 'active':
-        return '_cancel'
-      default:
-        return '_placebet'
-    }
+    return '_placebet' // Always stay blue
   }
 
   const getIndicatorClass = () => {
-    switch (gameState) {
-      case 'active':
-        return '_cancel'
-      default:
-        return '_placebet'
-    }
+    return '_placebet' // Always stay blue
   }
 
   return (
@@ -267,6 +264,26 @@ export default function StartAutoplayButton() {
 
         .btn-new__inner .indicator._cancel:after {
           background-image: linear-gradient(262deg, #f9718e 100%, #f64444 0%), linear-gradient(90deg, rgba(179, 179, 179, .45) -90%, rgba(0, 0, 0, .85) 141%);
+        }
+        
+        /* Disabled button styles */
+        .btn-new._disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          pointer-events: none;
+        }
+        
+        .btn-new._disabled ._bg1 {
+          background-image: linear-gradient(315.81deg, #17191c -42.75%, #32383e 123.05%);
+          opacity: 0.6;
+        }
+        
+        .btn-new._disabled .btn-new__inner {
+          border-color: rgba(68, 197, 238, 0.2);
+        }
+        
+        .btn-new__inner .indicator._disabled:after {
+          background-image: linear-gradient(92deg, #555 0%, #333 100%);
         }
       `}</style>
     </div>

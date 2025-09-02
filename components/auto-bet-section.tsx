@@ -1,33 +1,69 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAudioContext } from '../contexts/AudioContext'
+import { useGame } from '../contexts/GameContext'
 import StartAutoplayButton from './start-autoplay-button'
 
 export default function AutoBetSection() {
   const { playSound } = useAudioContext()
-  const [numberOfRounds, setNumberOfRounds] = useState("")
-  const [onWinAmount, setOnWinAmount] = useState("100")
-  const [onLossAmount, setOnLossAmount] = useState("100")
-  const [onWinMode, setOnWinMode] = useState<"reset" | "increase">("increase")
-  const [onLossMode, setOnLossMode] = useState<"reset" | "increase">("increase")
-  const [stopAtAnyWin, setStopAtAnyWin] = useState(false)
+  const { autoPlayConfig, setAutoPlayConfig, isAutoPlaying } = useGame()
+  
+  const [numberOfRounds, setNumberOfRounds] = useState("0")
+  const [onWinAmount, setOnWinAmount] = useState("0")
+  const [onLossAmount, setOnLossAmount] = useState("0")
+  const [onWinMode, setOnWinMode] = useState<"reset" | "increase">("reset")
+  const [onLossMode, setOnLossMode] = useState<"reset" | "increase">("reset")
+  const [stopAtAnyWin, setStopAtAnyWin] = useState(autoPlayConfig.stopAtAnyWin)
+  
+  // Update local state when context changes (except for default values)
+  useEffect(() => {
+    setOnWinMode(autoPlayConfig.onWinMode)
+    setOnLossMode(autoPlayConfig.onLossMode)
+    setStopAtAnyWin(autoPlayConfig.stopAtAnyWin)
+  }, [autoPlayConfig])
+  
 
   const handleWinModeChange = (mode: "reset" | "increase") => {
+    if (isAutoPlaying) return // Disable during auto-play
     playSound('/assets/audio/button_click.mp3')
     setOnWinMode(mode)
-    setOnWinAmount(mode === "reset" ? "0" : "100")
+    const newAmount = mode === "reset" ? "0" : "100"
+    setOnWinAmount(newAmount)
+    
+    // Update context immediately
+    setAutoPlayConfig({
+      ...autoPlayConfig,
+      onWinMode: mode,
+      onWinAmount: parseInt(newAmount) || 0
+    })
   }
 
   const handleLossModeChange = (mode: "reset" | "increase") => {
+    if (isAutoPlaying) return // Disable during auto-play
     playSound('/assets/audio/button_click.mp3')
     setOnLossMode(mode)
-    setOnLossAmount(mode === "reset" ? "0" : "100")
+    const newAmount = mode === "reset" ? "0" : "100"
+    setOnLossAmount(newAmount)
+    
+    // Update context immediately
+    setAutoPlayConfig({
+      ...autoPlayConfig,
+      onLossMode: mode,
+      onLossAmount: parseInt(newAmount) || 0
+    })
   }
 
   const handleStopAtWinChange = (checked: boolean) => {
+    if (isAutoPlaying) return // Disable during auto-play
     playSound('/assets/audio/button_click.mp3')
     setStopAtAnyWin(checked)
+    
+    // Update context immediately
+    setAutoPlayConfig({
+      ...autoPlayConfig,
+      stopAtAnyWin: checked
+    })
   }
 
   return (
@@ -44,7 +80,16 @@ export default function AutoBetSection() {
             tabIndex={-1}
             className="games-input__number"
             value={numberOfRounds}
-            onChange={(e) => setNumberOfRounds(e.target.value)}
+            onChange={(e) => {
+              if (isAutoPlaying) return // Disable during auto-play
+              setNumberOfRounds(e.target.value)
+              const rounds = e.target.value === "" ? 0 : parseInt(e.target.value) || 0
+              setAutoPlayConfig({
+                ...autoPlayConfig,
+                numberOfRounds: rounds
+              })
+            }}
+            disabled={isAutoPlaying}
           />
         </div>
         <span className="indicator__infinity">∞</span>
@@ -76,10 +121,18 @@ export default function AutoBetSection() {
             autoComplete="off"
             spellCheck="false"
             tabIndex={-1}
-            className="games-input__number"
+            className={`games-input__number ${onWinAmount === "0" ? "_grey" : ""}`}
             max="999"
             value={onWinAmount}
-            onChange={(e) => setOnWinAmount(e.target.value)}
+            onChange={(e) => {
+              if (isAutoPlaying) return // Disable during auto-play
+              setOnWinAmount(e.target.value)
+              setAutoPlayConfig({
+                ...autoPlayConfig,
+                onWinAmount: parseInt(e.target.value) || 0
+              })
+            }}
+            disabled={isAutoPlaying}
           />
         </div>
         <span className="indicator">%</span>
@@ -111,10 +164,18 @@ export default function AutoBetSection() {
             autoComplete="off"
             spellCheck="false"
             tabIndex={-1}
-            className="games-input__number"
+            className={`games-input__number ${onLossAmount === "0" ? "_grey" : ""}`}
             max="999"
             value={onLossAmount}
-            onChange={(e) => setOnLossAmount(e.target.value)}
+            onChange={(e) => {
+              if (isAutoPlaying) return // Disable during auto-play
+              setOnLossAmount(e.target.value)
+              setAutoPlayConfig({
+                ...autoPlayConfig,
+                onLossAmount: parseInt(e.target.value) || 0
+              })
+            }}
+            disabled={isAutoPlaying}
           />
         </div>
         <span className="indicator">%</span>
@@ -455,6 +516,10 @@ export default function AutoBetSection() {
 
         .games-input__number[type=number] {
           -moz-appearance: textfield;
+        }
+        
+        .games-input__number._grey {
+          color: rgba(255, 255, 255, 0.3);
         }
 
         /* Desktop input padding */
