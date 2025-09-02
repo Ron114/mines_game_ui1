@@ -46,6 +46,16 @@ export default function GameHistory() {
           overflow: hidden;
           box-shadow: inset 2px 1px 9px #070709;
         }
+        
+        /* Desktop - match game tiles width and position exactly */
+        @media (min-width: 820px) {
+          .game-history {
+            max-width: 540px;
+            margin-left: auto;
+            margin-right: auto;
+        
+          }
+        }
 
         .game-history__inner {
           flex: 1;
