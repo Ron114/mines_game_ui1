@@ -4,7 +4,7 @@ import { useGame } from '../contexts/GameContext'
 import { useAudioContext } from '../contexts/AudioContext'
 
 export default function StartGameButton() {
-  const { gameState, currentCashoutValue, resetGame, cashOut, startNewGame, formatCurrency } = useGame()
+  const { gameState, currentCashoutValue, resetGame, cashOut, startNewGame, formatCurrency, isDimmingCheckout } = useGame()
   const { playSound } = useAudioContext()
 
   const handleButtonClick = () => {
@@ -13,7 +13,7 @@ export default function StartGameButton() {
       startNewGame()
     } else if (gameState === 'active') {
       resetGame()
-    } else if (gameState === 'cashout') {
+    } else if (gameState === 'cashout' && !isDimmingCheckout) {
       playSound('/assets/audio/cashout.mp3')
       cashOut()
     }
@@ -35,7 +35,7 @@ export default function StartGameButton() {
       case 'active':
         return '_cancel'
       case 'cashout':
-        return '_cashout'
+        return isDimmingCheckout ? '_cashout _dimmed' : '_cashout'
       default:
         return '_placebet'
     }
@@ -305,6 +305,27 @@ export default function StartGameButton() {
 
         .btn-new._cashout .btn-new__inner {
           border-color: rgba(255, 152, 56, 0.5);
+        }
+
+        /* Dimmed checkout button styles */
+        .btn-new._cashout._dimmed {
+          opacity: 0.5;
+          transform: scale(0.95);
+          transition: all 0.1s ease;
+        }
+
+        .btn-new._cashout._dimmed .btn-new__inner {
+          border-color: rgba(255, 152, 56, 0.2);
+        }
+
+        .btn-new._cashout._dimmed ._bg1,
+        .btn-new._cashout._dimmed ._bg11 {
+          opacity: 0.3;
+        }
+
+        .btn-new._cashout._dimmed ._bg2,
+        .btn-new._cashout._dimmed ._bg22 {
+          opacity: 0.3;
         }
 
         .btn-new__inner .indicator._cashout:before {

@@ -43,6 +43,10 @@ interface GameContextType {
   setShowWinAnimation: (show: boolean) => void
   winAnimationAmount: number
   setWinAnimationAmount: (amount: number) => void
+  isDimmingCheckout: boolean
+  setIsDimmingCheckout: (dimming: boolean) => void
+  clearAllAnimations: () => void
+  clearCashOutTimers: () => void
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined)
@@ -64,6 +68,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [showWinAnimation, setShowWinAnimation] = useState(false)
   const [winAnimationAmount, setWinAnimationAmount] = useState(0)
   const [isCashingOut, setIsCashingOut] = useState(false)
+  const [isDimmingCheckout, setIsDimmingCheckout] = useState(false)
+  const [cashOutTimers, setCashOutTimers] = useState<NodeJS.Timeout[]>([])
   
   const multiplierMappings: Record<number, number[]> = {
     2: [1.03, 1.13, 1.23, 1.36, 1.5, 1.67, 1.86],
@@ -194,46 +200,81 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const clearCashOutTimers = () => {
+    cashOutTimers.forEach(timer => clearTimeout(timer))
+    setCashOutTimers([])
+  }
+
   const cashOut = () => {
     if (isCashingOut) return
     
+    // Clear any existing timers first
+    clearCashOutTimers()
+    
     setIsCashingOut(true)
-    setWinAnimationAmount(currentCashoutValue)
-    setShowWinAnimation(true)
-    setBalance(balance + currentCashoutValue)
-    setShowWinModal(true)
+    setIsDimmingCheckout(true)
     
-    setTimeout(() => {
+    const timers: NodeJS.Timeout[] = []
+    
+    timers.push(setTimeout(() => {
+      setIsDimmingCheckout(false)
+      setGameState('idle')
+    }, 400))
+    
+    timers.push(setTimeout(() => {
+      setWinAnimationAmount(currentCashoutValue)
+      setShowWinAnimation(true)
+      setBalance(balance + currentCashoutValue)
+      setShowWinModal(true)
+    }, 500))
+    
+    timers.push(setTimeout(() => {
       setShowAllTiles(true)
-    }, 120)
+    }, 600))
     
-    setTimeout(() => {
+    timers.push(setTimeout(() => {
       setShowWinAnimation(false)
-    }, 2700)
+    }, 2850))
     
-    setTimeout(() => {
+    timers.push(setTimeout(() => {
       setShowWinModal(false)
       resetGame()
-    }, 2500)
+    }, 2650))
+    
+    setCashOutTimers(timers)
+  }
+
+  const clearAllAnimations = () => {
+    clearCashOutTimers()
+    setShowWinModal(false)
+    setShowWinAnimation(false)
+    setShowAllTiles(false)
+    setIsCashingOut(false)
+    setIsDimmingCheckout(false)
+    setTileStatesInternal({})
+    setLoadingTilesInternal(new Set())
+    setBombHitTile(null)
+    setDiamondsFound(0)
+    setCurrentCashoutValue(0)
+    setWinAmount(0)
+    setWinAnimationAmount(0)
   }
 
   const resetGame = () => {
+    clearAllAnimations()
     setGameState('idle')
     setTileStatesInternal({})
     setLoadingTilesInternal(new Set())
     setWinAmount(0)
-    setShowWinModal(false)
-    setShowAllTiles(false)
     setBombHitTile(null)
     setDiamondsFound(0)
     setCurrentCashoutValue(0)
-    setShowWinAnimation(false)
     setWinAnimationAmount(0)
-    setIsCashingOut(false)
     generateMinePositions(selectedMines)
   }
 
   const startNewGame = () => {
+    clearAllAnimations()
     generateMinePositions(selectedMines)
     setGameState('active')
   }
@@ -277,7 +318,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
       showWinAnimation,
       setShowWinAnimation,
       winAnimationAmount,
-      setWinAnimationAmount
+      setWinAnimationAmount,
+      isDimmingCheckout,
+      setIsDimmingCheckout,
+      clearAllAnimations,
+      clearCashOutTimers
     }}>
       {children}
     </GameContext.Provider>
