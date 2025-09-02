@@ -40,6 +40,8 @@ interface GameContextType {
   setShowAllTiles: (show: boolean) => void
   bombHitTile: number | null
   setBombHitTile: (tile: number | null) => void
+  animatingTiles: Set<number>
+  setAnimatingTiles: (tiles: Set<number> | ((prev: Set<number>) => Set<number>)) => void
   diamondsFound: number
   multiplierValues: number[]
   getCurrentMultipliers: () => number[]
@@ -93,6 +95,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [betAmount, setBetAmount] = useState(1)
   const [showAllTiles, setShowAllTiles] = useState(false)
   const [bombHitTile, setBombHitTile] = useState<number | null>(null)
+  const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   const [diamondsFound, setDiamondsFound] = useState(0)
   const [currentCashoutValue, setCurrentCashoutValue] = useState(0)
   const [showWinAnimation, setShowWinAnimation] = useState(false)
@@ -314,7 +317,16 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setWinAmount(0)
     setShowWinModal(false)
     setShowWinAnimation(false)
-    generateMinePositions(selectedMines)
+    // Generate mine positions for this round
+    const positions = new Set<number>()
+    const totalTiles = 25
+    
+    while (positions.size < selectedMines) {
+      const randomPosition = Math.floor(Math.random() * totalTiles)
+      positions.add(randomPosition)
+    }
+    
+    setMinePositions(positions)
     setGameState('active')
     deductBet()
     
@@ -322,9 +334,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
     let hasBomb = false
     let bombTileIndex = -1
     
-    // Check all selected tiles for bombs
+    // Check all selected tiles for bombs using the newly generated positions
     for (const tileIndex of tilesToClick) {
-      const result = getTileType(tileIndex)
+      const result = positions.has(tileIndex) ? 'bomb' : 'diamond'
       if (result === 'bomb') {
         hasBomb = true
         bombTileIndex = tileIndex
@@ -332,86 +344,97 @@ export function GameProvider({ children }: { children: ReactNode }) {
       }
     }
     
-    // Small delay then reveal all tiles at once (no loading animation)
+    // Small delay then reveal ALL tiles at once
     setTimeout(() => {
-      // Reveal all selected tiles at once
-      tilesToClick.forEach(tileIndex => {
-        const result = getTileType(tileIndex)
-        setTileState(tileIndex, result)
-      })
-      
       if (hasBomb) {
-        // If there's a bomb, update bet for loss
-        updateBetAfterResult(false)
+        // First trigger explosion animation for bomb tiles in selected tiles
+        const animatingBombs = new Set<number>()
+        tilesToClick.forEach(tileIndex => {
+          if (positions.has(tileIndex)) {
+            animatingBombs.add(tileIndex)
+          }
+        })
         
-        // Set bomb hit tile for animation
+        // Start explosion animation
+        setAnimatingTiles(animatingBombs)
+        updateBetAfterResult(false)
         setBombHitTile(bombTileIndex)
         
-        // Show all tiles after bomb animation
+        // After explosion animation, reveal all tiles
         setTimeout(() => {
+          // Stop animation and reveal all tiles
+          setAnimatingTiles(new Set())
+          for (let i = 0; i < 25; i++) {
+            const result = positions.has(i) ? 'bomb' : 'diamond'
+            setTileState(i, result)
+          }
           setShowAllTiles(true)
+        }, 400) // 400ms for explosion animation like manual mode
+        
+        // After bomb animation and tile reveal, continue to next round
+        const nextRoundTimer = setTimeout(() => {
+          // Complete reset for next round - clear everything
+          setTileStatesInternal({})
+          setLoadingTilesInternal(new Set())
+          setShowAllTiles(false)
+          setBombHitTile(null)
+          setDiamondsFound(0)
+          setCurrentCashoutValue(0)
+          setWinAmount(0)
+          setShowWinModal(false)
+          setShowWinAnimation(false)
+          setIsCashingOut(false)
+          setIsDimmingCheckout(false)
+          clearCashOutTimers()
+          setAnimatingTiles(new Set())
+          // Mine positions will be generated at start of next round
+          setGameState('idle')
+          const nextRound = currentRound + 1
+          setCurrentRound(nextRound)
           
-          // Reset and continue to next round
-          const nextRoundTimer = setTimeout(() => {
-            // Complete reset for next round - clear everything
-            setTileStatesInternal({})
-            setLoadingTilesInternal(new Set())
-            setShowAllTiles(false)
-            setBombHitTile(null)
-            setDiamondsFound(0)
-            setCurrentCashoutValue(0)
-            setWinAmount(0)
-            setShowWinModal(false)
-            setShowWinAnimation(false)
-            setIsCashingOut(false)
-            setIsDimmingCheckout(false)
-            clearCashOutTimers()
-            generateMinePositions(selectedMines)
-            setGameState('idle')
-            const nextRound = currentRound + 1
-            setCurrentRound(nextRound)
-            
-            // Continue if: infinity mode (numberOfRounds = 0) OR haven't reached the limit
-            const shouldContinue = autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds
-            
-            if (shouldContinue && balance >= betAmount) {
-              executeAutoPlayRound()
-            } else {
-              stopAutoPlay()
-            }
-          }, 2000)
+          // Continue if: infinity mode (numberOfRounds = 0) OR haven't reached the limit
+          const shouldContinue = autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds
           
-          setAutoPlayTimers(prev => [...prev, nextRoundTimer])
-        }, 800)
+          if (shouldContinue && balance >= betAmount) {
+            executeAutoPlayRound()
+          } else {
+            stopAutoPlay()
+          }
+        }, 2400) // Wait for bomb animation + tile reveal
+        
+        setAutoPlayTimers(prev => [...prev, nextRoundTimer])
       } else {
-        // All tiles are diamonds - win!
+        // No bomb, reveal all tiles immediately
+        for (let i = 0; i < 25; i++) {
+          const result = positions.has(i) ? 'bomb' : 'diamond'
+          setTileState(i, result)
+        }
+        setShowAllTiles(true)
+        // All selected tiles are diamonds - win!
         updateBetAfterResult(true)
         
         // Calculate win amount
         const multiplier = multiplierValues[tilesToClick.length - 1] || multiplierValues[0]
         const winAmount = betAmount * multiplier
         
-        // Update balance, show win modal and win animation all at same time
+        // Update balance, show win modal and win animation
         setBalance(balance + winAmount)
         setCurrentCashoutValue(winAmount)
         setWinAmount(winAmount)
         setShowWinModal(true)
-        setShowAllTiles(true) // Show all tiles at same time as modal
-        
-        // Show win amount animation (green text rising)
         setWinAnimationAmount(winAmount)
         setShowWinAnimation(true)
         
         // Hide win animation after its duration
         const winAnimTimer = setTimeout(() => {
           setShowWinAnimation(false)
-        }, 2700)
+        }, 1500)
         setAutoPlayTimers(prev => [...prev, winAnimTimer])
         
         // Hide modal and continue to next round
         const modalTimer = setTimeout(() => {
           setShowWinModal(false)
-        }, 2500)
+        }, 1200)
         setAutoPlayTimers(prev => [...prev, modalTimer])
         
         // Schedule next round
@@ -429,7 +452,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
           setIsCashingOut(false)
           setIsDimmingCheckout(false)
           clearCashOutTimers()
-          generateMinePositions(selectedMines)
+          // Mine positions will be generated at start of next round
           setGameState('idle')
           
           // Check if should stop on win
@@ -449,7 +472,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
           } else {
             stopAutoPlay()
           }
-        }, 3000)
+        }, 1800)
         
         setAutoPlayTimers(prev => [...prev, nextRoundTimer])
       }
@@ -601,6 +624,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setShowAllTiles,
       bombHitTile,
       setBombHitTile,
+      animatingTiles,
+      setAnimatingTiles,
       diamondsFound,
       multiplierValues,
       getCurrentMultipliers: () => multiplierValues,

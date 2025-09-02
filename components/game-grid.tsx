@@ -10,10 +10,9 @@ export default function GameGrid() {
     gameState, tileStates, setTileState, loadingTiles, setTileLoading, showWinModal, 
     currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile, 
     getNextPotentialValue, formatCurrency, selectedMines, showWinAnimation, winAnimationAmount,
-    isAutoMode, selectedTilesForAuto, toggleTileForAutoPlay, isAutoPlaying 
+    isAutoMode, selectedTilesForAuto, toggleTileForAutoPlay, isAutoPlaying, animatingTiles, setAnimatingTiles
   } = useGame()
   const { playSound } = useAudioContext()
-  const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   const [hoveredTile, setHoveredTile] = useState<number | null>(null)
   
   const tiles = Array.from({ length: 25 }, (_, index) => index)
@@ -66,7 +65,7 @@ export default function GameGrid() {
       
       if (result === 'bomb') {
         playSound('/assets/audio/bomb.mp3')
-        setAnimatingTiles(prev => new Set(prev).add(tileIndex))
+        setAnimatingTiles(prev => new Set([...prev, tileIndex]))
         
         setTimeout(() => {
           setTileState(tileIndex, result)
