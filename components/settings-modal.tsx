@@ -71,12 +71,12 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
         className="absolute z-10 settings-modal pointer-events-auto"
         style={{
           width: "280px",
-          background: "linear-gradient(135deg, rgba(31, 32, 33, 0.95) 0%, rgba(18, 21, 26, 0.95) 50%, rgba(10, 12, 15, 0.95) 100%)",
+          background: "rgba(0, 0, 0, .4)",
           borderRadius: "28px",
           border: "1px solid rgba(255, 255, 255, 0.15)",
           padding: "18px",
           minHeight: "260px",
-          boxShadow: "0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.35), -0.125rem -0.125rem 0.25rem rgba(255, 255, 255, 0.1)",
+          boxShadow: "0 0 1.25rem rgba(0, 0, 0, .5)",
           backdropFilter: "blur(10px)",
           top: `${modalPosition.top}px`,
           right: `${modalPosition.right}px`,
