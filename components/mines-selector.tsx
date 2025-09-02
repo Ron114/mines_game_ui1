@@ -8,12 +8,18 @@ export default function MinesSelector() {
   const { selectedMines, setSelectedMines, gameState } = useGame()
   const { playSound } = useAudioContext()
   const [customMines, setCustomMines] = useState(selectedMines.toString())
+  const [showError, setShowError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   
   // Disable when game is active or in cashout state
   const isDisabled = gameState === 'active' || gameState === 'cashout'
   
   useEffect(() => {
     setCustomMines(selectedMines.toString())
+    // Clear error when selectedMines changes via buttons
+    if (selectedMines >= 2 && selectedMines <= 24) {
+      setShowError(false)
+    }
   }, [selectedMines])
 
   const handleMineSelect = (mines: number) => {
@@ -26,8 +32,14 @@ export default function MinesSelector() {
   const handleDecrease = () => {
     if (isDisabled) return
     playSound('/assets/audio/difficulty.mp3')
-    const current = Math.max(1, selectedMines - 1)
-    setSelectedMines(current)
+    const current = Math.max(2, selectedMines - 1)
+    if (current >= 2 && current <= 24) {
+      setSelectedMines(current)
+      setShowError(false)
+    } else {
+      setShowError(true)
+      setErrorMessage('Please choose from 2 to 24 mines')
+    }
     setCustomMines(current.toString())
   }
 
@@ -35,7 +47,13 @@ export default function MinesSelector() {
     if (isDisabled) return
     playSound('/assets/audio/difficulty.mp3')
     const current = Math.min(24, selectedMines + 1)
-    setSelectedMines(current)
+    if (current >= 2 && current <= 24) {
+      setSelectedMines(current)
+      setShowError(false)
+    } else {
+      setShowError(true)
+      setErrorMessage('Please choose from 2 to 24 mines')
+    }
     setCustomMines(current.toString())
   }
 
@@ -69,15 +87,65 @@ export default function MinesSelector() {
             value={customMines}
             onChange={(e) => {
               if (isDisabled) return
-              const value = Number.parseInt(e.target.value) || 1
-              setCustomMines(e.target.value)
-              setSelectedMines(Math.min(24, Math.max(1, value)))
+              
+              const input = e.target.value
+              
+              // Allow only numbers (and empty string for backspace)
+              if (input !== '' && !/^[0-9]+$/.test(input)) {
+                return // Reject non-numeric input
+              }
+              
+              // Allow empty string for user to clear and type
+              if (input === '') {
+                setCustomMines('')
+                setShowError(false)
+                return
+              }
+              
+              const value = parseInt(input)
+              
+              // Cap at maximum 25
+              if (value > 25) {
+                setCustomMines('25')
+                setShowError(true)
+                setErrorMessage('Please choose from 2 to 24 mines')
+                return
+              }
+              
+              // Set the input value
+              setCustomMines(input)
+              
+              // Check if value is in valid range (2-24)
+              if (value >= 2 && value <= 24) {
+                setSelectedMines(value)
+                setShowError(false)
+              } else {
+                // Show error but allow the input
+                setShowError(true)
+                setErrorMessage('Please choose from 2 to 24 mines')
+                if (value >= 2 && value <= 24) {
+                  setSelectedMines(value)
+                }
+              }
+            }}
+            onBlur={() => {
+              // Handle empty input on blur
+              if (customMines === '') {
+                setCustomMines('2')
+                setSelectedMines(2)
+                setShowError(false)
+              }
             }}
             className="games-input__number"
             autoComplete="off"
             spellCheck="false"
             disabled={isDisabled}
           />
+          {showError && (
+            <div className="input--error">
+              {errorMessage}
+            </div>
+          )}
         </div>
 
         <button className="button _sm _golden" onClick={handleIncrease}>
@@ -106,7 +174,7 @@ export default function MinesSelector() {
           padding: 1px;
           position: relative;
           box-shadow: inset 2px 2px 2px rgba(26, 32, 38, .4);
-          margin-bottom: 8px;
+          margin-bottom: 35px;
           display: flex;
           transition: opacity 0.3s ease;
         }
@@ -325,6 +393,19 @@ export default function MinesSelector() {
           top: 1px;
           left: 1px;
           box-shadow: inset -2px -2px 10px rgba(255, 255, 255, .05), inset 2px 3px 10px #070709;
+        }
+
+        .input--error {
+          color: rgba(227, 113, 113, .64);
+          text-align: left;
+          width: 100%;
+          padding: 0 17px 8px 17px;
+          font-size: 11px;
+          line-height: .91;
+          display: block;
+          position: absolute;
+          bottom: -27px;
+          left: 0;
         }
       `}</style>
     </div>
