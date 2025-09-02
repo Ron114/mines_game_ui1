@@ -485,7 +485,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
         }, 1200)
         setAutoPlayTimers(prev => [...prev, modalTimer])
         
-        // Schedule next round
+        // Schedule next round or stop if "Stop at any Win" is enabled
         const nextRoundTimer = setTimeout(() => {
           // Complete reset for next round - clear everything
           setTileStatesInternal({})
@@ -500,11 +500,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
           setIsCashingOut(false)
           setIsDimmingCheckout(false)
           clearCashOutTimers()
-          // Mine positions will be generated at start of next round
           setGameState('idle')
           
           // Check if should stop on win
           if (autoPlayConfig.stopAtAnyWin) {
+            console.log(`🏆 Stop at any Win enabled - stopping auto-play after win`)
             stopAutoPlay()
             return
           }
