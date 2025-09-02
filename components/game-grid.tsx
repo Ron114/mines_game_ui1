@@ -88,7 +88,7 @@ export default function GameGrid() {
     const isAnimating = animatingTiles.has(tileIndex)
     const isLoading = loadingTiles.has(tileIndex)
     const shouldShowContent = state || (showAllTiles && !isLoading)
-    const isSelectedForAuto = isAutoMode && selectedTilesForAuto.has(tileIndex)
+    const isSelectedForAuto = isAutoMode && selectedTilesForAuto.has(tileIndex) && !isAutoPlaying
     let classes = 'game-tile'
     
     if (isLoading) {
@@ -227,8 +227,8 @@ export default function GameGrid() {
             </div>
             <div className="game-tile__inner">
               {renderTileContent(tileIndex)}
-              {/* Auto-play selection indicator */}
-              {isAutoMode && selectedTilesForAuto.has(tileIndex) && !tileStates[tileIndex] && (
+              {/* Auto-play selection indicator - only show when not actively playing */}
+              {isAutoMode && selectedTilesForAuto.has(tileIndex) && !tileStates[tileIndex] && !isAutoPlaying && (
                 <div className="indicator"></div>
               )}
             </div>

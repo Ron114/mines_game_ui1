@@ -353,16 +353,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
           
           // Reset and continue to next round
           const nextRoundTimer = setTimeout(() => {
-            console.log('💥 Bomb: Checking next round', { 
-              isAutoPlaying, 
-              currentRound, 
-              numberOfRounds: autoPlayConfig.numberOfRounds,
-              balance,
-              betAmount
-            })
-            
-            // Don't call resetGame() here as it might affect isAutoPlaying state
-            // Instead, do a targeted reset
+            // Complete reset for next round - clear everything
             setTileStatesInternal({})
             setLoadingTilesInternal(new Set())
             setShowAllTiles(false)
@@ -372,6 +363,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
             setWinAmount(0)
             setShowWinModal(false)
             setShowWinAnimation(false)
+            setIsCashingOut(false)
+            setIsDimmingCheckout(false)
+            clearCashOutTimers()
             generateMinePositions(selectedMines)
             setGameState('idle')
             const nextRound = currentRound + 1
@@ -380,17 +374,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
             // Continue if: infinity mode (numberOfRounds = 0) OR haven't reached the limit
             const shouldContinue = autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds
             
-            console.log('🔄 Bomb: Should continue?', { 
-              shouldContinue, 
-              nextRound, 
-              hasBalance: balance >= betAmount 
-            })
-            
             if (shouldContinue && balance >= betAmount) {
-              console.log('✅ Bomb: Continuing to next round')
               executeAutoPlayRound()
             } else {
-              console.log('❌ Bomb: Stopping - no more rounds or insufficient balance')
               stopAutoPlay()
             }
           }, 2000)
@@ -430,17 +416,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
         
         // Schedule next round
         const nextRoundTimer = setTimeout(() => {
-          console.log('🔄 Win: Checking next round', { 
-            isAutoPlaying, 
-            currentRound, 
-            numberOfRounds: autoPlayConfig.numberOfRounds,
-            stopAtAnyWin: autoPlayConfig.stopAtAnyWin,
-            balance,
-            betAmount
-          })
-          
-          // Don't call resetGame() here as it might affect isAutoPlaying state
-          // Instead, do a targeted reset
+          // Complete reset for next round - clear everything
           setTileStatesInternal({})
           setLoadingTilesInternal(new Set())
           setShowAllTiles(false)
@@ -450,12 +426,14 @@ export function GameProvider({ children }: { children: ReactNode }) {
           setWinAmount(0)
           setShowWinModal(false)
           setShowWinAnimation(false)
+          setIsCashingOut(false)
+          setIsDimmingCheckout(false)
+          clearCashOutTimers()
           generateMinePositions(selectedMines)
           setGameState('idle')
           
           // Check if should stop on win
           if (autoPlayConfig.stopAtAnyWin) {
-            console.log('❌ Win: Stopping - stopAtAnyWin is enabled')
             stopAutoPlay()
             return
           }
@@ -466,17 +444,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
           // Continue if: infinity mode (numberOfRounds = 0) OR haven't reached the limit
           const shouldContinue = autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds
           
-          console.log('🔄 Win: Should continue?', { 
-            shouldContinue, 
-            nextRound, 
-            hasBalance: balance >= betAmount 
-          })
-          
           if (shouldContinue && balance >= betAmount) {
-            console.log('✅ Win: Continuing to next round')
             executeAutoPlayRound()
           } else {
-            console.log('❌ Win: Stopping - no more rounds or insufficient balance')
             stopAutoPlay()
           }
         }, 3000)
@@ -504,9 +474,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const stopAutoPlay = () => {
     // Clear all timers immediately
     clearAutoPlayTimers()
+    clearCashOutTimers()
     setIsAutoPlaying(false)
     
-    // Reset tiles immediately but let modal disappear on its own
+    // Reset tiles and clear selected auto tiles
     setTileStatesInternal({})
     setLoadingTilesInternal(new Set())
     setShowAllTiles(false)
@@ -515,11 +486,18 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setCurrentCashoutValue(0)
     setWinAmount(0)
     
+    // Force close any stuck modals and animations
+    setShowWinModal(false)
+    setShowWinAnimation(false)
+    setIsCashingOut(false)
+    setIsDimmingCheckout(false)
+    setWinAnimationAmount(0)
+    
     // Reset game state
     setGameState('idle')
     
-    // Modal will disappear on its own timer if it's showing
-    // Don't force close it immediately
+    // Clear selected tiles when stopping autoplay
+    setSelectedTilesForAuto(new Set())
   }
 
   const cashOut = () => {
