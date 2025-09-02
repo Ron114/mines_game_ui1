@@ -134,7 +134,8 @@ export default function GameGrid() {
     } else if (shouldShowContent) {
       const tileType = state || getTileType(tileIndex)
       const isHitBomb = bombHitTile === tileIndex
-      const opacity = showAllTiles && !isHitBomb ? 0.3 : 1
+      const isSelectedForAutoWin = isAutoMode && selectedTilesForAuto.has(tileIndex) && tileType === 'diamond'
+      const opacity = showAllTiles && !isHitBomb && !isSelectedForAutoWin ? 0.3 : 1
       
       if (tileType === 'diamond') {
         return (

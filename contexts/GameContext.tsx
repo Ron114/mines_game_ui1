@@ -344,10 +344,17 @@ export function GameProvider({ children }: { children: ReactNode }) {
       }
     }
     
-    // Small delay then reveal ALL tiles at once
+    // Small delay then reveal ALL tiles at once WITH bomb animations
     setTimeout(() => {
+      // Always reveal ALL 25 tiles simultaneously first
+      for (let i = 0; i < 25; i++) {
+        const result = positions.has(i) ? 'bomb' : 'diamond'
+        setTileState(i, result)
+      }
+      setShowAllTiles(true)
+      
       if (hasBomb) {
-        // First trigger explosion animation for bomb tiles in selected tiles
+        // Simultaneously trigger explosion animation for bomb tiles in selected tiles
         const animatingBombs = new Set<number>()
         tilesToClick.forEach(tileIndex => {
           if (positions.has(tileIndex)) {
@@ -355,21 +362,14 @@ export function GameProvider({ children }: { children: ReactNode }) {
           }
         })
         
-        // Start explosion animation
+        // Start explosion animation while tiles are revealed
         setAnimatingTiles(animatingBombs)
-        updateBetAfterResult(false)
         setBombHitTile(bombTileIndex)
         
-        // After explosion animation, reveal all tiles
+        // Stop explosion animation after it completes
         setTimeout(() => {
-          // Stop animation and reveal all tiles
           setAnimatingTiles(new Set())
-          for (let i = 0; i < 25; i++) {
-            const result = positions.has(i) ? 'bomb' : 'diamond'
-            setTileState(i, result)
-          }
-          setShowAllTiles(true)
-        }, 400) // 400ms for explosion animation like manual mode
+        }, 400)
         
         // After bomb animation and tile reveal, continue to next round
         const nextRoundTimer = setTimeout(() => {
