@@ -145,6 +145,60 @@ export default function AutoBetSection() {
         .game-autobet {
           margin-bottom: 20px;
         }
+        
+        /* Desktop compact styles */
+        @media (min-width: 820px) {
+          .game-autobet {
+            margin-bottom: 16px;
+          }
+          
+          .settings-input__wrapper {
+            margin-bottom: 16px;
+          }
+          
+          .settings-input__wrapper:first-child {
+            margin-bottom: 10px;
+          }
+          
+          .settings-input__wrapper:nth-child(2) {
+            margin-bottom: 9px;
+          }
+          
+          .settings-input__wrapper._has_btn label {
+            font-size: 11px;
+            min-width: 90px;
+          }
+          
+          .games-input__wrapper {
+            height: 44px;
+          }
+          
+          .games-input__wrapper label {
+            font-size: 9px;
+            top: 9px;
+          }
+          
+          .games-input__number {
+            font-size: 12px;
+            padding: 24px 16px 8px 16px;
+          }
+          
+          .input-button {
+            height: 36px;
+          }
+          
+          .input-button._md {
+            width: 72px;
+          }
+          
+          .input-button__text {
+            font-size: 9px;
+          }
+          
+          .indicator {
+            font-size: 12px;
+          }
+        }
 
         /* Mobile auto tab border */
         .game-autobet::before {
@@ -274,11 +328,11 @@ export default function AutoBetSection() {
 
         /* Desktop button positioning - adjusted for reduced label width */
         .settings-input__wrapper label + .input-button {
-          left: 98px;
+          left: 94px;
         }
 
         .settings-input__wrapper label + .input-button + .input-button {
-          left: 178px;
+          left: 174px;
         }
 
         /* Mobile button positioning */
