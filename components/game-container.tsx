@@ -174,7 +174,7 @@ export default function GameContainer() {
               "modeTabs history" min-content
               "betslip chart" min-content
               "betslip range" max-content
-              "stats stats" 1fr / 360px 1fr;
+              "stats stats" 1fr / 300px 1fr;
           }
 
           .mode-tabs {

@@ -70,6 +70,39 @@ export default function GameDetails() {
           box-shadow: inset 2px 1px 9px #070709;
           margin-top: 10px;
         }
+        
+        /* Desktop compact styles */
+        @media (min-width: 820px) {
+          .game-details {
+            margin-top: 6px;
+            font-size: 10px;
+          }
+          
+          .game-details__title {
+            height: 32px;
+            margin-bottom: 8px;
+            font-size: 10px;
+          }
+          
+          .game-details__row {
+            margin-bottom: 10px;
+            padding: 0 8px;
+          }
+          
+          .game-details__row-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+          }
+          
+          .game-details__row-text {
+            font-size: 10px;
+          }
+          
+          .game-details__row-value {
+            font-size: 10px;
+          }
+        }
 
         /* Mobile responsive styles */
         @media (max-width: 819px) {

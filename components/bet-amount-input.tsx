@@ -99,8 +99,34 @@ export default function BetAmountInput() {
 
       <style jsx>{`
         .input-text__wrapper {
-          margin-bottom: 20px;
+          margin-bottom: 16px;
           transition: opacity 0.3s ease;
+        }
+        
+        /* Desktop compact styles */
+        @media (min-width: 820px) {
+          .games-input__wrapper {
+            height: 46px;
+            margin-bottom: 10px;
+          }
+          
+          .games-input__wrapper label {
+            font-size: 10px;
+            top: 9px;
+          }
+          
+          .games-input__number {
+            font-size: 13px;
+            padding: 24px 16px 8px 16px;
+          }
+          
+          .button {
+            height: 20px;
+          }
+          
+          .button__text {
+            font-size: 9px;
+          }
         }
 
         .input-text__wrapper._disabled {

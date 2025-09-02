@@ -81,7 +81,16 @@ export default function GameModeTabs({ onModeChange }: GameModeTabsProps) {
         @media (min-width: 820px) {
           .game-mode-tabs {
             margin-top: 0;
-            padding-right: 20px;
+            padding-right: 15px;
+          }
+          
+          .mode-btn {
+            height: 34px;
+            font-size: 12px;
+          }
+          
+          .mode-btn__text {
+            font-size: 12px;
           }
         }
 

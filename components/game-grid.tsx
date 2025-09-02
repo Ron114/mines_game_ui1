@@ -271,7 +271,7 @@ export default function GameGrid() {
           .game-tiles {
             grid-gap: 10px;
             padding-bottom: 30px;
-            max-width: 405px;
+            max-width: 480px;
           }
         }
 

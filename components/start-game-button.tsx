@@ -102,6 +102,25 @@ export default function StartGameButton() {
             font-size: 14px;
           }
         }
+        
+        /* Desktop compact styles */
+        @media (min-width: 820px) {
+          .game-betslip__buttons {
+            margin-bottom: 8px;
+          }
+          
+          .btn-new {
+            height: 54px;
+          }
+          
+          .btn-new .text {
+            font-size: 14px;
+          }
+          
+          .btn-new__text ._small {
+            font-size: 9px;
+          }
+        }
 
         .btn-new {
           text-align: center;

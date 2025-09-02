@@ -178,6 +178,37 @@ export default function MinesSelector() {
           display: flex;
           transition: opacity 0.3s ease;
         }
+        
+        /* Desktop compact styles */
+        @media (min-width: 820px) {
+          .settings-input__wrapper._mines {
+            margin-bottom: 28px;
+          }
+          
+          .settings-input__wrapper._mines .button {
+            height: 35px;
+            top: 1px;
+            width: 36px;
+          }
+          
+          .settings-input__wrapper._mines .games-input__wrapper {
+            height: 37px;
+          }
+          
+          .settings-input__wrapper._mines .games-input__wrapper label {
+            font-size: 8px;
+            top: 7px;
+          }
+          
+          .settings-input__wrapper._mines .games-input__wrapper input {
+            font-size: 13px;
+            padding-top: 18px;
+          }
+          
+          .button__text {
+            font-size: 8px;
+          }
+        }
 
         .settings-input__wrapper._mines._disabled {
           opacity: 0.4;
@@ -229,23 +260,42 @@ export default function MinesSelector() {
         }
 
         .settings-input__wrapper._mines .button:nth-child(2) {
-          left: 47px;
+          left: 41px;
         }
 
         .settings-input__wrapper._mines .button:nth-child(3) {
-          left: 91px;
+          left: 79px;
         }
 
         .settings-input__wrapper._mines .button:nth-child(5) {
-          right: 91px;
+          right: 79px;
         }
 
         .settings-input__wrapper._mines .button:nth-child(6) {
-          right: 47px;
+          right: 41px;
         }
 
         .settings-input__wrapper._mines .button:nth-child(7) {
           right: 3px;
+        }
+        
+        /* Desktop positioning adjustments */
+        @media (min-width: 820px) {
+          .settings-input__wrapper._mines .button:nth-child(2) {
+            left: 40px;
+          }
+
+          .settings-input__wrapper._mines .button:nth-child(3) {
+            left: 77px;
+          }
+
+          .settings-input__wrapper._mines .button:nth-child(5) {
+            right: 77px;
+          }
+
+          .settings-input__wrapper._mines .button:nth-child(6) {
+            right: 40px;
+          }
         }
 
         .settings-input__wrapper._mines .button {
