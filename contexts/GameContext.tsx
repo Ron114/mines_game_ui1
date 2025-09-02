@@ -78,7 +78,9 @@ interface GameContextType {
   setIsAutoMode: (auto: boolean) => void
   toggleTileForAutoPlay: (tileIndex: number) => void
   executeAutoPlayRound: () => void
-  updateBetAfterResult: (won: boolean) => void
+  updateBetAfterResult: (won: boolean, currentBetAmount?: number) => number
+  initialBetAmount: number
+  setInitialBetAmount: (amount: number) => void
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined)
@@ -118,6 +120,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [currentRound, setCurrentRound] = useState(0)
   const [autoPlayTimers, setAutoPlayTimers] = useState<NodeJS.Timeout[]>([])
   const [isAutoMode, setIsAutoMode] = useState(false)
+  const [initialBetAmount, setInitialBetAmount] = useState(1)
   
   const multiplierMappings: Record<number, number[]> = {
     2: [1.03, 1.13, 1.23, 1.36, 1.5, 1.67, 1.86],
@@ -279,32 +282,52 @@ export function GameProvider({ children }: { children: ReactNode }) {
     })
   }
   
-  const updateBetAfterResult = (won: boolean) => {
+  const updateBetAfterResult = (won: boolean, currentBetAmount?: number) => {
     const config = autoPlayConfig
-    let newBetAmount = betAmount
+    let finalBetAmount = 0
     
-    if (won) {
-      if (config.onWinMode === 'increase' && config.onWinAmount > 0) {
-        // Increase bet by the specified percentage
-        newBetAmount = betAmount + (betAmount * config.onWinAmount / 100)
-      } else if (config.onWinMode === 'reset') {
-        // Reset bet to 1
-        newBetAmount = 1
+    setBetAmount(prevBetAmount => {
+      const workingBetAmount = currentBetAmount ?? prevBetAmount
+      let newBetAmount = workingBetAmount
+      
+      console.log(`🎯 updateBetAfterResult - Won: ${won}, Current bet: $${workingBetAmount}, Initial bet: $${initialBetAmount}`)
+      console.log(`🎯 Config - WinMode: ${config.onWinMode}, WinAmount: ${config.onWinAmount}%, LossMode: ${config.onLossMode}, LossAmount: ${config.onLossAmount}%`)
+      
+      if (won) {
+        if (config.onWinMode === 'increase' && config.onWinAmount > 0) {
+          // Always increase bet by the specified percentage from current bet
+          newBetAmount = workingBetAmount + (workingBetAmount * config.onWinAmount / 100)
+          console.log(`🎯 WIN: Increasing bet by ${config.onWinAmount}% from $${workingBetAmount} to $${newBetAmount}`)
+        } else if (config.onWinMode === 'reset') {
+          // Reset bet to initial bet amount (what user started with)
+          newBetAmount = initialBetAmount
+          console.log(`🎯 WIN: Resetting bet to initial amount $${newBetAmount}`)
+        }
+        // If onWinAmount is 0 or mode is something else, keep current bet amount
+      } else {
+        // When losing (bomb found), always reset to initial bet amount
+        if (config.onLossMode === 'increase' && config.onLossAmount > 0) {
+          // Reset to initial, then apply increase percentage
+          newBetAmount = initialBetAmount + (initialBetAmount * config.onLossAmount / 100)
+          console.log(`🎯 LOSS: Resetting to initial $${initialBetAmount} + ${config.onLossAmount}% = $${newBetAmount}`)
+        } else if (config.onLossMode === 'reset') {
+          // Reset bet to initial bet amount
+          newBetAmount = initialBetAmount
+          console.log(`🎯 LOSS: Resetting bet to initial amount $${newBetAmount}`)
+        } else {
+          // Default: reset to initial bet amount on loss
+          newBetAmount = initialBetAmount
+          console.log(`🎯 LOSS: Default - resetting bet to initial amount $${newBetAmount}`)
+        }
       }
-      // If onWinAmount is 0 or mode is something else, keep current bet amount
-    } else {
-      if (config.onLossMode === 'increase' && config.onLossAmount > 0) {
-        // Increase bet by the specified percentage
-        newBetAmount = betAmount + (betAmount * config.onLossAmount / 100)
-      } else if (config.onLossMode === 'reset') {
-        // Reset bet to 1
-        newBetAmount = 1
-      }
-      // If onLossAmount is 0 or mode is something else, keep current bet amount
-    }
+      
+      // Ensure bet amount is within valid bounds and not more than balance
+      finalBetAmount = Math.max(0.01, Math.min(newBetAmount, balance))
+      console.log(`🎯 Final bet amount: $${finalBetAmount}`)
+      return finalBetAmount
+    })
     
-    // Ensure bet amount is within valid bounds and not more than balance
-    setBetAmount(Math.max(0.01, Math.min(newBetAmount, balance)))
+    return finalBetAmount
   }
   
   const executeAutoPlayRound = () => {
@@ -382,18 +405,22 @@ export function GameProvider({ children }: { children: ReactNode }) {
         setAnimatingTiles(animatingBombs)
         setBombHitTile(bombTileIndex)
         
-        // Stop explosion animation after it completes
-        setTimeout(() => {
-          setAnimatingTiles(new Set())
-        }, 400)
+        // Update bet after bomb loss
+        updateBetAfterResult(false)
         
-        // After bomb animation and tile reveal, continue to next round
-        const nextRoundTimer = setTimeout(() => {
-          // Complete reset for next round - clear everything
+        // Stop explosion animation after it completes
+        const stopAnimationTimer = setTimeout(() => {
+          setAnimatingTiles(new Set())
+        }, 600) // Give bomb animation time to complete
+        
+        // After bomb explosion, slowly reset tiles to clean state
+        const cleanupTimer = setTimeout(() => {
+          // Complete cleanup of all game states
           setTileStatesInternal({})
           setLoadingTilesInternal(new Set())
           setShowAllTiles(false)
           setBombHitTile(null)
+          setAnimatingTiles(new Set())
           setDiamondsFound(0)
           setCurrentCashoutValue(0)
           setWinAmount(0)
@@ -401,10 +428,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
           setShowWinAnimation(false)
           setIsCashingOut(false)
           setIsDimmingCheckout(false)
+          setWinAnimationAmount(0)
           clearCashOutTimers()
-          setAnimatingTiles(new Set())
-          // Mine positions will be generated at start of next round
           setGameState('idle')
+        }, 1500) // Slower cleanup for stability
+        
+        // After cleanup, continue to next round
+        const nextRoundTimer = setTimeout(() => {
           const nextRound = currentRound + 1
           setCurrentRound(nextRound)
           
@@ -416,9 +446,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
           } else {
             stopAutoPlay()
           }
-        }, 2400) // Wait for bomb animation + tile reveal
+        }, 2000) // Slower timing for better user experience
         
-        setAutoPlayTimers(prev => [...prev, nextRoundTimer])
+        setAutoPlayTimers(prev => [...prev, stopAnimationTimer, cleanupTimer, nextRoundTimer])
       } else {
         // No bomb, reveal all tiles immediately
         for (let i = 0; i < 25; i++) {
@@ -427,11 +457,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
         }
         setShowAllTiles(true)
         // All selected tiles are diamonds - win!
-        updateBetAfterResult(true)
         
-        // Calculate win amount
+        // Calculate win amount with CURRENT bet amount before updating it
         const multiplier = multiplierValues[tilesToClick.length - 1] || multiplierValues[0]
         const winAmount = betAmount * multiplier
+        
+        // Now update bet amount for next round
+        updateBetAfterResult(true)
         
         // Update balance, show win modal and win animation
         setBalance(balance + winAmount)
@@ -501,6 +533,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
       return
     }
     
+    // Store the initial bet amount when auto-play starts
+    setInitialBetAmount(betAmount)
     setIsAutoPlaying(true)
     setCurrentRound(0)
     
@@ -677,7 +711,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setIsAutoMode,
       toggleTileForAutoPlay,
       executeAutoPlayRound,
-      updateBetAfterResult
+      updateBetAfterResult,
+      initialBetAmount,
+      setInitialBetAmount
     }}>
       {children}
     </GameContext.Provider>
