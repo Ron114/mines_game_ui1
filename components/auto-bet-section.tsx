@@ -67,7 +67,7 @@ export default function AutoBetSection() {
   }
 
   return (
-    <div className="game-autobet">
+    <div className={`game-autobet ${isAutoPlaying ? '_disabled' : ''}`}>
       {/* Number of rounds */}
       <div className="settings-input__wrapper">
         <div className="games-input__wrapper">
@@ -100,14 +100,14 @@ export default function AutoBetSection() {
         <label htmlFor="on_win">When Winning</label>
         
         <div 
-          className={`input-button _md ${onWinMode === "reset" ? "active" : ""}`}
+          className={`input-button _md ${onWinMode === "reset" ? "active" : ""} ${isAutoPlaying ? "_disabled" : ""}`}
           onClick={() => handleWinModeChange("reset")}
         >
           <div className="input-button__text">Reset</div>
         </div>
 
         <div 
-          className={`input-button _md ${onWinMode === "increase" ? "active" : ""}`}
+          className={`input-button _md ${onWinMode === "increase" ? "active" : ""} ${isAutoPlaying ? "_disabled" : ""}`}
           onClick={() => handleWinModeChange("increase")}
         >
           <div className="input-button__text">Increase by</div>
@@ -143,14 +143,14 @@ export default function AutoBetSection() {
         <label htmlFor="on_loss">When Losing</label>
         
         <div 
-          className={`input-button _md ${onLossMode === "reset" ? "active" : ""}`}
+          className={`input-button _md ${onLossMode === "reset" ? "active" : ""} ${isAutoPlaying ? "_disabled" : ""}`}
           onClick={() => handleLossModeChange("reset")}
         >
           <div className="input-button__text">Reset</div>
         </div>
 
         <div 
-          className={`input-button _md ${onLossMode === "increase" ? "active" : ""}`}
+          className={`input-button _md ${onLossMode === "increase" ? "active" : ""} ${isAutoPlaying ? "_disabled" : ""}`}
           onClick={() => handleLossModeChange("increase")}
         >
           <div className="input-button__text">Increase by</div>
@@ -185,7 +185,7 @@ export default function AutoBetSection() {
       <div className="settings-input__wrapper _has_btn">
         <label htmlFor="on_any_win">Stop at any Win</label>
         
-        <div className="switcher">
+        <div className={`switcher ${isAutoPlaying ? '_disabled' : ''}`}>
           <div className={`switcher__inner ${stopAtAnyWin ? 'active' : ''}`}>
             <input 
               type="checkbox" 
@@ -193,6 +193,7 @@ export default function AutoBetSection() {
               className="switcher__input"
               checked={stopAtAnyWin}
               onChange={(e) => handleStopAtWinChange(e.target.checked)}
+              disabled={isAutoPlaying}
             />
             <label htmlFor="on_any_win" className="switcher__label"></label>
           </div>
@@ -205,6 +206,11 @@ export default function AutoBetSection() {
       <style jsx>{`
         .game-autobet {
           margin-bottom: 20px;
+          transition: opacity 0.3s ease;
+        }
+        
+        .game-autobet._disabled {
+          opacity: 0.4;
         }
         
         /* Desktop compact styles */
@@ -440,6 +446,12 @@ export default function AutoBetSection() {
           font-weight: 700;
           line-height: 1.45;
         }
+        
+        .input-button._disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          pointer-events: none;
+        }
 
         /* Desktop hover effects */
         @media (min-width: 820px) {
@@ -559,6 +571,13 @@ export default function AutoBetSection() {
           position: relative;
           cursor: pointer;
           z-index: 10;
+          transition: opacity 0.3s ease;
+        }
+        
+        .switcher._disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          pointer-events: none;
         }
 
         /* Mobile touch fix */

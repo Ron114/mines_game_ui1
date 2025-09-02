@@ -283,16 +283,27 @@ export function GameProvider({ children }: { children: ReactNode }) {
     const config = autoPlayConfig
     let newBetAmount = betAmount
     
-    if (won && config.onWinMode === 'increase') {
-      newBetAmount = betAmount + (betAmount * config.onWinAmount / 100)
-    } else if (won && config.onWinMode === 'reset') {
-      newBetAmount = 1
-    } else if (!won && config.onLossMode === 'increase') {
-      newBetAmount = betAmount + (betAmount * config.onLossAmount / 100)
-    } else if (!won && config.onLossMode === 'reset') {
-      newBetAmount = 1
+    if (won) {
+      if (config.onWinMode === 'increase' && config.onWinAmount > 0) {
+        // Increase bet by the specified percentage
+        newBetAmount = betAmount + (betAmount * config.onWinAmount / 100)
+      } else if (config.onWinMode === 'reset') {
+        // Reset bet to 1
+        newBetAmount = 1
+      }
+      // If onWinAmount is 0 or mode is something else, keep current bet amount
+    } else {
+      if (config.onLossMode === 'increase' && config.onLossAmount > 0) {
+        // Increase bet by the specified percentage
+        newBetAmount = betAmount + (betAmount * config.onLossAmount / 100)
+      } else if (config.onLossMode === 'reset') {
+        // Reset bet to 1
+        newBetAmount = 1
+      }
+      // If onLossAmount is 0 or mode is something else, keep current bet amount
     }
     
+    // Ensure bet amount is within valid bounds and not more than balance
     setBetAmount(Math.max(0.01, Math.min(newBetAmount, balance)))
   }
   
@@ -307,7 +318,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       return
     }
     
-    // Clean all tiles and start fresh round
+    // Complete reset of all game states before starting new round
     setTileStatesInternal({})
     setLoadingTilesInternal(new Set())
     setShowAllTiles(false)
@@ -317,6 +328,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setWinAmount(0)
     setShowWinModal(false)
     setShowWinAnimation(false)
+    setAnimatingTiles(new Set())
+    setIsCashingOut(false)
+    setIsDimmingCheckout(false)
+    setWinAnimationAmount(0)
+    clearCashOutTimers()
     // Generate mine positions for this round
     const positions = new Set<number>()
     const totalTiles = 25

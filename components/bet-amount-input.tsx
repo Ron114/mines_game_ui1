@@ -5,13 +5,13 @@ import { useGame } from '../contexts/GameContext'
 import { useAudioContext } from '../contexts/AudioContext'
 
 export default function BetAmountInput() {
-  const { betAmount, setBetAmount, gameState, tileStates } = useGame()
+  const { betAmount, setBetAmount, gameState, tileStates, isAutoPlaying } = useGame()
   const { playSound } = useAudioContext()
   const [displayAmount, setDisplayAmount] = useState(betAmount.toString())
   
-  // Disable after first tile is clicked (when tileStates has any entries)
+  // Disable after first tile is clicked (when tileStates has any entries) OR during auto-play
   const hasClickedTile = Object.keys(tileStates).length > 0
-  const isDisabled = hasClickedTile && (gameState === 'active' || gameState === 'cashout')
+  const isDisabled = (hasClickedTile && (gameState === 'active' || gameState === 'cashout')) || isAutoPlaying
   
   useEffect(() => {
     setDisplayAmount(betAmount.toString())
