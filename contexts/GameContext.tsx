@@ -550,6 +550,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
     clearCashOutTimers()
     setIsAutoPlaying(false)
     
+    // Reset bet amount to what user initially entered when auto-play started
+    console.log(`🛑 Stopping auto-play - resetting bet from $${betAmount} back to initial $${initialBetAmount}`)
+    setBetAmount(initialBetAmount)
+    
     // Reset tiles and clear selected auto tiles
     setTileStatesInternal({})
     setLoadingTilesInternal(new Set())
