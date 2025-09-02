@@ -175,6 +175,7 @@ export default function GameContainer() {
               "betslip chart" min-content
               "betslip range" max-content
               "stats stats" 1fr / 300px 1fr;
+            column-gap: 20px;
           }
 
           .mode-tabs {
