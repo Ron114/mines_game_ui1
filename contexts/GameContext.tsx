@@ -294,23 +294,12 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }
   
   const executeAutoPlayRound = () => {
-    console.log('🔵 executeAutoPlayRound called', {
-      selectedTilesCount: selectedTilesForAuto.size,
-      selectedTiles: Array.from(selectedTilesForAuto),
-      balance,
-      betAmount,
-      isAutoPlaying,
-      gameState
-    })
-    
     if (selectedTilesForAuto.size === 0) {
-      console.log('🔴 executeAutoPlayRound failed - no tiles selected')
       stopAutoPlay()
       return
     }
     
     if (balance < betAmount) {
-      console.log('🔴 executeAutoPlayRound failed - insufficient balance')
       stopAutoPlay()
       return
     }
@@ -343,21 +332,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
       }
     }
     
-    console.log('🟠 Game setup complete, will reveal tiles in 300ms', {
-      tilesToClick,
-      hasBomb,
-      bombTileIndex,
-      gameState
-    })
-    
     // Small delay then reveal all tiles at once (no loading animation)
     setTimeout(() => {
-      console.log('🟣 Revealing tiles now', { tilesToClick, isAutoPlaying })
-      
       // Reveal all selected tiles at once
       tilesToClick.forEach(tileIndex => {
         const result = getTileType(tileIndex)
-        console.log(`🔷 Setting tile ${tileIndex} to ${result}`)
         setTileState(tileIndex, result)
       })
       
@@ -374,15 +353,44 @@ export function GameProvider({ children }: { children: ReactNode }) {
           
           // Reset and continue to next round
           const nextRoundTimer = setTimeout(() => {
-            if (!isAutoPlaying) return // Stop if auto-play was stopped
+            console.log('💥 Bomb: Checking next round', { 
+              isAutoPlaying, 
+              currentRound, 
+              numberOfRounds: autoPlayConfig.numberOfRounds,
+              balance,
+              betAmount
+            })
             
-            resetGame()
+            // Don't call resetGame() here as it might affect isAutoPlaying state
+            // Instead, do a targeted reset
+            setTileStatesInternal({})
+            setLoadingTilesInternal(new Set())
+            setShowAllTiles(false)
+            setBombHitTile(null)
+            setDiamondsFound(0)
+            setCurrentCashoutValue(0)
+            setWinAmount(0)
+            setShowWinModal(false)
+            setShowWinAnimation(false)
+            generateMinePositions(selectedMines)
+            setGameState('idle')
             const nextRound = currentRound + 1
             setCurrentRound(nextRound)
             
-            if (autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds) {
+            // Continue if: infinity mode (numberOfRounds = 0) OR haven't reached the limit
+            const shouldContinue = autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds
+            
+            console.log('🔄 Bomb: Should continue?', { 
+              shouldContinue, 
+              nextRound, 
+              hasBalance: balance >= betAmount 
+            })
+            
+            if (shouldContinue && balance >= betAmount) {
+              console.log('✅ Bomb: Continuing to next round')
               executeAutoPlayRound()
             } else {
+              console.log('❌ Bomb: Stopping - no more rounds or insufficient balance')
               stopAutoPlay()
             }
           }, 2000)
@@ -422,12 +430,32 @@ export function GameProvider({ children }: { children: ReactNode }) {
         
         // Schedule next round
         const nextRoundTimer = setTimeout(() => {
-          if (!isAutoPlaying) return // Stop if auto-play was stopped
+          console.log('🔄 Win: Checking next round', { 
+            isAutoPlaying, 
+            currentRound, 
+            numberOfRounds: autoPlayConfig.numberOfRounds,
+            stopAtAnyWin: autoPlayConfig.stopAtAnyWin,
+            balance,
+            betAmount
+          })
           
-          resetGame()
+          // Don't call resetGame() here as it might affect isAutoPlaying state
+          // Instead, do a targeted reset
+          setTileStatesInternal({})
+          setLoadingTilesInternal(new Set())
+          setShowAllTiles(false)
+          setBombHitTile(null)
+          setDiamondsFound(0)
+          setCurrentCashoutValue(0)
+          setWinAmount(0)
+          setShowWinModal(false)
+          setShowWinAnimation(false)
+          generateMinePositions(selectedMines)
+          setGameState('idle')
           
           // Check if should stop on win
           if (autoPlayConfig.stopAtAnyWin) {
+            console.log('❌ Win: Stopping - stopAtAnyWin is enabled')
             stopAutoPlay()
             return
           }
@@ -435,9 +463,20 @@ export function GameProvider({ children }: { children: ReactNode }) {
           const nextRound = currentRound + 1
           setCurrentRound(nextRound)
           
-          if (autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds) {
+          // Continue if: infinity mode (numberOfRounds = 0) OR haven't reached the limit
+          const shouldContinue = autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds
+          
+          console.log('🔄 Win: Should continue?', { 
+            shouldContinue, 
+            nextRound, 
+            hasBalance: balance >= betAmount 
+          })
+          
+          if (shouldContinue && balance >= betAmount) {
+            console.log('✅ Win: Continuing to next round')
             executeAutoPlayRound()
           } else {
+            console.log('❌ Win: Stopping - no more rounds or insufficient balance')
             stopAutoPlay()
           }
         }, 3000)
@@ -448,21 +487,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }
   
   const startAutoPlay = () => {
-    console.log('🟢 startAutoPlay called', {
-      selectedTilesCount: selectedTilesForAuto.size,
-      selectedTiles: Array.from(selectedTilesForAuto),
-      balance,
-      betAmount,
-      isAutoPlaying
-    })
-    
     // Check if we have tiles selected and sufficient balance
     if (selectedTilesForAuto.size === 0 || balance < betAmount) {
-      console.log('🔴 startAutoPlay failed - no tiles or insufficient balance')
       return
     }
     
-    console.log('🟡 Setting isAutoPlaying = true and calling executeAutoPlayRound after state update')
     setIsAutoPlaying(true)
     setCurrentRound(0)
     
