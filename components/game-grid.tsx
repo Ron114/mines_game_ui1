@@ -735,8 +735,8 @@ export default function GameGrid() {
         /* Win Amount Animation */
         .win-amount-animation {
           position: fixed;
-          top: 130px;
-          right: 375px;
+          top: 150px;
+          right: 400px;
           z-index: 2000;
           pointer-events: none;
         }
@@ -745,7 +745,7 @@ export default function GameGrid() {
           font-size: 0.7325rem;
           font-weight: 600;
           color: #7CFC00;
-          animation: winAmountRiseUp 2.7s ease-out forwards;
+          animation: winAmountRiseUp 2s ease-out forwards;
         }
 
         @keyframes winAmountRiseUp {
@@ -753,7 +753,7 @@ export default function GameGrid() {
             opacity: 1;
             transform: translateY(10px);
           }
-          80% {
+          100% {
             opacity: 0;
             transform: translateY(-20px);
           }
