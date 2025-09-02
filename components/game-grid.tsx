@@ -745,7 +745,7 @@ export default function GameGrid() {
           font-size: 0.7325rem;
           font-weight: 600;
           color: #7CFC00;
-          animation: winAmountRiseUp 2s ease-out forwards;
+          animation: winAmountRiseUp 2.7s ease-out forwards;
         }
 
         @keyframes winAmountRiseUp {
