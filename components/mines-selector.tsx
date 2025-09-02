@@ -187,7 +187,7 @@ export default function MinesSelector() {
         /* Mobile responsive styles */
         @media (max-width: 819px) {
           .settings-input__wrapper._mines {
-            margin-bottom: 0;
+            margin-bottom: 35px;
             height: 42px;
           }
 
