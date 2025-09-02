@@ -36,7 +36,7 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
     }
   }, [isOpen, triggerRef])
 
-  // Handle click outside to close modal
+  // Handle click outside to close modal and prevent mobile scrolling
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -46,8 +46,19 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside)
+      
+      // Prevent background scrolling on mobile
+      const isMobile = window.innerWidth <= 920
+      if (isMobile) {
+        document.body.style.overflow = 'hidden'
+      }
+      
       return () => {
         document.removeEventListener('mousedown', handleClickOutside)
+        // Restore scrolling when modal closes
+        if (isMobile) {
+          document.body.style.overflow = 'auto'
+        }
       }
     }
   }, [isOpen, onClose])
@@ -111,7 +122,7 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
             <div
               className="relative w-full h-full"
               style={{
-                background: "linear-gradient(318.44deg, #1a1b1f 21.28%, #242a30 141.88%)",
+                background: "#0f1012",
                 borderRadius: "0.625rem",
                 boxShadow: "inset 0.125rem 0.1875rem 0.625rem #070709, inset -0.125rem -0.125rem 0.625rem rgba(255, 255, 255, 0.05)",
                 border: "none",
@@ -348,6 +359,7 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
             left: 50% !important;
             right: auto !important;
             transform: translate(-50%, -50%) !important;
+            border: none !important;
           }
         }
       `}</style>
