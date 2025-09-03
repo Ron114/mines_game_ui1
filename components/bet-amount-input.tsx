@@ -45,7 +45,7 @@ export default function BetAmountInput() {
   }
 
   return (
-    <div className={`input-text__wrapper mt-[7px] ${isDisabled ? '_disabled' : ''}`}>
+    <div className={`input-text__wrapper md:mt-0 mt-[7px] ${isDisabled ? '_disabled' : ''}`}>
       <div className="games-input__wrapper">
         <label htmlFor="bet-amount">
           Bet Amount
