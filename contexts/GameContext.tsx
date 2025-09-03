@@ -47,8 +47,8 @@ interface GameContextType {
   getCurrentMultipliers: () => number[]
   currentCashoutValue: number
   setCurrentCashoutValue: (value: number) => void
-  currentRoundBetAmount: number
-  setCurrentRoundBetAmount: (amount: number) => void
+  modalWinData: { winAmount: number; betAmount: number; multiplier: number } | null
+  setModalWinData: (data: { winAmount: number; betAmount: number; multiplier: number } | null) => void
   animateValueUpdate: (newValue: number) => void
   getNextPotentialValue: () => number
   formatCurrency: (value: number) => string
@@ -107,7 +107,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   const [diamondsFound, setDiamondsFound] = useState(0)
   const [currentCashoutValue, setCurrentCashoutValue] = useState(0)
-  const [currentRoundBetAmount, setCurrentRoundBetAmount] = useState(0)
+  const [modalWinData, setModalWinData] = useState<{ winAmount: number; betAmount: number; multiplier: number } | null>(null)
   const [showWinAnimation, setShowWinAnimation] = useState(false)
   const [winAnimationAmount, setWinAnimationAmount] = useState(0)
   const [isCashingOut, setIsCashingOut] = useState(false)
@@ -270,7 +270,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       
       animateValueUpdate(newCashoutValue)
       setWinAmount(newCashoutValue)
-      setCurrentRoundBetAmount(betAmount) // Store current bet amount for manual play
+      setModalWinData({ winAmount: newCashoutValue, betAmount, multiplier }) // Store exact values for modal
       setGameState('cashout')
     } else if (state === 'bomb') {
       setGameState('idle')
@@ -520,7 +520,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
         // Update balance, show win modal and win animation
         setBalance(prevBalance => prevBalance + winAmount)
         setCurrentCashoutValue(winAmount)
-        setCurrentRoundBetAmount(actualBetAmount) // Store the bet amount used for this round
+        setModalWinData({ winAmount, betAmount: actualBetAmount, multiplier }) // Store exact values used
         setWinAmount(winAmount)
         console.log(`🎯 Setting modal values: winAmount=${winAmount}, actualBetAmount=${actualBetAmount}, multiplier=${multiplier}`)
         setShowWinModal(true)
@@ -746,8 +746,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
       getCurrentMultipliers: () => multiplierValues,
       currentCashoutValue,
       setCurrentCashoutValue,
-      currentRoundBetAmount,
-      setCurrentRoundBetAmount,
+      modalWinData,
+      setModalWinData,
       animateValueUpdate,
       getNextPotentialValue,
       formatCurrency,

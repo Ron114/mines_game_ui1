@@ -11,7 +11,7 @@ export default function GameGrid() {
     currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile,
     getNextPotentialValue, formatCurrency, selectedMines, showWinAnimation, winAnimationAmount,
     isAutoMode, selectedTilesForAuto, toggleTileForAutoPlay, isAutoPlaying, animatingTiles, setAnimatingTiles,
-    showAlert, setShowAlert, alertMessage, setAlertMessage, currentRoundBetAmount
+    showAlert, setShowAlert, alertMessage, setAlertMessage, modalWinData
   } = useGame()
   const { playSound } = useAudioContext()
   const [hoveredTile, setHoveredTile] = useState<number | null>(null)
@@ -25,6 +25,13 @@ export default function GameGrid() {
       setBombClicked(false)
     }
   }, [gameState, showAllTiles])
+
+  // Debug modal values when it shows
+  useEffect(() => {
+    if (showWinModal && modalWinData) {
+      console.log(`🎯 Modal showing: winAmount=${modalWinData.winAmount}, betAmount=${modalWinData.betAmount}, multiplier=${modalWinData.multiplier}`)
+    }
+  }, [showWinModal, modalWinData])
 
   const getDiamondSound = () => {
     if (selectedMines < 10) {
@@ -205,12 +212,13 @@ export default function GameGrid() {
           </div>
 
           <div className="modal-body">
-            <div className="win-amount">{formatCurrency(currentCashoutValue)}</div>
+            <div className="win-amount">{modalWinData ? formatCurrency(modalWinData.winAmount) : formatCurrency(currentCashoutValue)}</div>
             <div className="modal-divider"></div>
             <div className="multiplier-section">
               <span className="multiplier-label">Multiplier</span>
-              <span className="multiplier-value">x{(currentCashoutValue / (currentRoundBetAmount || betAmount)).toFixed(2)}</span>
+              <span className="multiplier-value">x{modalWinData ? modalWinData.multiplier.toFixed(2) : (currentCashoutValue / betAmount).toFixed(2)}</span>
             </div>
+
           </div>
         </div>
       )}
