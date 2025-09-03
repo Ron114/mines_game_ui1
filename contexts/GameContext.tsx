@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react'
+import { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react'
 
 type GameState = 'idle' | 'active' | 'cashout'
 
@@ -129,6 +129,19 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [isAutoMode, setIsAutoMode] = useState(false)
   const [initialBetAmount, setInitialBetAmount] = useState(1)
   
+  // Refs to track current values for closure issues
+  const balanceRef = useRef(balance)
+  const betAmountRef = useRef(betAmount)
+  
+  // Update refs when values change
+  useEffect(() => {
+    balanceRef.current = balance
+  }, [balance])
+  
+  useEffect(() => {
+    betAmountRef.current = betAmount
+  }, [betAmount])
+  
   const multiplierMappings: Record<number, number[]> = {
     2: [1.03, 1.13, 1.23, 1.36, 1.5, 1.67, 1.86],
     3: [1.08, 1.23, 1.42, 1.64, 1.92, 2.25, 2.68],
@@ -160,13 +173,21 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const setBalance = (newBalance: number) => {
-    setBalanceInternal(newBalance)
-    localStorage.setItem('minesGameBalance', newBalance.toString())
+  const setBalance = (newBalance: number | ((prevBalance: number) => number)) => {
+    if (typeof newBalance === 'function') {
+      setBalanceInternal(prevBalance => {
+        const updatedBalance = newBalance(prevBalance)
+        localStorage.setItem('minesGameBalance', updatedBalance.toString())
+        return updatedBalance
+      })
+    } else {
+      setBalanceInternal(newBalance)
+      localStorage.setItem('minesGameBalance', newBalance.toString())
+    }
   }
 
   const deductBet = () => {
-    setBalance(balance - betAmount)
+    setBalance(prevBalance => prevBalance - betAmount)
   }
 
   const animateValueUpdate = (newValue: number) => {
@@ -329,7 +350,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       }
       
       // Ensure bet amount is within valid bounds and not more than balance
-      finalBetAmount = Math.max(0.01, Math.min(newBetAmount, balance))
+      finalBetAmount = Math.max(0.01, Math.min(newBetAmount, balanceRef.current))
       console.log(`🎯 Final bet amount: $${finalBetAmount}`)
       return finalBetAmount
     })
@@ -343,7 +364,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       return
     }
     
-    if (balance < betAmount) {
+    if (balanceRef.current < betAmountRef.current) {
       stopAutoPlay()
       return
     }
@@ -448,9 +469,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
           // Continue if: infinity mode (numberOfRounds = 0) OR haven't reached the limit
           const shouldContinue = autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds
           
-          if (shouldContinue && balance >= betAmount) {
+          if (shouldContinue && balanceRef.current >= betAmountRef.current) {
             executeAutoPlayRound()
           } else {
+            console.log(`🛑 Stopping autoplay after loss - Round limit reached or insufficient balance`)
             stopAutoPlay()
           }
         }, 2000) // Slower timing for better user experience
@@ -473,7 +495,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
         updateBetAfterResult(true)
         
         // Update balance, show win modal and win animation
-        setBalance(balance + winAmount)
+        setBalance(prevBalance => prevBalance + winAmount)
         setCurrentCashoutValue(winAmount)
         setWinAmount(winAmount)
         setShowWinModal(true)
@@ -522,9 +544,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
           // Continue if: infinity mode (numberOfRounds = 0) OR haven't reached the limit
           const shouldContinue = autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds
           
-          if (shouldContinue && balance >= betAmount) {
+          if (shouldContinue && balanceRef.current >= betAmountRef.current) {
             executeAutoPlayRound()
           } else {
+            console.log(`🛑 Stopping autoplay after win - Round limit reached or insufficient balance`)
             stopAutoPlay()
           }
         }, 1800)
@@ -536,7 +559,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   
   const startAutoPlay = () => {
     // Check if we have tiles selected and sufficient balance
-    if (selectedTilesForAuto.size === 0 || balance < betAmount) {
+    if (selectedTilesForAuto.size === 0 || balanceRef.current < betAmountRef.current) {
       return
     }
     
@@ -602,7 +625,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     timers.push(setTimeout(() => {
       setWinAnimationAmount(currentCashoutValue)
       setShowWinAnimation(true)
-      setBalance(balance + currentCashoutValue)
+      setBalance(prevBalance => prevBalance + currentCashoutValue)
       setShowWinModal(true)
     }, 500))
     
