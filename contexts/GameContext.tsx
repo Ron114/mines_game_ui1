@@ -479,6 +479,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
           
           // Continue if: infinity mode (numberOfRounds = 0) OR haven't reached the limit
           const shouldContinue = autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds
+          console.log(`🔄 LOSS Round Check: nextRound=${nextRound}, numberOfRounds=${autoPlayConfig.numberOfRounds}, shouldContinue=${shouldContinue}`)
           
           if (shouldContinue && balanceRef.current >= betAmountRef.current) {
             executeAutoPlayRound()
@@ -555,6 +556,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
           
           // Continue if: infinity mode (numberOfRounds = 0) OR haven't reached the limit
           const shouldContinue = autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds
+          console.log(`🔄 WIN Round Check: nextRound=${nextRound}, numberOfRounds=${autoPlayConfig.numberOfRounds}, shouldContinue=${shouldContinue}`)
           
           if (shouldContinue && balanceRef.current >= betAmountRef.current) {
             executeAutoPlayRound()
@@ -579,6 +581,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setInitialBetAmount(betAmount)
     setIsAutoPlaying(true)
     setCurrentRound(0)
+    console.log(`🚀 Starting autoplay with ${autoPlayConfig.numberOfRounds} rounds (0 = infinite)`)
     
     // Execute the first round after state updates
     setTimeout(() => {
