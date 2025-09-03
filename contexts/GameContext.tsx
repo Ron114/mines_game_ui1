@@ -47,6 +47,8 @@ interface GameContextType {
   getCurrentMultipliers: () => number[]
   currentCashoutValue: number
   setCurrentCashoutValue: (value: number) => void
+  currentRoundBetAmount: number
+  setCurrentRoundBetAmount: (amount: number) => void
   animateValueUpdate: (newValue: number) => void
   getNextPotentialValue: () => number
   formatCurrency: (value: number) => string
@@ -105,6 +107,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [animatingTiles, setAnimatingTiles] = useState<Set<number>>(new Set())
   const [diamondsFound, setDiamondsFound] = useState(0)
   const [currentCashoutValue, setCurrentCashoutValue] = useState(0)
+  const [currentRoundBetAmount, setCurrentRoundBetAmount] = useState(0)
   const [showWinAnimation, setShowWinAnimation] = useState(false)
   const [winAnimationAmount, setWinAnimationAmount] = useState(0)
   const [isCashingOut, setIsCashingOut] = useState(false)
@@ -267,6 +270,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       
       animateValueUpdate(newCashoutValue)
       setWinAmount(newCashoutValue)
+      setCurrentRoundBetAmount(betAmount) // Store current bet amount for manual play
       setGameState('cashout')
     } else if (state === 'bomb') {
       setGameState('idle')
@@ -402,13 +406,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setGameState('active')
     
     // Capture the current bet amount for this round before any updates
-    const currentRoundBetAmount = betAmountRef.current
-    console.log(`💰 Starting round with bet amount: $${currentRoundBetAmount}`)
+    const actualBetAmount = betAmountRef.current
+    console.log(`💰 Starting round with bet amount: $${actualBetAmount}`)
     
     // Deduct the bet amount for this round
     setBalance(prevBalance => {
-      const newBalance = prevBalance - currentRoundBetAmount
-      console.log(`💰 Deducted $${currentRoundBetAmount} from balance: $${prevBalance} -> $${newBalance}`)
+      const newBalance = prevBalance - actualBetAmount
+      console.log(`💰 Deducted $${actualBetAmount} from balance: $${prevBalance} -> $${newBalance}`)
       return newBalance
     })
     
@@ -449,8 +453,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
         setBombHitTile(bombTileIndex)
         
         // Update bet after bomb loss  
-        console.log(`💣 LOSS! Lost bet: $${currentRoundBetAmount}`)
-        updateBetAfterResult(false, currentRoundBetAmount)
+        console.log(`💣 LOSS! Lost bet: $${actualBetAmount}`)
+        updateBetAfterResult(false, actualBetAmount)
         
         // Stop explosion animation after it completes
         const stopAnimationTimer = setTimeout(() => {
@@ -507,16 +511,18 @@ export function GameProvider({ children }: { children: ReactNode }) {
         
         // Calculate win amount with the bet amount used for THIS round
         const multiplier = multiplierValues[tilesToClick.length - 1] || multiplierValues[0]
-        const winAmount = currentRoundBetAmount * multiplier
-        console.log(`🏆 WIN! Bet: $${currentRoundBetAmount} x ${multiplier} = $${winAmount}`)
+        const winAmount = actualBetAmount * multiplier
+        console.log(`🏆 WIN! Bet: $${actualBetAmount} x ${multiplier} = $${winAmount}`)
         
         // Now update bet amount for next round
-        updateBetAfterResult(true, currentRoundBetAmount)
+        updateBetAfterResult(true, actualBetAmount)
         
         // Update balance, show win modal and win animation
         setBalance(prevBalance => prevBalance + winAmount)
         setCurrentCashoutValue(winAmount)
+        setCurrentRoundBetAmount(actualBetAmount) // Store the bet amount used for this round
         setWinAmount(winAmount)
+        console.log(`🎯 Setting modal values: winAmount=${winAmount}, actualBetAmount=${actualBetAmount}, multiplier=${multiplier}`)
         setShowWinModal(true)
         setWinAnimationAmount(winAmount)
         setShowWinAnimation(true)
@@ -740,6 +746,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
       getCurrentMultipliers: () => multiplierValues,
       currentCashoutValue,
       setCurrentCashoutValue,
+      currentRoundBetAmount,
+      setCurrentRoundBetAmount,
       animateValueUpdate,
       getNextPotentialValue,
       formatCurrency,

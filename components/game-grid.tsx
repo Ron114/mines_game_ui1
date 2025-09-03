@@ -11,7 +11,7 @@ export default function GameGrid() {
     currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile,
     getNextPotentialValue, formatCurrency, selectedMines, showWinAnimation, winAnimationAmount,
     isAutoMode, selectedTilesForAuto, toggleTileForAutoPlay, isAutoPlaying, animatingTiles, setAnimatingTiles,
-    showAlert, setShowAlert, alertMessage, setAlertMessage
+    showAlert, setShowAlert, alertMessage, setAlertMessage, currentRoundBetAmount
   } = useGame()
   const { playSound } = useAudioContext()
   const [hoveredTile, setHoveredTile] = useState<number | null>(null)
@@ -209,7 +209,7 @@ export default function GameGrid() {
             <div className="modal-divider"></div>
             <div className="multiplier-section">
               <span className="multiplier-label">Multiplier</span>
-              <span className="multiplier-value">x{(currentCashoutValue / betAmount).toFixed(2)}</span>
+              <span className="multiplier-value">x{(currentCashoutValue / (currentRoundBetAmount || betAmount)).toFixed(2)}</span>
             </div>
           </div>
         </div>
