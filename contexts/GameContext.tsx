@@ -333,11 +333,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
         }
         // If onWinAmount is 0 or mode is something else, keep current bet amount
       } else {
-        // When losing (bomb found), always reset to initial bet amount
+        // When losing (bomb found)
         if (config.onLossMode === 'increase' && config.onLossAmount > 0) {
-          // Reset to initial, then apply increase percentage
-          newBetAmount = initialBetAmount + (initialBetAmount * config.onLossAmount / 100)
-          console.log(`🎯 LOSS: Resetting to initial $${initialBetAmount} + ${config.onLossAmount}% = $${newBetAmount}`)
+          // Increase bet by the specified percentage from current bet (allows compounding)
+          newBetAmount = workingBetAmount + (workingBetAmount * config.onLossAmount / 100)
+          console.log(`🎯 LOSS: Increasing bet by ${config.onLossAmount}% from $${workingBetAmount} to $${newBetAmount}`)
         } else if (config.onLossMode === 'reset') {
           // Reset bet to initial bet amount
           newBetAmount = initialBetAmount
@@ -395,7 +395,17 @@ export function GameProvider({ children }: { children: ReactNode }) {
     
     setMinePositions(positions)
     setGameState('active')
-    deductBet()
+    
+    // Capture the current bet amount for this round before any updates
+    const currentRoundBetAmount = betAmountRef.current
+    console.log(`💰 Starting round with bet amount: $${currentRoundBetAmount}`)
+    
+    // Deduct the bet amount for this round
+    setBalance(prevBalance => {
+      const newBalance = prevBalance - currentRoundBetAmount
+      console.log(`💰 Deducted $${currentRoundBetAmount} from balance: $${prevBalance} -> $${newBalance}`)
+      return newBalance
+    })
     
     const tilesToClick = Array.from(selectedTilesForAuto)
     let hasBomb = false
@@ -433,8 +443,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
         setAnimatingTiles(animatingBombs)
         setBombHitTile(bombTileIndex)
         
-        // Update bet after bomb loss
-        updateBetAfterResult(false)
+        // Update bet after bomb loss  
+        console.log(`💣 LOSS! Lost bet: $${currentRoundBetAmount}`)
+        updateBetAfterResult(false, currentRoundBetAmount)
         
         // Stop explosion animation after it completes
         const stopAnimationTimer = setTimeout(() => {
@@ -487,12 +498,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
         setShowAllTiles(true)
         // All selected tiles are diamonds - win!
         
-        // Calculate win amount with CURRENT bet amount before updating it
+        // Calculate win amount with the bet amount used for THIS round
         const multiplier = multiplierValues[tilesToClick.length - 1] || multiplierValues[0]
-        const winAmount = betAmount * multiplier
+        const winAmount = currentRoundBetAmount * multiplier
+        console.log(`🏆 WIN! Bet: $${currentRoundBetAmount} x ${multiplier} = $${winAmount}`)
         
         // Now update bet amount for next round
-        updateBetAfterResult(true)
+        updateBetAfterResult(true, currentRoundBetAmount)
         
         // Update balance, show win modal and win animation
         setBalance(prevBalance => prevBalance + winAmount)
