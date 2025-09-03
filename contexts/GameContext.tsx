@@ -132,6 +132,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   // Refs to track current values for closure issues
   const balanceRef = useRef(balance)
   const betAmountRef = useRef(betAmount)
+  const currentRoundRef = useRef(currentRound)
   
   // Update refs when values change
   useEffect(() => {
@@ -141,6 +142,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     betAmountRef.current = betAmount
   }, [betAmount])
+  
+  useEffect(() => {
+    currentRoundRef.current = currentRound
+  }, [currentRound])
   
   const multiplierMappings: Record<number, number[]> = {
     2: [1.03, 1.13, 1.23, 1.36, 1.5, 1.67, 1.86],
@@ -474,8 +479,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
         
         // After cleanup, continue to next round
         const nextRoundTimer = setTimeout(() => {
-          const nextRound = currentRound + 1
+          const nextRound = currentRoundRef.current + 1
           setCurrentRound(nextRound)
+          currentRoundRef.current = nextRound // Update ref immediately
           
           // Continue if: infinity mode (numberOfRounds = 0) OR haven't reached the limit
           const shouldContinue = autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds
@@ -551,8 +557,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
             return
           }
           
-          const nextRound = currentRound + 1
+          const nextRound = currentRoundRef.current + 1
           setCurrentRound(nextRound)
+          currentRoundRef.current = nextRound // Update ref immediately
           
           // Continue if: infinity mode (numberOfRounds = 0) OR haven't reached the limit
           const shouldContinue = autoPlayConfig.numberOfRounds === 0 || nextRound < autoPlayConfig.numberOfRounds
@@ -581,6 +588,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setInitialBetAmount(betAmount)
     setIsAutoPlaying(true)
     setCurrentRound(0)
+    currentRoundRef.current = 0 // Initialize ref
     console.log(`🚀 Starting autoplay with ${autoPlayConfig.numberOfRounds} rounds (0 = infinite)`)
     
     // Execute the first round after state updates
