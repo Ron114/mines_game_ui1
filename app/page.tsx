@@ -34,6 +34,7 @@ export default function Home() {
       <button
         onClick={handleClose}
         className="desktop-close-btn fixed z-50 text-white hover:text-gray-300 transition-colors duration-200"
+        suppressHydrationWarning
         style={{
           fontSize: "24px",
           lineHeight: "1",

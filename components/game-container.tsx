@@ -177,7 +177,7 @@ export default function GameContainer() {
             display: grid;
             grid-gap: 0;
             width: 100%;
-            max-width: 880px;
+            max-width: 950px;
             margin: 0 auto;
             padding: 0 10px 10px;
             padding-bottom: calc(20px + var(--safe-area-inset-bottom));
@@ -185,7 +185,7 @@ export default function GameContainer() {
               "modeTabs history" min-content
               "betslip chart" min-content
               "betslip range" max-content
-              "stats stats" 1fr / 300px 1fr;
+              "stats stats" 1fr / 340px 1fr;
             column-gap: 20px;
           }
 

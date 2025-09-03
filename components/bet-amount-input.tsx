@@ -45,7 +45,7 @@ export default function BetAmountInput() {
   }
 
   return (
-    <div className={`input-text__wrapper ${isDisabled ? '_disabled' : ''}`}>
+    <div className={`input-text__wrapper mt-[7px] ${isDisabled ? '_disabled' : ''}`}>
       <div className="games-input__wrapper">
         <label htmlFor="bet-amount">
           Bet Amount
@@ -56,6 +56,7 @@ export default function BetAmountInput() {
           type="text"
           inputMode="decimal"
           value={`$${displayAmount}`}
+          suppressHydrationWarning
           onChange={(e) => {
             if (isDisabled) return
             const value = e.target.value.replace("$", "")
@@ -72,25 +73,25 @@ export default function BetAmountInput() {
       </div>
 
       <div className="control-buttons">
-        <button className="button _sm" onClick={handleMinClick}>
+        <button className="button _sm" onClick={handleMinClick} suppressHydrationWarning>
           <div className="button__inner">
             <div className="button__text">min</div>
           </div>
         </button>
 
-        <button className="button _sm" onClick={handleDecrease}>
+        <button className="button _sm" onClick={handleDecrease} suppressHydrationWarning>
           <div className="button__inner">
             <div className="button__text">-</div>
           </div>
         </button>
 
-        <button className="button _sm" onClick={handleIncrease}>
+        <button className="button _sm" onClick={handleIncrease} suppressHydrationWarning>
           <div className="button__inner">
             <div className="button__text">+</div>
           </div>
         </button>
 
-        <button className="button _sm" onClick={handleMaxClick}>
+        <button className="button _sm" onClick={handleMaxClick} suppressHydrationWarning>
           <div className="button__inner">
             <div className="button__text">max</div>
           </div>

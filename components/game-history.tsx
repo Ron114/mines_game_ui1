@@ -4,23 +4,24 @@ import { useGame } from '../contexts/GameContext'
 
 export default function GameHistory() {
   const { multiplierValues, diamondsFound, gameState, isAutoMode, selectedTilesForAuto } = useGame()
-  
+
   const formatMultiplier = (value: number): string => {
     if (value >= 1000) {
       return `x${(value / 1000).toFixed(2)}k`
     }
     return `x${value}`
   }
-  
+
   const historyItems = multiplierValues.slice(0, 7).map(val => formatMultiplier(val))
 
   return (
     <div className="game-history">
       <div className="game-history__inner">
+        <div className='w-full h-full flex absolute top-0 left-0 z-[1]'>
+          <div className='w-[55%] h-[95.5%] bg-[#232327a3] sm:block hidden clipped-right'></div>
+        </div>
         <div className="game-history__inner-container">
           {historyItems.map((multiplier, index) => {
-            // In auto mode, show active state based on selected tiles count
-            // In manual mode, show active state based on actual diamonds found
             const selectedTilesCount = selectedTilesForAuto.size
             const isActive = isAutoMode 
               ? index + 1 === selectedTilesCount && selectedTilesCount > 0
@@ -35,7 +36,7 @@ export default function GameHistory() {
             
             return (
               <div key={index} data-history-item="false" className={itemClass}>
-                <div className="game-history__item-text">{multiplier}</div>
+                <div className="game-history__item-text z-[2]">{multiplier}</div>
               </div>
             )
           })}
@@ -44,7 +45,7 @@ export default function GameHistory() {
 
       <style jsx>{`
         .game-history {
-          background: #0c0c0e;
+          // background-color: #0c0c0e;
           border-radius: 5px;
           height: 41px;
           padding: 1px;
@@ -52,6 +53,8 @@ export default function GameHistory() {
           position: relative;
           overflow: hidden;
           box-shadow: inset 2px 1px 9px #070709;
+          position: relative;
+          background-image: linear-gradient(360deg, rgba(194, 108, 66, 0.79) 0%, rgba(35, 38, 43, 0) 100%), linear-gradient(90.51deg, rgb(93, 102, 111) 9.05%, rgba(18, 20, 21, 0.33) 105.67%);
         }
         
         /* Desktop - match game tiles width and position exactly */
@@ -60,13 +63,17 @@ export default function GameHistory() {
             max-width: 540px;
             margin-left: auto;
             margin-right: auto;
-        
           }
         }
 
         .game-history__inner {
           flex: 1;
           display: flex;
+          
+        }
+
+        .clipped-right {
+          clip-path: polygon(0 0, 100% 0, calc(100% - 35px) 100%, 0 100%);
         }
 
         .game-history__inner-container {
@@ -99,7 +106,7 @@ export default function GameHistory() {
           -webkit-user-select: none;
           -moz-user-select: none;
           -ms-user-select: none;
-          background: rgba(22, 25, 29, 0.8);
+          background: transparent;
           transition: all 0.2s ease;
         }
 
@@ -123,7 +130,7 @@ export default function GameHistory() {
           font-weight: 500;
           color: inherit;
           transition: all 0.2s ease;
-          background: #000;
+          background: transparent;
         }
 
         /* Active state - currently selected diamond */

@@ -107,6 +107,7 @@ export default function MobileBetAmount() {
           spellCheck="false"
           tabIndex={-1}
           className="games-input__number"
+          suppressHydrationWarning
           value={`$${displayAmount}`}
           onChange={handleInputChange}
         />

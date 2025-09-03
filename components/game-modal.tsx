@@ -16,6 +16,15 @@ export default function GameModal() {
           </div>
 
         <style jsx>{`
+          .flex.flex-col.overflow-y-auto.h-full {
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
+          }
+          
+          .flex.flex-col.overflow-y-auto.h-full::-webkit-scrollbar {
+            display: none; 
+          }
+
           /* Desktop layout */
           .game-modal-wrapper {
             position: absolute;
@@ -28,9 +37,8 @@ export default function GameModal() {
 
           .game-modal-content {
             width: 100%;
-            max-width: 72rem;
+            max-width: 75rem;
             border-radius: 0.5rem;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
             background: linear-gradient(135deg, #2a2f35 0%, #1a1e22 50%, #12151a 100%);

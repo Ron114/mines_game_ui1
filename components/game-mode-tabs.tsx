@@ -40,9 +40,13 @@ export default function GameModeTabs({ onModeChange }: GameModeTabsProps) {
 
       <style jsx>{`
         .game-mode-tabs {
-          margin: 5px 0 10px;
           display: flex;
           transition: opacity 0.3s ease;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom : 10px;
         }
 
         .game-mode-tabs._disabled {
@@ -81,7 +85,6 @@ export default function GameModeTabs({ onModeChange }: GameModeTabsProps) {
         @media (min-width: 820px) {
           .game-mode-tabs {
             margin-top: 0;
-            padding-right: 15px;
           }
           
           .mode-btn {

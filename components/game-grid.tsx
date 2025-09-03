@@ -143,8 +143,8 @@ export default function GameGrid() {
             <Image 
               src="/assets/diamond.svg" 
               alt="Diamond" 
-              width={50} 
-              height={50}
+              width={70} 
+              height={70}
               style={{ filter: 'drop-shadow(0 0 10px rgba(92, 217, 245, 0.6))' }}
             />
           </div>
@@ -155,8 +155,8 @@ export default function GameGrid() {
             <Image 
               src="/assets/bomb.svg" 
               alt="Bomb" 
-              width={45} 
-              height={45}
+              width={65} 
+              height={65}
               style={{ filter: 'drop-shadow(0 0 10px rgba(255, 68, 68, 0.6))' }}
             />
           </div>

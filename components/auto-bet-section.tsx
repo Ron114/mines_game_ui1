@@ -289,6 +289,11 @@ export default function AutoBetSection() {
           .game-autobet {
             margin-bottom: 0;
           }
+          
+          /* Hide the Start Autoplay button on mobile */
+          .game-autobet .game-betslip__buttons {
+            display: none;
+          }
 
           .settings-input__wrapper {
             margin-bottom: 12px;

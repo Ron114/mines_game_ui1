@@ -10,10 +10,10 @@ export default function MinesSelector() {
   const [customMines, setCustomMines] = useState(selectedMines.toString())
   const [showError, setShowError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  
+
   // Disable when game is active, in cashout state, or auto-playing
   const isDisabled = gameState === 'active' || gameState === 'cashout' || isAutoPlaying
-  
+
   useEffect(() => {
     setCustomMines(selectedMines.toString())
     // Clear error when selectedMines changes via buttons
@@ -72,19 +72,19 @@ export default function MinesSelector() {
   return (
     <div className={`settings-input__wrapper _mines ${isDisabled ? '_disabled' : ''}`}>
       <div className="settings-input__wrapper-inner">
-        <button className={`button _sm ${selectedMines === 3 ? "_active" : ""}`} onClick={() => handleMineSelect(3)}>
+        <button className={`button _sm ${selectedMines === 3 ? "_active" : ""}`} onClick={() => handleMineSelect(3)} suppressHydrationWarning>
           <div className="button__inner">
             <div className="button__text">3</div>
           </div>
         </button>
 
-        <button className={`button _sm ${selectedMines === 5 ? "_active" : ""}`} onClick={() => handleMineSelect(5)}>
+        <button className={`button _sm ${selectedMines === 5 ? "_active" : ""}`} onClick={() => handleMineSelect(5)} suppressHydrationWarning>
           <div className="button__inner">
             <div className="button__text">5</div>
           </div>
         </button>
 
-        <button className="button _sm _golden" onClick={handleDecrease}>
+        <button className="button _sm _golden" onClick={handleDecrease} suppressHydrationWarning>
           <div className="button__inner">
             <div className="button__text">-</div>
           </div>
@@ -97,25 +97,26 @@ export default function MinesSelector() {
             name="mines"
             type="text"
             value={customMines}
+            suppressHydrationWarning
             onChange={(e) => {
               if (isDisabled) return
-              
+
               const input = e.target.value
-              
+
               // Allow only numbers (and empty string for backspace)
               if (input !== '' && !/^[0-9]+$/.test(input)) {
                 return // Reject non-numeric input
               }
-              
+
               // Allow empty string for user to clear and type
               if (input === '') {
                 setCustomMines('')
                 setShowError(false)
                 return
               }
-              
+
               const value = parseInt(input)
-              
+
               // Cap at maximum 25
               if (value > 25) {
                 setCustomMines('25')
@@ -123,10 +124,10 @@ export default function MinesSelector() {
                 setErrorMessage('Please choose from 2 to 24 mines')
                 return
               }
-              
+
               // Set the input value
               setCustomMines(input)
-              
+
               // Check if value is in valid range (2-24)
               if (value >= 2 && value <= 24) {
                 setSelectedMines(value)
@@ -168,19 +169,19 @@ export default function MinesSelector() {
           )}
         </div>
 
-        <button className="button _sm _golden" onClick={handleIncrease}>
+        <button className="button _sm _golden" onClick={handleIncrease} suppressHydrationWarning>
           <div className="button__inner">
             <div className="button__text">+</div>
           </div>
         </button>
 
-        <button className={`button _sm ${selectedMines === 10 ? "_active" : ""}`} onClick={() => handleMineSelect(10)}>
+        <button className={`button _sm ${selectedMines === 10 ? "_active" : ""}`} onClick={() => handleMineSelect(10)} suppressHydrationWarning>
           <div className="button__inner">
             <div className="button__text">10</div>
           </div>
         </button>
 
-        <button className={`button _sm ${selectedMines === 20 ? "_active" : ""}`} onClick={() => handleMineSelect(20)}>
+        <button className={`button _sm ${selectedMines === 20 ? "_active" : ""}`} onClick={() => handleMineSelect(20)} suppressHydrationWarning>
           <div className="button__inner">
             <div className="button__text">20</div>
           </div>
@@ -207,8 +208,7 @@ export default function MinesSelector() {
           
           .settings-input__wrapper._mines .button {
             height: 35px;
-            top: 1px;
-            width: 36px;
+            width: 35px;
           }
           
           .settings-input__wrapper._mines .games-input__wrapper {
@@ -244,7 +244,7 @@ export default function MinesSelector() {
 
           .settings-input__wrapper._mines .button {
             height: 40px;
-            top: 2px;
+            width: 40px;
           }
 
           .settings-input__wrapper._mines .games-input__wrapper {
@@ -267,69 +267,32 @@ export default function MinesSelector() {
         }
 
         .settings-input__wrapper-inner {
-          background-image: linear-gradient(315deg, #16191d 0%, #252a2e 100%);
+          background-color: #0c0c0e;
           border-radius: 10px;
           flex: 1;
           padding: 1px;
           display: flex;
           position: relative;
-        }
-
-        .settings-input__wrapper._mines .button:first-child {
-          left: 3px;
-        }
-
-        .settings-input__wrapper._mines .button:nth-child(2) {
-          left: 41px;
-        }
-
-        .settings-input__wrapper._mines .button:nth-child(3) {
-          left: 79px;
-        }
-
-        .settings-input__wrapper._mines .button:nth-child(5) {
-          right: 79px;
-        }
-
-        .settings-input__wrapper._mines .button:nth-child(6) {
-          right: 41px;
-        }
-
-        .settings-input__wrapper._mines .button:nth-child(7) {
-          right: 3px;
-        }
-        
-        /* Desktop positioning adjustments */
-        @media (min-width: 820px) {
-          .settings-input__wrapper._mines .button:nth-child(2) {
-            left: 40px;
-          }
-
-          .settings-input__wrapper._mines .button:nth-child(3) {
-            left: 77px;
-          }
-
-          .settings-input__wrapper._mines .button:nth-child(5) {
-            right: 77px;
-          }
-
-          .settings-input__wrapper._mines .button:nth-child(6) {
-            right: 40px;
-          }
+          gap: 1px;
+          align-items: center;
+          justify-content: space-between;
+          height: 100%;
+          height: 48px
         }
 
         .settings-input__wrapper._mines .button {
           z-index: 1;
           border-radius: 7px;
-          height: 45px;
-          position: absolute;
-          top: 3px;
+          height: 44px;
+          width: 44px;
+          position: relative;
+          flex-shrink: 0;
         }
 
         .button {
           cursor: pointer;
           border-radius: 6px;
-          height: 46px;
+          height: 44px;
           padding: 1px;
           transition: opacity .5s cubic-bezier(.075,.82,.165,1);
           display: flex;
@@ -339,6 +302,7 @@ export default function MinesSelector() {
 
         .button._sm {
           width: 44px;
+          height: 44px;
         }
 
         .settings-input__wrapper._mines .button._golden {
@@ -387,8 +351,9 @@ export default function MinesSelector() {
 
         .settings-input__wrapper._mines .games-input__wrapper {
           background: radial-gradient(39.88% 38.48% at 50% 109.2%, #ba6238 0%, rgba(12, 12, 14, 0) 100%), radial-gradient(39.64% 68.64% at 50% -18.72%, #ba6238 0%, rgba(12, 12, 14, 0) 100%), #0c0c0e;
-          border-radius: 9px;
-          height: 47px;
+          height: 100%;
+          flex: 1;
+          margin: 0 4px;
         }
 
         .settings-input__wrapper .games-input__wrapper {
@@ -396,14 +361,13 @@ export default function MinesSelector() {
           margin: 0 !important;
         }
 
+        .settings-input__wrapper._mines .games-input__wrapper {
+          width: auto;
+        }
+
         .games-input__wrapper {
-          background: linear-gradient(98deg, rgba(200, 213, 225, .25) 0%, transparent 100%);
-          border-radius: 11px;
           height: 52px;
-          margin-bottom: 20px;
           position: relative;
-          box-shadow: inset 2px 2px 2px rgba(26, 32, 38, .4);
-          transition: opacity .5s cubic-bezier(.075,.82,.165,1);
         }
 
         .settings-input__wrapper._mines .games-input__wrapper label {
@@ -434,8 +398,7 @@ export default function MinesSelector() {
         .settings-input__wrapper._mines .games-input__wrapper input {
           text-align: center;
           color: #d26d3d;
-          background-color: #0c0c0e;
-          background-image: none;
+          background-color: #0c0c0e; 
           border: none;
           padding-top: 25px;
           font-size: 17px;
@@ -449,7 +412,6 @@ export default function MinesSelector() {
         .games-input__number {
           color: #d6e1ef;
           background-color: transparent;
-          background-image: linear-gradient(135deg, #222326 0%, #222326 25%, #283034 100%);
           border: 1px solid #202328;
           border-radius: 10px;
           outline: none;
@@ -462,7 +424,6 @@ export default function MinesSelector() {
           position: absolute;
           top: 1px;
           left: 1px;
-          box-shadow: inset -2px -2px 10px rgba(255, 255, 255, .05), inset 2px 3px 10px #070709;
         }
 
         .input--error {

@@ -16,7 +16,7 @@ export default function GameHeader() {
   const { isMuted, setMuted } = useAudioContext()
   const settingsButtonRef = useRef<HTMLButtonElement>(null)
   return (
-    <div className="flex items-center relative px-2 text-white/50 pt-2" style={{ maxWidth: '880px', margin: '0 auto', width: '100%' }}>
+    <div className="flex items-center relative px-2 pr-5 text-white/50 pt-2" style={{ maxWidth: '950px', margin: '0 auto', width: '100%' }}>
       {/* Left side - Back button and Logo */}
       <div className="flex items-center">
         <button
@@ -67,6 +67,7 @@ export default function GameHeader() {
         <button 
           className="w-7 h-7 ml-3 cursor-pointer relative"
           onClick={() => setMuted(!isMuted)}
+          suppressHydrationWarning
         >
           <div
             className="flex items-center justify-center w-7 h-7 min-w-full min-h-full rounded-full relative"
@@ -86,6 +87,7 @@ export default function GameHeader() {
           ref={settingsButtonRef}
           className="w-7 h-7 ml-3 cursor-pointer relative"
           onClick={() => setIsSettingsOpen(true)}
+          suppressHydrationWarning
         >
           <div
             className="flex items-center justify-center w-7 h-7 min-w-full min-h-full rounded-full"
