@@ -153,11 +153,10 @@ export default function GameGrid() {
       if (tileType === 'diamond') {
         return (
           <div className="tile-content" style={{ opacity }}>
-            <Image
+            <img
               src="/assets/diamond.svg"
               alt="Diamond"
-              width={70}
-              height={70}
+              className="md:w-16 md:h-16 w-12 h-12"
               style={{ filter: 'drop-shadow(0 0 10px rgba(92, 217, 245, 0.6))' }}
             />
           </div>
@@ -165,11 +164,10 @@ export default function GameGrid() {
       } else if (tileType === 'bomb') {
         return (
           <div className="tile-content" style={{ opacity }}>
-            <Image
+            <img
               src="/assets/bomb.svg"
               alt="Bomb"
-              width={65}
-              height={65}
+              className='md:w-16 md:h-16 w-10 h-10'
               style={{ filter: 'drop-shadow(0 0 10px rgba(255, 68, 68, 0.6))' }}
             />
           </div>
@@ -181,7 +179,7 @@ export default function GameGrid() {
   }
 
   return (
-    <div className="table-holder">
+    <div className="table-holder md:mt-0 mt-[8px]">
       {showWinModal && (
         <div className="win-modal">
           <div className="modal-header">
@@ -264,7 +262,6 @@ export default function GameGrid() {
       <style jsx>{`
         .table-holder {
           position: relative;
-          margin-top: 8px;
         }
 
         @media (max-height: 700px) and (min-width: 820px) {
@@ -435,7 +432,6 @@ export default function GameGrid() {
           }
         }
 
-
         /* Loading tile states */
         .game-tile._loading .game-tile__inner {
           opacity: 1;
@@ -491,6 +487,19 @@ export default function GameGrid() {
           position: relative;
         }
 
+        /* Responsive diamond image sizing */
+        .diamond-image {
+          width: 70px;
+          height: 70px;
+        }
+
+        @media (max-width: 819px) {
+          .diamond-image {
+            width: 55px;
+            height: 55px;
+          }
+        }
+
         /* Explosion animation styles */
         .game-tile._exploding {
           background-image: radial-gradient(33.95% 33.95% at -8.16% 104.08%, rgba(255, 140, 0, .6) 5.7%, rgba(42, 33, 33, 0) 100%), radial-gradient(33.68% 33.68% at 113.68% 107.89%, rgba(255, 69, 0, .6) 0%, rgba(42, 33, 33, 0) 100%), radial-gradient(62.12% 48.25% at 49.48% -8.25%, #ff4500 0%, rgba(46, 38, 38, 0) 100%), linear-gradient(129.86deg, #242526 -1.52%, rgba(36, 29, 29, .21) 107.51%);
@@ -529,6 +538,11 @@ export default function GameGrid() {
           
           .explosion-video {
             border-radius: 0;
+          }
+
+          .diamond-image {
+            width: 55px;
+            height: 55px;
           }
         }
 
@@ -861,12 +875,9 @@ export default function GameGrid() {
         @media (min-width: 1400px) {
           .win-amount-animation {
             top: 150px;
-            right: calc(50% - 300px);
+            right: calc(50% - 330px);
           }
         }
-
-
-
       `}</style>
     </div>
   )

@@ -1,6 +1,6 @@
 "use client"
 
-import { X, FileText, Volume2, VolumeX } from "lucide-react"
+import { X, FileText, Volume2, VolumeX, Edit } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { useAudioContext } from '../contexts/AudioContext'
 
@@ -15,7 +15,9 @@ interface SettingsModalProps {
 export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRules, triggerRef }: SettingsModalProps) {
   const { volume, setVolume, isMuted, setMuted } = useAudioContext()
   const [isDragging, setIsDragging] = useState(false)
-  const [modalPosition, setModalPosition] = useState({ top: 60, right: 20 })
+  const [modalPosition, setModalPosition] = useState({ top: 50, right: 20 })
+  const [nickname, setNickname] = useState("Diplomatic Frog")
+  const [isNicknameFocused, setIsNicknameFocused] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
 
   // Calculate modal position based on settings button position
@@ -28,7 +30,7 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
         const containerRect = headerContainer.getBoundingClientRect()
 
         // Position modal below the settings button with some spacing
-        const top = triggerRect.bottom - containerRect.top + 10
+        const top = triggerRect.bottom - containerRect.top + 5
         const right = containerRect.right - triggerRect.right
 
         setModalPosition({ top, right })
@@ -78,8 +80,8 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
         minHeight: "260px",
         boxShadow: "0 0 1.25rem rgba(0, 0, 0, .5)",
         backdropFilter: "blur(10px)",
-        top: `${modalPosition.top}px`,
-        right: `${modalPosition.right}px`,
+        top: `50px`,
+        right: `20px`,
       }}
     >
       {/* Header */}
@@ -112,22 +114,18 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
         <div
           className="relative"
           style={{
-            background: "linear-gradient(148.95deg, rgba(190, 191, 192, 0.8) -14.69%, rgba(35, 47, 57, 0.23) 180.58%)",
+            // background: "linear-gradient(148.95deg, rgba(190, 191, 192, 0.8) -14.69%, rgba(35, 47, 57, 0.23) 180.58%)",
             borderRadius: "0.6875rem",
-            height: "2.875rem",
+            height: "3.1rem",
             padding: "0.0625rem",
             boxShadow: "inset 0.125rem 0.125rem 0.125rem rgba(26, 32, 38, 0.4)",
           }}
         >
           <div
-            className="relative w-full h-full"
+            className="relative w-full h-full border-b-2 border-[#393b3d] border-r-2"
             style={{
               background: "#0f1012",
-              borderRadius: "0.625rem",
-              boxShadow: "inset 0.125rem 0.1875rem 0.625rem #070709, inset -0.125rem -0.125rem 0.625rem rgba(255, 255, 255, 0.05)",
-              border: "none",
-              borderBottom: "1px solid rgba(255, 255, 255, 0.15)",
-              borderRight: "1px solid rgba(255, 255, 255, 0.15)",
+              borderRadius: "0.375rem",
             }}
           >
             <label
@@ -140,9 +138,28 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
             >
               Nickname
             </label>
+
+            {/* Character count - only show when focused */}
+            {isNicknameFocused && (
+              <div
+                className="absolute text-white/50 font-medium"
+                style={{
+                  fontSize: "0.625rem",
+                  top: "0.5rem",
+                  right: "2.5rem",
+                }}
+              >
+                {nickname.length}/32
+              </div>
+            )}
+
             <input
               type="text"
-              defaultValue="Diplomatic Frog"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              onFocus={() => setIsNicknameFocused(true)}
+              onBlur={() => setIsNicknameFocused(false)}
+              maxLength={32}
               className="absolute w-full h-full bg-transparent border-none outline-none text-white font-bold"
               style={{
                 padding: "1.25rem 3.0625rem 0.375rem 0.625rem",
@@ -150,6 +167,23 @@ export default function SettingsModal({ isOpen, onClose, onOpenLimits, onOpenRul
                 color: "#d6e1ef",
               }}
             />
+
+            {/* Edit icon - only show when focused */}
+            {isNicknameFocused && (
+              <div
+                className="absolute cursor-pointer"
+                style={{
+                  bottom: "0.375rem",
+                  right: "0.625rem",
+                }}
+              >
+                <svg version="1.1" id="Edit--Streamline-Carbon" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 16 16" enableBackground="new 0 0 32 32" height="16" width="16">
+                  <path d="M1 13h14v1H1Z" fill="#969698" strokeWidth="1"></path>
+                  <path d="M12.7 4.5c0.4 -0.4 0.4 -1 0 -1.4l-1.8 -1.8c-0.4 -0.4 -1 -0.4 -1.4 0l-7.5 7.5V12h3.2l7.5 -7.5zm-2.5 -2.5L12 3.8l-1.5 1.5L8.7 3.5l1.5 -1.5zM3 11v-1.8l5 -5 1.8 1.8 -5 5H3z" fill="#969698" strokeWidth="1"></path>
+                  <path id="_Transparent_Rectangle_" d="M0 0h16v16H0Z" fill="none" strokeWidth="1"></path>
+                </svg>
+              </div>
+            )}
           </div>
         </div>
       </div>
