@@ -15,8 +15,8 @@ export default function GameHistory() {
   const historyItems = multiplierValues.slice(0, 7).map(val => formatMultiplier(val))
 
   return (
-    <div className="game-history">
-      <div className="game-history__inner">
+    <div className="game-history md:mt-0 -mt-2">
+      <div className="game-history__inner relative">
         <div className='w-full h-full flex absolute top-0 left-0 z-[1]'>
           <div className='w-[55%] h-[95.5%] bg-[#232327a3] sm:block hidden clipped-right'></div>
         </div>
@@ -45,7 +45,6 @@ export default function GameHistory() {
 
       <style jsx>{`
         .game-history {
-          // background-color: #0c0c0e;
           border-radius: 5px;
           height: 41px;
           padding: 1px;

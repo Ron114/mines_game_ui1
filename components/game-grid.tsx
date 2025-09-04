@@ -6,19 +6,20 @@ import { useState, useEffect } from 'react'
 import { useAudioContext } from '../contexts/AudioContext'
 
 export default function GameGrid() {
-  const { 
-    gameState, tileStates, setTileState, loadingTiles, setTileLoading, showWinModal, 
-    currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile, 
+  const {
+    gameState, tileStates, setTileState, loadingTiles, setTileLoading, showWinModal,
+    currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile,
     getNextPotentialValue, formatCurrency, selectedMines, showWinAnimation, winAnimationAmount,
-    isAutoMode, selectedTilesForAuto, toggleTileForAutoPlay, isAutoPlaying, animatingTiles, setAnimatingTiles
+    isAutoMode, selectedTilesForAuto, toggleTileForAutoPlay, isAutoPlaying, animatingTiles, setAnimatingTiles,
+    showAlert, setShowAlert, alertMessage, setAlertMessage
   } = useGame()
   const { playSound } = useAudioContext()
   const [hoveredTile, setHoveredTile] = useState<number | null>(null)
-  
+
   const tiles = Array.from({ length: 25 }, (_, index) => index)
 
   const [bombClicked, setBombClicked] = useState(false)
-  
+
   useEffect(() => {
     if (gameState === 'idle' && !showAllTiles) {
       setBombClicked(false)
@@ -34,7 +35,7 @@ export default function GameGrid() {
       return '/assets/audio/diamond3.mp3'
     }
   }
-  
+
   const handleTileClick = (tileIndex: number) => {
     // Auto mode tile selection (pre-selection phase)
     if (isAutoMode && gameState === 'idle' && !isAutoPlaying) {
@@ -42,13 +43,25 @@ export default function GameGrid() {
       toggleTileForAutoPlay(tileIndex)
       return
     }
-    
+
+    // Show alert if game is idle and not in auto mode
+    if (gameState === 'idle' && !isAutoMode) {
+      setAlertMessage('Please press "Start Game"')
+      setShowAlert(true)
+      
+      // Auto-hide alert after 2.5 seconds
+      setTimeout(() => {
+        setShowAlert(false)
+      }, 2500)
+      return
+    }
+
     // Regular game tile clicking
     if ((gameState !== 'active' && gameState !== 'cashout') || tileStates[tileIndex] || loadingTiles.has(tileIndex) || showAllTiles || bombClicked) return
 
     playSound('/assets/audio/tile_click.mp3')
     const result = getTileType(tileIndex)
-    
+
     if (result === 'bomb') {
       setBombClicked(true)
     }
@@ -57,16 +70,16 @@ export default function GameGrid() {
     if (isFirstClick) {
       deductBet()
     }
-    
+
     setTileLoading(tileIndex, true)
-    
+
     setTimeout(() => {
       setTileLoading(tileIndex, false)
-      
+
       if (result === 'bomb') {
         playSound('/assets/audio/bomb.mp3')
         setAnimatingTiles(prev => new Set([...prev, tileIndex]))
-        
+
         setTimeout(() => {
           setTileState(tileIndex, result)
           setAnimatingTiles(prev => {
@@ -89,7 +102,7 @@ export default function GameGrid() {
     const shouldShowContent = state || (showAllTiles && !isLoading)
     const isSelectedForAuto = isAutoMode && selectedTilesForAuto.has(tileIndex) && !isAutoPlaying
     let classes = 'game-tile'
-    
+
     if (isLoading) {
       classes += ' _loading'
     } else if (isAnimating) {
@@ -105,7 +118,7 @@ export default function GameGrid() {
     } else if (isSelectedForAuto) {
       classes += ' _selected-auto'
     }
-    
+
     return classes
   }
 
@@ -114,7 +127,7 @@ export default function GameGrid() {
     const isAnimating = animatingTiles.has(tileIndex)
     const isLoading = loadingTiles.has(tileIndex)
     const shouldShowContent = state || (showAllTiles && !isLoading)
-    
+
     if (isLoading) {
       return null
     } else if (isAnimating) {
@@ -125,7 +138,7 @@ export default function GameGrid() {
             autoPlay
             muted
             playsInline
-            onEnded={() => {}}
+            onEnded={() => { }}
           >
             <source src="/assets/bombgif.mp4" type="video/mp4" />
           </video>
@@ -136,14 +149,14 @@ export default function GameGrid() {
       const isHitBomb = bombHitTile === tileIndex
       const isSelectedForAutoWin = isAutoMode && selectedTilesForAuto.has(tileIndex) && tileType === 'diamond'
       const opacity = showAllTiles && !isHitBomb && !isSelectedForAutoWin ? 0.3 : 1
-      
+
       if (tileType === 'diamond') {
         return (
           <div className="tile-content" style={{ opacity }}>
-            <Image 
-              src="/assets/diamond.svg" 
-              alt="Diamond" 
-              width={70} 
+            <Image
+              src="/assets/diamond.svg"
+              alt="Diamond"
+              width={70}
               height={70}
               style={{ filter: 'drop-shadow(0 0 10px rgba(92, 217, 245, 0.6))' }}
             />
@@ -152,10 +165,10 @@ export default function GameGrid() {
       } else if (tileType === 'bomb') {
         return (
           <div className="tile-content" style={{ opacity }}>
-            <Image 
-              src="/assets/bomb.svg" 
-              alt="Bomb" 
-              width={65} 
+            <Image
+              src="/assets/bomb.svg"
+              alt="Bomb"
+              width={65}
               height={65}
               style={{ filter: 'drop-shadow(0 0 10px rgba(255, 68, 68, 0.6))' }}
             />
@@ -163,46 +176,48 @@ export default function GameGrid() {
         )
       }
     }
-    
+
     return null
   }
 
   return (
-          <div className="table-holder">
+    <div className="table-holder">
       {showWinModal && (
-      <div className="win-modal">
-        <div className="modal-header">
-          <div className="header-diamond left-diamond">
-            <Image 
-              src="/assets/1diamond.png" 
-              alt="Diamond" 
-              width={42} 
-              height={42}
-              className="diamond-image"
-            />
+        <div className="win-modal">
+          <div className="modal-header">
+            <div className="header-diamond left-diamond">
+              <Image
+                src="/assets/1diamond.png"
+                alt="Diamond"
+                width={42}
+                height={42}
+                className="diamond-image"
+              />
+            </div>
+            <div className="win-text">You win!</div>
+            <div className="header-diamond right-diamond">
+              <Image
+                src="/assets/2diamond.png"
+                alt="Diamond"
+                width={55}
+                height={55}
+                className="diamond-image"
+              />
+            </div>
           </div>
-          <div className="win-text">You win!</div>
-          <div className="header-diamond right-diamond">
-            <Image 
-              src="/assets/2diamond.png" 
-              alt="Diamond" 
-              width={55} 
-              height={55}
-              className="diamond-image"
-            />
+
+          <div className="modal-body">
+            <div className="win-amount">{formatCurrency(currentCashoutValue)}</div>
+            <div className="modal-divider"></div>
+            <div className="multiplier-section">
+              <span className="multiplier-label">Multiplier</span>
+              <span className="multiplier-value">x{(currentCashoutValue / betAmount).toFixed(2)}</span>
+            </div>
           </div>
         </div>
-        
-        <div className="modal-body">
-          <div className="win-amount">{formatCurrency(currentCashoutValue)}</div>
-          <div className="modal-divider"></div>
-          <div className="multiplier-section">
-            <span className="multiplier-label">Multiplier</span>
-            <span className="multiplier-value">x{(currentCashoutValue / betAmount).toFixed(2)}</span>
-          </div>
-        </div>
-      </div>
       )}
+
+
 
       {/* Win Amount Animation */}
       {showWinAnimation && (
@@ -215,8 +230,8 @@ export default function GameGrid() {
 
       <div className="game-tiles">
         {tiles.map((tileIndex) => (
-          <div 
-            key={tileIndex} 
+          <div
+            key={tileIndex}
             className={getTileClass(tileIndex)}
             onClick={() => handleTileClick(tileIndex)}
             onMouseEnter={() => setHoveredTile(tileIndex)}
@@ -271,17 +286,14 @@ export default function GameGrid() {
         /* Mobile responsive styles */
         @media (max-width: 819px) {
           .table-holder {
-            margin-top: 0;
-            padding: 0 10px;
+            margin-top: -7px;
           }
 
           .game-tiles {
             width: 100%;
             max-width: 100%;
             grid-gap: calc((100vw - 20px) / 30);
-            // padding-bottom: 30px;
             grid-template-rows: repeat(5, calc((100vw - 20px) / 6));
-            grid-template-columns: repeat(5, calc((100vw - 20px) / 6));
             justify-content: center;
           }
         }
@@ -362,7 +374,7 @@ export default function GameGrid() {
         /* Mobile responsive tile styles */
         @media (max-width: 819px) {
           .game-tile {
-            border-radius: 8px;
+            border-radius: 15px;
             font-size: 20px;
             line-height: 40px;
             box-shadow: 2px 2px 3px rgba(10, 9, 9, 0.4);
@@ -852,6 +864,8 @@ export default function GameGrid() {
             right: calc(50% - 300px);
           }
         }
+
+
 
       `}</style>
     </div>

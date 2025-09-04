@@ -132,7 +132,7 @@ export default function GameStatistics() {
 
   return (
     <div className="game-statistic">
-      <div className="border"></div>
+      <div className="w-full h-[1px] bg-[#353a42] mb-[20px]"></div>
 
       <ul className="tabs">
         {tabs.map((tab) => (

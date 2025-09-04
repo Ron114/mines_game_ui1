@@ -27,7 +27,7 @@ export default function GameContainer() {
   }
   
   return (
-    <div className="game-container mt-2">
+    <div className="game-container md:mt-4 mt-2">
       <div className="desktop-layout">
         <div className="mode-tabs">
           <GameModeTabs onModeChange={handleModeChange} />

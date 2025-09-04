@@ -58,6 +58,10 @@ interface GameContextType {
   setIsDimmingCheckout: (dimming: boolean) => void
   clearAllAnimations: () => void
   clearCashOutTimers: () => void
+  showAlert: boolean
+  setShowAlert: (show: boolean) => void
+  alertMessage: string
+  setAlertMessage: (message: string) => void
   
   // Auto-play functionality
   isAutoPlaying: boolean
@@ -105,6 +109,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [isCashingOut, setIsCashingOut] = useState(false)
   const [isDimmingCheckout, setIsDimmingCheckout] = useState(false)
   const [cashOutTimers, setCashOutTimers] = useState<NodeJS.Timeout[]>([])
+  const [showAlert, setShowAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
   
   // Auto-play state
   const [isAutoPlaying, setIsAutoPlaying] = useState(false)
@@ -645,9 +651,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }
 
   const startNewGame = () => {
-    clearAllAnimations()
-    generateMinePositions(selectedMines)
-    setGameState('active')
+    clearAllAnimations();
+    generateMinePositions(selectedMines);
+    setTimeout(() => {
+      setGameState('active');
+    }, 1000);
   }
 
   return (
@@ -696,6 +704,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setIsDimmingCheckout,
       clearAllAnimations,
       clearCashOutTimers,
+      showAlert,
+      setShowAlert,
+      alertMessage,
+      setAlertMessage,
       
       isAutoPlaying,
       setIsAutoPlaying,
