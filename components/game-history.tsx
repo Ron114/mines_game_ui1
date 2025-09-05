@@ -174,7 +174,7 @@ export default function GameHistory() {
             /* Ensure items don't shrink below minimum width */
             min-width: 0;
             flex: 0 0 auto;
-            width: calc(20% - 0.8px);
+            width: calc(20% - 5px);
           }
 
           .game-history__item-text {

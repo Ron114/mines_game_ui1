@@ -102,9 +102,11 @@ export default function GameContainer() {
           )}
         </div>
         
-        <div className="mobile-stats">
+        <div className="mobile-stats md:p-0 pb-36">
           <GameStatistics />
+          <span className="md:hidden block">Toap on any bet to see details</span>
         </div>
+
       </div>
 
       <style jsx>{`
@@ -166,6 +168,17 @@ export default function GameContainer() {
 
         .mobile-stats {
           margin: 16px 10px 0 10px;
+          position: relative
+        }
+
+        .mobile-stats span {
+          font-size: 10px;
+          color: #8a9ba8;
+          text-align: center;
+          position: absolute;
+          bottom: 160px;
+          left: 50%;
+          transform: translateX(-50%);
         }
 
         @media (min-width: 820px) {
