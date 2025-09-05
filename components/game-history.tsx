@@ -1,9 +1,11 @@
 "use client"
 
 import { useGame } from '../contexts/GameContext'
+import { useEffect, useRef } from 'react'
 
 export default function GameHistory() {
   const { multiplierValues, diamondsFound, gameState, isAutoMode, selectedTilesForAuto } = useGame()
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   const formatMultiplier = (value: number): string => {
     if (value >= 1000) {
@@ -12,8 +14,37 @@ export default function GameHistory() {
     return `x${value}`
   }
 
-  // Show all items with horizontal scrolling on mobile, 7 on desktop
-  const historyItems = multiplierValues.slice(0, 7).map(val => formatMultiplier(val))
+  // Show all multiplier values for horizontal scrolling
+  const historyItems = multiplierValues.map(val => formatMultiplier(val))
+
+  // Auto-scroll to center the active multiplier
+  useEffect(() => {
+    if (!scrollContainerRef.current) return
+
+    const selectedTilesCount = selectedTilesForAuto.size
+    let activeIndex = -1
+
+    if (isAutoMode && selectedTilesCount > 0) {
+      activeIndex = selectedTilesCount - 1
+    } else if (gameState === 'cashout' && diamondsFound > 0) {
+      activeIndex = diamondsFound - 1
+    } else if (gameState === 'active' && diamondsFound > 0) {
+      activeIndex = diamondsFound - 1
+    }
+
+    if (activeIndex >= 0 && activeIndex < historyItems.length) {
+      const container = scrollContainerRef.current
+      // Use responsive item width: 60px on mobile, 70px on desktop
+      const itemWidth = window.innerWidth <= 819 ? 61 : 71 // +1 for gap
+      const containerWidth = container.offsetWidth
+      const scrollPosition = (activeIndex * itemWidth) - (containerWidth / 2) + (itemWidth / 2)
+      
+      container.scrollTo({
+        left: Math.max(0, scrollPosition),
+        behavior: 'smooth'
+      })
+    }
+  }, [diamondsFound, selectedTilesForAuto.size, gameState, isAutoMode, historyItems.length])
 
   return (
     <div className="game-history md:mt-0 -mt-2">
@@ -21,7 +52,7 @@ export default function GameHistory() {
         <div className='w-full h-full flex absolute top-0 left-0 z-[1]'>
           <div className='w-[55%] h-[95.5%] bg-[#232327a3] sm:block hidden clipped-right'></div>
         </div>
-        <div className="game-history__inner-container">
+        <div className="game-history__inner-container" ref={scrollContainerRef}>
           {historyItems.map((multiplier, index) => {
             const selectedTilesCount = selectedTilesForAuto.size
             const isActive = isAutoMode 
@@ -89,6 +120,16 @@ export default function GameHistory() {
           overflow-x: auto;
           overflow-y: hidden;
           gap: 1px;
+          /* Hide scrollbar but keep scrolling functionality */
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* Internet Explorer 10+ */
+          /* Ensure smooth scrolling on touch devices */
+          -webkit-overflow-scrolling: touch;
+        }
+
+        /* Hide scrollbar for WebKit browsers */
+        .game-history__inner-container::-webkit-scrollbar {
+          display: none;
         }
 
         .game-history__item {
@@ -96,7 +137,10 @@ export default function GameHistory() {
           color: #d26d3d;
           justify-content: center;
           align-items: center;
-          flex: 1;
+          /* Fixed width instead of flex: 1 */
+          width: 70px;
+          min-width: 70px;
+          flex: 0 0 70px;
           padding: 2px;
           font-size: 10px;
           font-weight: 500;
@@ -154,27 +198,15 @@ export default function GameHistory() {
 
           .game-history__inner-container {
             border-radius: 4px;
-            /* Enable horizontal scrolling on mobile to show all items */
-            overflow-x: auto;
-            /* Hide scrollbar but keep scrolling functionality */
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* Internet Explorer 10+ */
-            /* Ensure smooth scrolling on touch devices */
-            -webkit-overflow-scrolling: touch;
             touch-action: pan-x;
-          }
-
-          /* Hide scrollbar for WebKit browsers */
-          .game-history__inner-container::-webkit-scrollbar {
-            display: none;
           }
 
           .game-history__item {
             font-size: 9px;
-            /* Ensure items don't shrink below minimum width */
-            min-width: 0;
-            flex: 0 0 auto;
-            width: calc(20% - 5px);
+            /* Keep fixed width on mobile too */
+            width: 60px;
+            min-width: 60px;
+            flex: 0 0 60px;
           }
 
           .game-history__item-text {
@@ -189,9 +221,10 @@ export default function GameHistory() {
           }
 
           .game-history__item {
-            /* Show all 7 items on desktop */
-            flex: 1;
-            min-width: 0;
+            /* Fixed width on desktop too for consistent scrolling */
+            width: 70px;
+            min-width: 70px;
+            flex: 0 0 70px;
           }
         }
       `}</style>
