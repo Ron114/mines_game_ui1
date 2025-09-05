@@ -1,6 +1,10 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+* {
+  background-color: #15181d;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
