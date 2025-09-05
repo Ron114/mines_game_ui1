@@ -8,7 +8,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative" style={{ height: '100vh', overflow: 'auto' }}>
       {/* Desktop background - hidden on mobile */}
       <div className="desktop-bg min-h-screen bg-black">
         <div

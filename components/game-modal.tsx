@@ -61,6 +61,10 @@ export default function GameModal() {
               justify-content: unset;
               padding: 0;
               min-height: 100vh;
+              height: 100vh;
+              /* Prevent overscroll and pull-to-refresh */
+              overscroll-behavior: none;
+              overflow: hidden;
             }
 
             .game-modal-content {
@@ -70,7 +74,18 @@ export default function GameModal() {
               background: linear-gradient(135deg, #2a2f35 0%, #1a1e22 50%, #12151a 100%);
               max-height: none;
               min-height: 100vh;
+              height: 100vh;
               border: none;
+              /* Prevent overscroll and pull-to-refresh */
+              overscroll-behavior: none;
+            }
+            
+            .flex.flex-col.overflow-y-auto.h-full {
+              /* Allow internal scrolling but prevent overscroll */
+              overscroll-behavior: contain;
+              height: 100vh;
+              overflow-y: auto;
+              overflow-x: hidden;
             }
           }
         `}</style>
