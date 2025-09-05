@@ -102,7 +102,7 @@ export default function GameContainer() {
           )}
         </div>
 
-        <div className="mobile-stats md:p-0 pb-36">
+        <div className="mobile-stats md:p-0">
           <GameStatistics />
           <span className="md:hidden block">Toap on any bet to see details</span>
         </div>
@@ -179,7 +179,7 @@ export default function GameContainer() {
           color: #8a9ba8;
           text-align: center;
           position: absolute;
-          bottom: 160px;
+          bottom: 25px;
           left: 50%;
           transform: translateX(-50%);
         }
