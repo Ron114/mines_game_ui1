@@ -34,9 +34,9 @@ export default function GameHistory() {
 
     if (activeIndex >= 0 && activeIndex < historyItems.length) {
       const container = scrollContainerRef.current
-      // Use responsive item width: 60px on mobile, 70px on desktop
-      const itemWidth = window.innerWidth <= 819 ? 61 : 71 // +1 for gap
+      // Calculate actual item width based on even smaller calculation
       const containerWidth = container.offsetWidth
+      const itemWidth = (containerWidth - 16) / 7 // Match the CSS calculation
       const scrollPosition = (activeIndex * itemWidth) - (containerWidth / 2) + (itemWidth / 2)
       
       container.scrollTo({
@@ -137,10 +137,11 @@ export default function GameHistory() {
           color: #d26d3d;
           justify-content: center;
           align-items: center;
-          /* Fixed width instead of flex: 1 */
-          width: 70px;
-          min-width: 70px;
-          flex: 0 0 70px;
+          /* Calculate width so exactly 7 items are visible at once */
+          /* Even smaller width calculation to fit exactly 7 items */
+          width: calc((100% - 16px) / 7); /* More aggressive reduction */
+          min-width: calc((100% - 16px) / 7);
+          flex: 0 0 calc((100% - 16px) / 7);
           padding: 2px;
           font-size: 10px;
           font-weight: 500;
@@ -203,10 +204,10 @@ export default function GameHistory() {
 
           .game-history__item {
             font-size: 9px;
-            /* Keep fixed width on mobile too */
-            width: 60px;
-            min-width: 60px;
-            flex: 0 0 60px;
+            /* Calculate width so exactly 7 items are visible on mobile too */
+            width: calc((100% - 16px) / 7);
+            min-width: calc((100% - 16px) / 7);
+            flex: 0 0 calc((100% - 16px) / 7);
           }
 
           .game-history__item-text {
@@ -221,10 +222,10 @@ export default function GameHistory() {
           }
 
           .game-history__item {
-            /* Fixed width on desktop too for consistent scrolling */
-            width: 70px;
-            min-width: 70px;
-            flex: 0 0 70px;
+            /* Calculate width so exactly 7 items are visible on desktop */
+            width: calc((100% - 16px) / 7);
+            min-width: calc((100% - 16px) / 7);
+            flex: 0 0 calc((100% - 16px) / 7);
           }
         }
       `}</style>
