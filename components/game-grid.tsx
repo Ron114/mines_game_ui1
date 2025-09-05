@@ -186,7 +186,7 @@ export default function GameGrid() {
   }
 
   return (
-    <div className="table-holder md:mt-0 mt-[8px]">
+    <div className="table-holder md:mt-0 mt-[10px]">
       {showWinModal && (
         <div className="win-modal">
           <div className="modal-header">
@@ -222,8 +222,6 @@ export default function GameGrid() {
           </div>
         </div>
       )}
-
-
 
       {/* Win Amount Animation */}
       {showWinAnimation && (
@@ -291,14 +289,14 @@ export default function GameGrid() {
         /* Mobile responsive styles */
         @media (max-width: 819px) {
           .table-holder {
-            margin-top: -7px;
+            margin-top: -5px;
           }
 
           .game-tiles {
             width: 100%;
             max-width: 100%;
-            grid-gap: calc((100vw - 20px) / 30);
-            grid-template-rows: repeat(5, calc((100vw - 20px) / 6));
+            grid-gap: calc((100vw - 60px) / 30);
+            grid-template-rows: repeat(5, calc((100vw) / 6));
             justify-content: center;
           }
         }
@@ -306,7 +304,7 @@ export default function GameGrid() {
         /* Desktop styles */
         @media (min-width: 820px) {
           .game-tiles {
-            grid-gap: 10px;
+            grid-gap: 12px;
             padding-bottom: 30px;
             max-width: 540px;
           }

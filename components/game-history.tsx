@@ -12,6 +12,7 @@ export default function GameHistory() {
     return `x${value}`
   }
 
+  // Show 5 items on mobile, 7 on desktop
   const historyItems = multiplierValues.slice(0, 7).map(val => formatMultiplier(val))
 
   return (
@@ -154,21 +155,53 @@ export default function GameHistory() {
 
           .game-history__inner-container {
             border-radius: 4px;
+            /* Show only 5 items on mobile, hide the rest */
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #a35231 transparent;
+          }
+
+          .game-history__inner-container::-webkit-scrollbar {
+            height: 3px;
+          }
+
+          .game-history__inner-container::-webkit-scrollbar-track {
+            background: transparent;
+          }
+
+          .game-history__inner-container::-webkit-scrollbar-thumb {
+            background: #a35231;
+            border-radius: 3px;
           }
 
           .game-history__item {
             font-size: 9px;
+            /* Ensure items don't shrink below minimum width */
+            min-width: 0;
+            flex: 0 0 auto;
+            width: calc(20% - 0.8px); /* 5 items = 20% each minus gap */
           }
 
           .game-history__item-text {
             font-size: 9px;
             border-radius: 3px;
           }
+
+          /* Hide items beyond the 5th on mobile */
+          .game-history__item:nth-child(n+6) {
+            display: none;
+          }
         }
 
         @media (min-width: 820px) {
           .game-history {
             grid-area: history;
+          }
+
+          .game-history__item {
+            /* Show all 7 items on desktop */
+            flex: 1;
+            min-width: 0;
           }
         }
       `}</style>
