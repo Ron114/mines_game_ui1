@@ -55,12 +55,17 @@ export default function GameHistory() {
         <div className="game-history__inner-container" ref={scrollContainerRef}>
           {historyItems.map((multiplier, index) => {
             const selectedTilesCount = selectedTilesForAuto.size
+            const isLastMultiplier = index === historyItems.length - 1
+            
             const isActive = isAutoMode 
-              ? index + 1 === selectedTilesCount && selectedTilesCount > 0
-              : diamondsFound === index + 1 && gameState === 'cashout'
+              ? (index + 1 === selectedTilesCount && selectedTilesCount > 0) || 
+                (isLastMultiplier && selectedTilesCount > historyItems.length)
+              : (diamondsFound === index + 1 && gameState === 'cashout') ||
+                (isLastMultiplier && diamondsFound > historyItems.length && (gameState === 'active' || gameState === 'cashout'))
+                
             const isResulted = isAutoMode 
-              ? index + 1 < selectedTilesCount 
-              : diamondsFound > index + 1
+              ? index + 1 < selectedTilesCount && !isActive
+              : diamondsFound > index + 1 && !isActive
             
             let itemClass = 'game-history__item'
             if (isActive) itemClass += ' _active'
