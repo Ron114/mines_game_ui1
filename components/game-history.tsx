@@ -12,7 +12,7 @@ export default function GameHistory() {
     return `x${value}`
   }
 
-  // Show 5 items on mobile, 7 on desktop
+  // Show all items with horizontal scrolling on mobile, 7 on desktop
   const historyItems = multiplierValues.slice(0, 7).map(val => formatMultiplier(val))
 
   return (
@@ -82,7 +82,6 @@ export default function GameHistory() {
           border: 1px solid #1e2122;
           border-radius: 5px;
           flex: 1;
-          max-width: 100%;
           height: 100%;
           padding: 2px;
           display: flex;
@@ -155,23 +154,19 @@ export default function GameHistory() {
 
           .game-history__inner-container {
             border-radius: 4px;
-            /* Show only 5 items on mobile, hide the rest */
+            /* Enable horizontal scrolling on mobile to show all items */
             overflow-x: auto;
-            scrollbar-width: thin;
-            scrollbar-color: #a35231 transparent;
+            /* Hide scrollbar but keep scrolling functionality */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer 10+ */
+            /* Ensure smooth scrolling on touch devices */
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-x;
           }
 
+          /* Hide scrollbar for WebKit browsers */
           .game-history__inner-container::-webkit-scrollbar {
-            height: 3px;
-          }
-
-          .game-history__inner-container::-webkit-scrollbar-track {
-            background: transparent;
-          }
-
-          .game-history__inner-container::-webkit-scrollbar-thumb {
-            background: #a35231;
-            border-radius: 3px;
+            display: none;
           }
 
           .game-history__item {
@@ -179,17 +174,12 @@ export default function GameHistory() {
             /* Ensure items don't shrink below minimum width */
             min-width: 0;
             flex: 0 0 auto;
-            width: calc(20% - 0.8px); /* 5 items = 20% each minus gap */
+            width: calc(20% - 0.8px);
           }
 
           .game-history__item-text {
             font-size: 9px;
             border-radius: 3px;
-          }
-
-          /* Hide items beyond the 5th on mobile */
-          .game-history__item:nth-child(n+6) {
-            display: none;
           }
         }
 
