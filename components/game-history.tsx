@@ -34,9 +34,9 @@ export default function GameHistory() {
 
     if (activeIndex >= 0 && activeIndex < historyItems.length) {
       const container = scrollContainerRef.current
-      // Calculate actual item width based on even smaller calculation
+      // Use actual item width from CSS (75px desktop, 50px mobile + 1px gap)
+      const itemWidth = window.innerWidth >= 820 ? 76 : 51 // item width + gap
       const containerWidth = container.offsetWidth
-      const itemWidth = (containerWidth - 16) / 7 // Match the CSS calculation
       const scrollPosition = (activeIndex * itemWidth) - (containerWidth / 2) + (itemWidth / 2)
       
       container.scrollTo({
@@ -100,7 +100,7 @@ export default function GameHistory() {
         .game-history__inner {
           flex: 1;
           display: flex;
-          
+          min-width: 0;
         }
 
         .clipped-right {
@@ -120,11 +120,16 @@ export default function GameHistory() {
           overflow-x: auto;
           overflow-y: hidden;
           gap: 1px;
+          /* Force minimum width to enable scrolling */
+          min-width: 0;
+          width: 100%;
           /* Hide scrollbar but keep scrolling functionality */
           scrollbar-width: none; /* Firefox */
           -ms-overflow-style: none; /* Internet Explorer 10+ */
           /* Ensure smooth scrolling on touch devices */
           -webkit-overflow-scrolling: touch;
+          /* Enable horizontal scrolling with momentum on iOS */
+          overscroll-behavior-x: contain;
         }
 
         /* Hide scrollbar for WebKit browsers */
