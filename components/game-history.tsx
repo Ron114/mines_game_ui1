@@ -137,11 +137,11 @@ export default function GameHistory() {
           color: #d26d3d;
           justify-content: center;
           align-items: center;
-          /* Calculate width so exactly 7 items are visible at once */
-          /* Even smaller width calculation to fit exactly 7 items */
-          width: calc((100% - 16px) / 7); /* More aggressive reduction */
-          min-width: calc((100% - 16px) / 7);
-          flex: 0 0 calc((100% - 16px) / 7);
+          /* Fixed width to show exactly 7 items - testing smaller size */
+          width: 75px !important;
+          min-width: 75px !important;
+          max-width: 75px !important;
+          flex: 0 0 75px !important;
           padding: 2px;
           font-size: 10px;
           font-weight: 500;
@@ -204,10 +204,11 @@ export default function GameHistory() {
 
           .game-history__item {
             font-size: 9px;
-            /* Calculate width so exactly 7 items are visible on mobile too */
-            width: calc((100% - 16px) / 7);
-            min-width: calc((100% - 16px) / 7);
-            flex: 0 0 calc((100% - 16px) / 7);
+            /* Fixed width for mobile to show exactly 7 items */
+            width: 50px !important;
+            min-width: 50px !important;
+            max-width: 50px !important;
+            flex: 0 0 50px !important;
           }
 
           .game-history__item-text {
@@ -222,10 +223,11 @@ export default function GameHistory() {
           }
 
           .game-history__item {
-            /* Calculate width so exactly 7 items are visible on desktop */
-            width: calc((100% - 16px) / 7);
-            min-width: calc((100% - 16px) / 7);
-            flex: 0 0 calc((100% - 16px) / 7);
+            /* Fixed width for desktop to show exactly 7 items */
+            width: 75px !important;
+            min-width: 75px !important;
+            max-width: 75px !important;
+            flex: 0 0 75px !important;
           }
         }
       `}</style>
