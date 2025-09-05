@@ -17,7 +17,7 @@ import GameStatistics from "./game-statistics"
 export default function GameContainer() {
   const [gameMode, setGameMode] = useState<"manual" | "auto">("manual")
   const { setIsAutoMode, resetAutoPlayState } = useGame()
-  
+
   const handleModeChange = (mode: "manual" | "auto") => {
     setGameMode(mode)
     setIsAutoMode(mode === "auto")
@@ -25,18 +25,18 @@ export default function GameContainer() {
       resetAutoPlayState()
     }
   }
-  
+
   return (
     <div className="game-container md:mt-4 mt-2">
       <div className="desktop-layout">
         <div className="mode-tabs">
           <GameModeTabs onModeChange={handleModeChange} />
         </div>
-        
+
         <div className="history">
           <GameHistory />
         </div>
-        
+
         <div className="betslip">
           <BetAmountInput />
           <MinesSelector />
@@ -49,11 +49,11 @@ export default function GameContainer() {
             <AutoBetSection />
           )}
         </div>
-        
+
         <div className="chart">
           <GameGrid />
         </div>
-        
+
         <div className="stats">
           <GameStatistics />
         </div>
@@ -63,15 +63,15 @@ export default function GameContainer() {
         <div className="mobile-history">
           <GameHistory />
         </div>
-        
+
         <div className="mobile-mode-tabs">
           <GameModeTabs onModeChange={handleModeChange} />
         </div>
-        
+
         <div className="mobile-chart">
           <GameGrid />
         </div>
-        
+
         <div className="mobile-betslip">
           {gameMode === "manual" ? (
             <div className="mobile-start-button">
@@ -82,15 +82,15 @@ export default function GameContainer() {
               <StartAutoplayButton />
             </div>
           )}
-          
+
           <div className="mobile-bet-amount">
             <MobileBetAmount />
           </div>
-          
+
           <div className="mobile-mines">
             <MinesSelector />
           </div>
-          
+
           {gameMode === "manual" ? (
             <div className="mobile-game-details">
               <GameDetails />
@@ -101,7 +101,7 @@ export default function GameContainer() {
             </div>
           )}
         </div>
-        
+
         <div className="mobile-stats md:p-0 pb-36">
           <GameStatistics />
           <span className="md:hidden block">Toap on any bet to see details</span>
@@ -119,11 +119,14 @@ export default function GameContainer() {
         }
 
         .mobile-layout {
+          width: 100%;
+          height: 100vh;
           display: flex;
           flex-direction: column;
           padding: 0;
           margin: 0;
           gap: 0;
+          bottom: 0
         }
 
         .mobile-history {
