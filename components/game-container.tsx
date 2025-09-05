@@ -126,8 +126,6 @@ export default function GameContainer() {
           padding: 0;
           margin: 0;
           gap: 0;
-          top: 0;
-          bottom: 0
         }
 
         .mobile-history {
