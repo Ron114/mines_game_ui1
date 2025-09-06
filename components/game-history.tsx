@@ -35,7 +35,7 @@ export default function GameHistory() {
     if (activeIndex >= 0 && activeIndex < historyItems.length) {
       const container = scrollContainerRef.current
       // Use actual item width from CSS (75px desktop, 50px mobile + 1px gap)
-      const itemWidth = window.innerWidth >= 820 ? 76 : 51 // item width + gap
+      const itemWidth = window.innerWidth >= 820 ? 76 : 75 // item width + gap
       const containerWidth = container.offsetWidth
       const scrollPosition = (activeIndex * itemWidth) - (containerWidth / 2) + (itemWidth / 2)
       
@@ -216,8 +216,8 @@ export default function GameHistory() {
             font-size: 9px;
             /* Fixed width for mobile to show exactly 7 items */
             width: 50px !important;
-            min-width: 50px !important;
-            max-width: 50px !important;
+            min-width: 75px !important;
+            max-width: 75px !important;
             flex: 0 0 50px !important;
           }
 
