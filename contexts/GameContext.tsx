@@ -364,12 +364,19 @@ export function GameProvider({ children }: { children: ReactNode }) {
       
       setBombHitTile(tileIndex)
       
+      // Immediately reveal all tiles when bomb explodes (parallel with explosion)
+      for (let i = 0; i < 25; i++) {
+        const tileType = minePositions.has(i) ? 'bomb' : 'diamond'
+        if (i !== tileIndex) { // Don't override the bomb tile that was just set
+          setTileStatesInternal(prev => ({ ...prev, [i]: tileType }))
+        }
+      }
+      setShowAllTiles(true)
+      
+      // Reset game after showing tiles for a while
       setTimeout(() => {
-        setShowAllTiles(true)
-        setTimeout(() => {
-          resetGame()
-        }, 2500)
-      }, 800)
+        resetGame()
+      }, 2500)
     }
   }
 
