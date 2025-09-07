@@ -11,7 +11,7 @@ export default function GameGrid() {
     currentCashoutValue, betAmount, getTileType, deductBet, showAllTiles, bombHitTile,
     getNextPotentialValue, formatCurrency, selectedMines, showWinAnimation, winAnimationAmount,
     isAutoMode, selectedTilesForAuto, toggleTileForAutoPlay, isAutoPlaying, animatingTiles, setAnimatingTiles,
-    showAlert, setShowAlert, alertMessage, setAlertMessage, modalWinData
+    showAlert, setShowAlert, alertMessage, setAlertMessage, modalWinData, diamondsFound
   } = useGame()
   const { playSound } = useAudioContext()
   const [hoveredTile, setHoveredTile] = useState<number | null>(null)
@@ -34,9 +34,10 @@ export default function GameGrid() {
   }, [showWinModal, modalWinData])
 
   const getDiamondSound = () => {
-    if (selectedMines < 10) {
+    const nextDiamondCount = diamondsFound + 1
+    if (nextDiamondCount <= 9) {
       return '/assets/audio/diamond1.mp3'
-    } else if (selectedMines >= 10 && selectedMines < 20) {
+    } else if (nextDiamondCount >= 10 && nextDiamondCount <= 19) {
       return '/assets/audio/diamond2.mp3'
     } else {
       return '/assets/audio/diamond3.mp3'
