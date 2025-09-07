@@ -94,12 +94,12 @@ export default function GameGrid() {
             newSet.delete(tileIndex)
             return newSet
           })
-        }, 400)
+        }, 150)
       } else {
         playSound(getDiamondSound())
         setTileState(tileIndex, result)
       }
-    }, 190)
+    }, 50)
   }
 
   const getTileClass = (tileIndex: number) => {
