@@ -113,6 +113,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [isCashingOut, setIsCashingOut] = useState(false)
   const [isDimmingCheckout, setIsDimmingCheckout] = useState(false)
   const [cashOutTimers, setCashOutTimers] = useState<NodeJS.Timeout[]>([])
+  const [bombResetTimers, setBombResetTimers] = useState<NodeJS.Timeout[]>([])
   const [showAlert, setShowAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
   
@@ -374,15 +375,21 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setShowAllTiles(true)
       
       // Reset game after showing tiles for a while
-      setTimeout(() => {
+      const bombTimer = setTimeout(() => {
         resetGame()
       }, 2500)
+      setBombResetTimers([bombTimer])
     }
   }
 
   const clearCashOutTimers = () => {
     cashOutTimers.forEach(timer => clearTimeout(timer))
     setCashOutTimers([])
+  }
+  
+  const clearBombResetTimers = () => {
+    bombResetTimers.forEach(timer => clearTimeout(timer))
+    setBombResetTimers([])
   }
   
   const clearAutoPlayTimers = () => {
@@ -768,6 +775,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   const clearAllAnimations = () => {
     clearCashOutTimers()
+    clearBombResetTimers()
     setShowWinModal(false)
     setShowWinAnimation(false)
     setShowAllTiles(false)
