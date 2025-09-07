@@ -21,6 +21,7 @@ export default function GameHistory() {
   useEffect(() => {
     if (!scrollContainerRef.current) return
 
+    const container = scrollContainerRef.current
     const selectedTilesCount = selectedTilesForAuto.size
     let activeIndex = -1
 
@@ -32,8 +33,17 @@ export default function GameHistory() {
       activeIndex = diamondsFound - 1
     }
 
+    // Handle game reset - slide back to beginning when game becomes idle
+    if (gameState === 'idle' && diamondsFound === 0 && !isAutoMode) {
+      container.scrollTo({
+        left: 0,
+        behavior: 'smooth'
+      })
+      return
+    }
+
+    // Handle normal scrolling to active multiplier
     if (activeIndex >= 0 && activeIndex < historyItems.length) {
-      const container = scrollContainerRef.current
       // Use actual item width from CSS (75px desktop, 50px mobile + 1px gap)
       const itemWidth = window.innerWidth >= 820 ? 76 : 75 // item width + gap
       const containerWidth = container.offsetWidth
