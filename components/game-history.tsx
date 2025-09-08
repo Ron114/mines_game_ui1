@@ -216,8 +216,8 @@ export default function GameHistory() {
             font-size: 9px;
             /* Fixed width for mobile to show exactly 7 items */
             width: 50px !important;
-            min-width: 75px !important;
-            max-width: 75px !important;
+            min-width: 60px !important;
+            max-width: 60px !important;
             flex: 0 0 50px !important;
           }
 
